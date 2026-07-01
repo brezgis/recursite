@@ -85,7 +85,8 @@
     vertical-align: super;
     letter-spacing: 0.02em;
   }
-  .note { color: #555548; font-size: 0.82em; }
+  .note { display: block; margin-left: 1.6em; color: #555548; font-size: 0.82em; }
+  a.proj, a.proj:visited { color: #0000ee; }   /* live-project links stay blue even when visited */
   a.repo-link { color: #008000; font-size: 0.82em; }
   a.repo-link:visited { color: #006000; }
 
@@ -209,12 +210,11 @@
 
   <ul class="collection">
     <li><a href="#">link_1</a> <span class="new">NEW!</span>
-        <span class="note">&mdash; dinosaur train table (coming soon; the trains are dinosaurs; do not ask)</span></li>
-    <li><a href="https://tv.brezgis.com" target="_blank" rel="noopener">snow-globe</a>
-        <span class="note">&mdash; A 24/7 video stream in the style of broadcast television. Content includes Richard Feynman lectures, nature footage, and arthouse short films with Adult Swim-style bumps.</span>
-        <a href="https://github.com/brezgis/snow-globe" target="_blank" rel="noopener" class="repo-link">repo</a></li>
-    <li><a href="#">link_2</a> <span class="note">&mdash; (placeholder)</span></li>
-    <li><a href="#">link_3</a> <span class="note">&mdash; (placeholder)</span></li>
+        <span class="note">dinosaur train table (coming soon; the trains are dinosaurs; do not ask)</span></li>
+    <li><a class="proj" href="https://tv.brezgis.com" target="_blank" rel="noopener">snow-globe</a>
+        <span class="note">A 24/7 video stream in the style of broadcast television. Content includes Richard Feynman lectures, nature footage, and arthouse short films with Adult Swim-style bumps. <a href="https://github.com/brezgis/snow-globe" target="_blank" rel="noopener" class="repo-link">repo</a></span></li>
+    <li><a href="#">link_2</a> <span class="note">(placeholder)</span></li>
+    <li><a href="#">link_3</a> <span class="note">(placeholder)</span></li>
   </ul>
 
   <hr>
