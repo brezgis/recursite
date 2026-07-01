@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!-- turtles all the way down; recursion base case still TBD -->
+<!-- "The power of recursion evidently lies in the possibility of defining an infinite set
+     of objects by a finite statement." -- Niklaus Wirth, Algorithms + Data Structures = Programs -->
+<!-- best viewed in Netscape Navigator 3.0 at 800x600, with your feet up -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the recursite</title>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #000000;
+    background: #ffffcc;
+    max-width: 46em;
+    margin: 3.2em auto 1.4em;    /* centered column; extra breathing room up top */
+    padding: 0 1.4em;
+    text-align: left;      /* reading content stays flush-left */
+  }
+
+  /* masthead: the furniture gets centered, the words below don't */
+  .masthead { text-align: center; }
+
+  h1.welcome {
+    font-size: 2.7em;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+    color: #101010;
+    text-shadow: 1px 1px 0 #ffffff, 3px 3px 0 #c9b84a;  /* embossed WordArt bevel */
+    margin: 0.05em 0 0.2em 0;
+    line-height: 1.08;
+    overflow-wrap: break-word;
+  }
+  .rec-word { cursor: pointer; }
+  .rec-word:hover { color: #0000cc; }
+
+  /* the rainbow.gif divider, reincarnated in CSS */
+  .rainbow {
+    clear: both;
+    height: 5px;
+    background: linear-gradient(to right,
+      #0033cc, #0099ff, #00cc66, #ffff00, #ff9900, #ff0000);
+    margin: 1.1em 0 0.9em 0;
+  }
+
+  .epigraph {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #4a4a3a;
+    margin: 0 0 1.1em 0;
+  }
+
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+  a:active { color: #ff0000; }      /* period-accurate active flash */
+  a:hover { background: #ffff88; }
+
+  h2 {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin: 1.1em 0 0.5em 0;
+  }
+
+  ul.collection { list-style: none; padding-left: 1.3em; margin: 0.4em 0; }
+  ul.collection li { position: relative; margin: 0.38em 0; }
+  ul.collection li::before {
+    content: "\25CF";
+    color: #2a4fce;
+    position: absolute;
+    left: -1.3em;
+    top: 0.28em;
+    font-size: 0.72em;
+  }
+
+  .new {
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 0.62em;
+    font-family: Arial, Helvetica, sans-serif;
+    vertical-align: super;
+    letter-spacing: 0.02em;
+  }
+  .note { color: #555548; font-size: 0.82em; }
+
+  hr { border: none; border-top: 1px solid #999080; margin: 1.3em 0; }
+
+  footer {
+    font-size: 0.78em;
+    color: #3a3a30;
+    margin-top: 1.6em;
+    line-height: 1.5;
+  }
+
+  /* ---- recursion lightbox: a fake Windows 95 pop-up ---- */
+  .recurse-link { cursor: pointer; }
+  #recursion-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 999;
+  }
+  #recursion-overlay.open { display: block; }
+  #recursion-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 620px);
+    background: #c0c0c0;                              /* silver window */
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;   /* outset bevel */
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.45);
+    font-family: "Times New Roman", Times, serif;
+  }
+  #recursion-titlebar {
+    background: #000080;                              /* Win95 navy */
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.85em;
+    padding: 3px 4px 3px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #recursion-close {
+    background: #c0c0c0;
+    color: #000000;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 0.78em;
+    line-height: 1;
+    padding: 1px 7px;
+    cursor: pointer;
+  }
+  #recursion-close:active { border-color: #808080 #ffffff #ffffff #808080; }
+  #recursion-body { background: #ffffff; padding: 12px; text-align: center; }
+  #recursion-img {
+    max-width: 100%;
+    max-height: 56vh;
+    border: 1px solid #808080;
+    background: #ffffff;
+  }
+  #recursion-credit { font-size: 0.82em; color: #333333; margin: 9px 0 2px; font-style: italic; }
+  #recursion-credit a { color: #0000ee; }
+  #recursion-nav {
+    background: #c0c0c0;
+    padding: 6px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8em;
+    border-top: 1px solid #808080;
+  }
+  .win-btn {
+    background: #c0c0c0;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    padding: 3px 12px;
+    cursor: pointer;
+  }
+  .win-btn:active { border-color: #808080 #ffffff #ffffff #808080; }
+
+  /* ---- mobile ---- */
+  @media (max-width: 600px) {
+    body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 15px; }
+    h1.welcome { font-size: 1.8em; }
+    .rainbow { margin: 0.9em 0 0.8em 0; }
+    #recursion-titlebar { font-size: 0.8em; }
+    #recursion-body { padding: 8px; }
+    #recursion-img { max-height: 60vh; }
+    #recursion-nav { font-size: 0.72em; padding: 5px 6px; }
+    .win-btn { padding: 3px 9px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="masthead">
+    <h1 class="welcome" id="hero">Welcome to the <span class="rec-word" onclick="expandRecursite(); return false;">Recursite</span></h1>
+
+    <div class="rainbow"></div>
+
+    <p class="epigraph">&ldquo;To iterate is human, to <a class="recurse-link" href="#" onclick="openRecursion(); return false;">recurse</a> divine.&rdquo; &mdash; L. Peter Deutsch</p>
+  </div>
+
+  <p>
+    This is my 1990s&#8209;themed website, tucked inside my chic 2020s one. Here I put
+    the projects that are too small for my sharabara page but that I still want to share
+    with the world. Look closely enough and you'll find a 1980s Usenet site embedded
+    within this one&hellip; and a 1970s ARPANET site within that.
+  </p>
+
+  <hr>
+
+  <h2>The Collection</h2>
+
+  <ul class="collection">
+    <li><a href="#">link_1</a> <span class="new">NEW!</span>
+        <span class="note">&mdash; dinosaur train table (coming soon; the trains are dinosaurs; do not ask)</span></li>
+    <li><a href="#">link_2</a> <span class="note">&mdash; (placeholder)</span></li>
+    <li><a href="#">link_3</a> <span class="note">&mdash; (placeholder)</span></li>
+    <li><a href="#">link_4</a> <span class="note">&mdash; (placeholder)</span></li>
+  </ul>
+
+  <hr>
+
+  <footer>
+    Last updated 30 June 2026. This primitive HTML site was built by a state-of-the-art language model.
+  </footer>
+
+  <!-- recursion.exe: click "recurse" in the epigraph to open -->
+  <div id="recursion-overlay" onclick="if(event.target===this)closeRecursion()">
+    <div id="recursion-window">
+      <div id="recursion-titlebar">
+        <span>recursion.exe</span>
+        <button id="recursion-close" onclick="closeRecursion()" aria-label="close">X</button>
+      </div>
+      <div id="recursion-body">
+        <img id="recursion-img" src="" alt="a comic about recursion">
+        <div id="recursion-credit"></div>
+      </div>
+      <div id="recursion-nav">
+        <button class="win-btn" onclick="recursionPrev()">&#9664; Prev</button>
+        <span id="recursion-counter"></span>
+        <button class="win-btn" onclick="recursionNext()">Next &#9654;</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ---- self-referential title: click "Recursite" to expand it into its own definition, ad infinitum ---- */
+    var recursiteDepth = 0;
+    function renderHero() {
+      var core = '<span class="rec-word" onclick="expandRecursite(); return false;">Recursite</span>';
+      for (var i = 0; i < recursiteDepth; i++) core = '(Welcome to the ' + core + ')';
+      var hero = document.getElementById("hero");
+      hero.innerHTML = "Welcome to the " + core;
+      var mobile = window.innerWidth <= 600;
+      var base = mobile ? 1.8 : 2.7;
+      var step = mobile ? 0.12 : 0.18;
+      var size = Math.max(0.9, base - recursiteDepth * step);   /* shrink as it grows so it never breaks the layout */
+      hero.style.fontSize = size + "em";
+    }
+    function expandRecursite() { recursiteDepth++; renderHero(); }
+    window.addEventListener("resize", renderHero);
+    renderHero();   /* set the responsive hero size on load */
+
+    var recursionComics = [
+      { src: "comics/comic1_twitter.png",        credit: 'Artist unknown &mdash; via Twitter' },
+      { src: "comics/comic2_xkcd_tabletop.png",  credit: 'Randall Munroe &mdash; <a href="https://xkcd.com/244/" target="_blank" rel="noopener">xkcd #244</a>' },
+      { src: "comics/comic3_marekbennett.jpg",   credit: 'Marek Bennett &mdash; <a href="https://marekbennett.com/" target="_blank" rel="noopener">Infinite Funnies</a>' },
+      { src: "comics/comic4_crystallize_168.jpg",credit: '<a href="https://crystallize.com/" target="_blank" rel="noopener">Crystallize</a> &mdash; strip #168' },
+      { src: "comics/comic5_pinterest.png",      credit: '<a href="https://x.com/System32Comics" target="_blank" rel="noopener">System32Comics</a>' },
+      { src: "comics/comic6_exocomics_213.jpg",  credit: 'Li Chen &mdash; <a href="https://www.exocomics.com/213/" target="_blank" rel="noopener">Exocomics #213</a>' }
+    ];
+    var recursionIndex = 0;
+    function renderRecursion() {
+      var c = recursionComics[recursionIndex];
+      document.getElementById("recursion-img").src = c.src;
+      document.getElementById("recursion-credit").innerHTML = c.credit;
+      document.getElementById("recursion-counter").innerHTML = "slide " + (recursionIndex + 1) + " of " + recursionComics.length;
+    }
+    function openRecursion() {
+      recursionIndex = 0; renderRecursion();
+      document.getElementById("recursion-overlay").classList.add("open");
+    }
+    function closeRecursion() {
+      document.getElementById("recursion-overlay").classList.remove("open");
+    }
+    function recursionNext() {
+      recursionIndex = (recursionIndex + 1) % recursionComics.length; renderRecursion();
+    }
+    function recursionPrev() {
+      recursionIndex = (recursionIndex - 1 + recursionComics.length) % recursionComics.length; renderRecursion();
+    }
+    document.addEventListener("keydown", function(e) {
+      if (!document.getElementById("recursion-overlay").classList.contains("open")) return;
+      if (e.key === "Escape") closeRecursion();
+      else if (e.key === "ArrowRight") recursionNext();
+      else if (e.key === "ArrowLeft") recursionPrev();
+    });
+  </script>
+
+</body>
+</html>
