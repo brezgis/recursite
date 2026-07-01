@@ -1,12 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- the recursite in miniature: pale-yellow tile + the rainbow bar -->
-  <rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#ffffcc" stroke="#d9d29a"/>
-  <g fill="none" stroke-width="2.2" stroke-linecap="round">
-    <path d="M3 25 A13 13 0 0 1 29 25" stroke="#ff0000"/>
-    <path d="M5 25 A11 11 0 0 1 27 25" stroke="#ff9900"/>
-    <path d="M7 25 A9 9 0 0 1 25 25" stroke="#ffcc00"/>
-    <path d="M9 25 A7 7 0 0 1 23 25" stroke="#33bb44"/>
-    <path d="M11 25 A5 5 0 0 1 21 25" stroke="#0099ff"/>
-    <path d="M13 25 A3 3 0 0 1 19 25" stroke="#6633cc"/>
-  </g>
+  <!-- a tiny screenshot of the recursite: yellow page, bold title, rainbow rule, text + blue links -->
+  <defs>
+    <linearGradient id="rb" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0033cc"/>
+      <stop offset="0.2" stop-color="#0099ff"/>
+      <stop offset="0.4" stop-color="#00cc66"/>
+      <stop offset="0.6" stop-color="#ffff00"/>
+      <stop offset="0.8" stop-color="#ff9900"/>
+      <stop offset="1" stop-color="#ff0000"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="31" height="31" rx="5" fill="#ffffcc" stroke="#d9d29a"/>
+
+  <!-- title, with the gold WordArt drop-shadow -->
+  <rect x="6.2" y="6.6" width="20" height="4" rx="1" fill="#c9b84a"/>
+  <rect x="5.5" y="5.8" width="20" height="4" rx="1" fill="#141414"/>
+
+  <!-- rainbow rule -->
+  <rect x="4" y="12.4" width="24" height="1.8" fill="url(#rb)"/>
+
+  <!-- body text -->
+  <rect x="4" y="15.8" width="24" height="1.2" rx="0.6" fill="#8f8f82"/>
+  <rect x="4" y="18.3" width="24" height="1.2" rx="0.6" fill="#8f8f82"/>
+  <rect x="4" y="20.8" width="14" height="1.2" rx="0.6" fill="#8f8f82"/>
+
+  <!-- the collection: blue links with bullets -->
+  <circle cx="5" cy="24.7" r="0.9" fill="#2a4fce"/>
+  <rect x="7" y="24" width="10" height="1.4" rx="0.5" fill="#0000ee"/>
+  <circle cx="5" cy="27.6" r="0.9" fill="#2a4fce"/>
+  <rect x="7" y="26.9" width="7.5" height="1.4" rx="0.5" fill="#0000ee"/>
 </svg>
