@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- the recursite in miniature: pale-yellow tile + the rainbow bar -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#ffffcc" stroke="#d9d29a"/>
+  <g fill="none" stroke-width="2.2" stroke-linecap="round">
+    <path d="M3 25 A13 13 0 0 1 29 25" stroke="#ff0000"/>
+    <path d="M5 25 A11 11 0 0 1 27 25" stroke="#ff9900"/>
+    <path d="M7 25 A9 9 0 0 1 25 25" stroke="#ffcc00"/>
+    <path d="M9 25 A7 7 0 0 1 23 25" stroke="#33bb44"/>
+    <path d="M11 25 A5 5 0 0 1 21 25" stroke="#0099ff"/>
+    <path d="M13 25 A3 3 0 0 1 19 25" stroke="#6633cc"/>
+  </g>
+</svg>
