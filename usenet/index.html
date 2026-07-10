@@ -329,6 +329,32 @@ seem to ever expire their news....
     Piet Beertema
     CWI (Center for Math. & Comp. Science), Amsterdam
     ...{decvax,philabs}!mcvax!piet`},
+{ real:true,
+from:"trt@rti-sel.UUCP",
+path:"brezvax!decvax!clyde!floyd!harpo!decvax!mcnc!rti!rti-sel!trt",
+subj:"Making uucp/news go faster",
+date:"Sat, 24-Mar-84 10:29:28 EST",
+id:"<1104@rti-sel.UUCP>",
+body:
+"Here is a performance hack that did not make it into 4.2 uux:\n\tif (argc > 2) {\t/* rti-sel!trt: avoid gwd() for trivial case (rnews) */\n\t\tret = gwd(Wrkdir);\n\t\tif (ret != 0) {\n\t\t\tfprintf(stderr, \"can't get working directory; will try to continue\\n\");\n\t\t\tstrcpy(Wrkdir, \"/UNKNOWN\");\n\t\t}\n\t}\n\tDEBUG(4, \"\\n\\n** %s **\\n\", \"START\");\n[Note: the placement of this code is important.  The old ``gwd'' code\nappears later in uux and should be removed.]\nAvoiding the ``gwd'' call avoids a fork(II), an exec(II) of sh(I),\nanother fork(II), an exec(II) of pwd(I), and a few other things.\n(The performance effect was never measured.  After all, it's a hack.)\n\nAlas, Mark Horton's speedup-by-sleeping hack never got into 4.2 uucp either.\nBut I am not convinced it helps.  Anyone care to rerun Mark's tests of it?\n\nI think what really ticks people off is that letters can get hung up\nfor hours waiting for uucico/uuxqt to finish processing all the news.\nUsing Mark Horton's ``grade'' option helps the uucico part,\nbut uuxqt never sees the grade information when it is ordering\nthe X. files for processing.\nThat has been fixed in Honey DanBer uucp, probably with a hack to uux\nto include the grade letter in the 'X.' filename.\n\nAs for phone line overhead, the only ease cure is to batch news\ninto small numbers of large files, and ship those.\nHere is what uucico does to ship a *single* file:\n\tMaster:\tI wanna send D.rti-selB1234\t(70 bytes)\n\tSlave:\tOK\t\t\t\t(70 bytes!!)\n\tMaster:\t... here is the file ...\t(N bytes + ~32 bytes slop)\n\tSlave:\tTNX\t\t\t\t(70 bytes!!)\nEven with zero dead time the overhead is substantial at 1200 baud.\nA uux-shipped news article requires sending an 'X.' and a 'D.'.\nSome batching schemes do not send an 'X.' but still send each\narticle as a separate 'D.'.  To save phone time the articles\nshould be concatenated (and compressed) into large files.\nWouldn't it be nice if there were a ``uubatch'' command\nwith syntax and semantics essentially identical to ``uux''?\nAh well, there's never time to code but there's always time to flame.\n\tTom (\"still waiting for a fix\") Truscott"},
+{ real:true,
+from:"jc@inmet.UUCP",
+path:"brezvax!decvax!clyde!akgua!mcnc!decvax!cca!ima!inmet!jc",
+subj:"Re: Orphaned Response - (nf)",
+date:"Sat, 21-Apr-84 07:04:09 EST",
+id:"<1309@inmet.UUCP>",
+body:
+"#R:seismo:-87500:inmet:6700011:177600:687\ninmet!jc    Apr 20 17:14:00 1984\n\n\n\n\n> version B 2.10.1 4/1/83 (SU840401)\n> \tkremvax.UUCP\t\n\nReally?  They must have been fast workers, to bring it up on April first\nand submit a message the same day.  Who'd have ever thought those bureaucratic \ntypes could have even plugged in a terminal in less than a day!\n\nCongratulations, either to the originator of this hoax, or to the kremvax\nsystem administrators, for a job well done!  I hope to read many interesting\nsubmissions from their address.  How about a followup on the mammontelephas,\nfor a starter?\n\n\t\t\t\t\tJohn M Chambers [inmet!jc]\n\t\t\t\t\tIntermetrics, Inc.\n\t\t\t\t\t735 Concord Ave.\n\t\t\t\t\tCambridge, MA 02138\n\"I don't have any solution but I certainly admire the problem.\""},
+{ real:true,
+from:"warren@ihnss.UUCP (Warren Montgomery)",
+path:"brezvax!decvax!harpo!ulysses!mhuxl!ihnp4!ihnss!warren",
+pv:"version B 2.10.1 exptools 1/6/84; site ihnss.UUCP",
+org:"AT&T Bell Labs, Naperville, IL",
+subj:"Proliferation of old topics",
+date:"Tue, 24-Apr-84 11:52:32 EST",
+id:"<2047@ihnss.UUCP>",
+body:
+"The worst aspect that I have seen of the flooding of the network\nwith old netnews is that one or two very old articles will look new\nto people and revive a long dead debate.  The best solution is, of\ncourse, to build more safeguards into the distribution mechanism in\norder to prevent single failures from causing a flood of old news. \nI would like to raise a couple of suggestions in order to try to\nprevent it:\n\n1)\tBuild in a check into rnews to refuse to accept news with a\n\tsubmission date older than 2-3 weeks.  This would be severe,\n\tbut would certainly catch a lot of errors.\n\n2)\tBuild in a warning into readnews and vnews for any attempt\n\tto follow up on very old articles.  Users should be allowed\n\tto issue such followups IF THEY REALLY WANT TO, but it would\n\tprobably cut down on the number of followups to dea subjects\n\tto have some warning for a posting that would do so.\n\t\nI have watched netnews grow from a dozen sites and a dozen\nnewsgroups to it's current global size.  I am amazed that this has\nbeen accomplished so smoothly, and hope we can look forward to\nfurther smooth growth.  As the news load grows and the network\nbecomes more widespread, preventing the proliferation of useless\narticles (this is not a commentary on the contents of the news, I\nmean really useless stuff, like duplicates) will be an increasingly\ncritical problem.\n\n-- \n\n\tWarren Montgomery\n\tihnss!warren\n\tIH x2494"},
 ]},
 
 { name:"net.columbia", desc:"The space shuttle and the STS program", arts:[
@@ -404,7 +430,173 @@ body:
 3) Which do you think costs more?  A jumbo jet ride across the
    country, using commercial airline fuel, or a shuttle ride,
    consuming half a million gallons of liquids hydrogen and
-   oxygen (not to mention the cost of an external tank)?`}
+   oxygen (not to mention the cost of an external tank)?`},
+{ real:true,
+from:"scw@cepu.UUCP",
+path:"brezvax!decvax!clyde!floyd!harpo!decvax!ittvax!dcdwest!sdcsvax!bmcg!cepu!scw",
+pv:"version B 2.10 5/3/83; site cepu.UUCP",
+org:"VA Wadsworth Med. Center, LA CA",
+subj:"New uniforms (T-shirts)",
+date:"Thu, 12-Apr-84 12:46:36 EST",
+id:"<221@cepu.UUCP>",
+body:
+"*<-DDT ... I though that this was fixed already, What's goin' on here.\n\nThis morning (12-Apr-84) on Paul Harvey I heard that the 41-C Crew are\nnow wearing T-shirts with the Logo:\n\n\n\t  ACE Satellite Repair\n\t  Pickup and Delivery\n\n\n-- \nStephen C. Woods (VA Wadsworth Med Ctr./UCLA Dept. of Neurology)\nuucp:\t{ {ihnp4, uiucdcs}!bradley, hao, trwrb, sdcsvax!bmcg}!cepu!scw\nARPA: cepu!scw@ucla-locus\nlocation: N 34 06'37\" W 118 25'43\""}
+]},
+
+{ name:"net.unix-wizards", desc:"Discussions, bugs, fixes on and for UNIX", arts:[
+{ real:true,
+from:"johnl@haddock.UUCP",
+path:"brezvax!decvax!clyde!akgua!mcnc!decvax!cca!ima!haddock!johnl",
+subj:"Re: silly comment - (nf)",
+date:"Fri, 20-Apr-84 23:43:14 EST",
+id:"<156@haddock.UUCP>",
+body:
+"#R:sri-arpa:-1210000:haddock:16800011:000:658\nhaddock!johnl    Apr 20 15:08:00 1984\n\nThe \"comet sucks\" comment in the 4BSD printf routine refers to the\nannoying fact that the Vax 750 \"movtuc\" instruction, which used to be\nin printf's inner loop, doesn't work right and sprays crud all over\nmemory at inconvenient times.\n\nActually, movtuc turned out to have two bugs in it.  Bill Joy found one,\nadded the comment, and fiddled the code a little but didn't take out the\nmovtuc.  I found the other and completely removed the movtuc.\n\nThe ramifications were pretty strange.  While fighting that bug, I tried\nrecompiling the C compiler, and it took three iterations until it converged\nto the same object code twice in a row.\n\nJohn Levine, ima!johnl"},
+{ real:true,
+from:"guido@mcvax.UUCP",
+path:"brezvax!decvax!clyde!akgua!mcnc!decvax!harpo!ulysses!mhuxl!houxm!hogpc!houti!ariel!vax135!floyd!cmcl2!philabs!mcvax!guido",
+pv:"version B 2.10.1 6/24/83 (MC840302); site mcvax.UUCP",
+org:"\"Stamp Out BASIC\" Committee, CWI, Amsterdam",
+refs:"<137@utecfa.UUCP> <1277@cbosgd.UUCP>",
+subj:"Re: MAJOR BUG (Mark Horton's reply)",
+date:"Fri, 20-Apr-84 10:08:39 EST",
+id:"<5784@mcvax.UUCP>",
+body:
+"It was very honorable of Mark Horton to admit his \"guilt\"; but I'm not\nconvinced by His reply.\n\n>Why do you assume this is a bug?  It was put in as a feature [...].\n\nAt most I'd call it a quick hack, especially given the bad quality of the\ncode (pointed out by another unix-wizard) and the absence of documentation.\n\n>EMACS has a similar feature.\n\nNo it hasn't.  There is no way to specify IN THE FILE you are editing\nthat certain Emacs commands must be performed.  You specify this in the\nset-up file by binding commands to certain filenames.  (At least that's\nthe situation in Gosling's Emacs.)  This way it is only you who decides\nwhat's be done (if you trust Emacs itself).\n\n>[...] you seem to have found a security problem.\n\nI can't believe you didn't think of that when you invented it.\n\nEnough flaming; the gentleman who proposed to have a flag \"modeline\"\nwhich turns the feature on (default off) has my warm approval.\n\n--\n\tGuido van Rossum, \"Stamp Out BASIC\" Committee, CWI, Amsterdam\n\tguido @ mcvax"},
+{ real:true,
+from:"topher@cyb-eng.UUCP (Topher Eliot)",
+path:"brezvax!decvax!clyde!akgua!mcnc!decvax!harpo!seismo!ut-sally!cyb-eng!topher",
+pv:"version B 2.10.1 6/24/83; site cyb-eng.UUCP",
+org:"Cyb Systems, Austin, Texas",
+refs:"<12175@sri-arpa.UUCP> <306@kpno.UUCP>",
+subj:"/lib, /usr/lib, /usr/local/lib",
+date:"Fri, 20-Apr-84 14:29:04 EST",
+id:"<362@cyb-eng.UUCP>",
+body:
+"If my impression is correct, once upon a time there was /lib, where the\nlibraries were kept.  Then /usr/lib was added, for 'local stuff that isn't\npart of the standard system, but that we still want to make available to\neveryone on the machine', (well, ok, also for systems whose root disks\nwere too small.  But that doesn't occur very much these days).  For the\nsake of tidiness, I would love to throw away /usr/lib, /usr/bin, and all\nthe other 'duplicate' directories.  But I can't, because those pathnames\nare built into so many programs.\n\nSo now we have /usr/local/lib for 'local stuff that isn't part of the\nstandard system, but that we still want to make available to everyone on\nthe machine'.  Pretty soon that pathname will be compiled into lots of\nprograms, too.\n\nWhat's next?  /usr/local/REALLYlocal/lib?\n\nAm I missing something, or is this an undesirable trend?\n\nCheers,\nTopher Eliot\nCyb Systems, Austin, TX\nihnp4!ut-sally!cyb-eng!topher"},
+{ real:true,
+from:"alanr@drutx.UUCP (RobertsonAL)",
+path:"brezvax!decvax!clyde!burl!ulysses!mhuxl!ihnp4!drutx!alanr",
+pv:"version B 2.10.1 (Denver Mods 4/2/84) 6/24/83; site drutx.UUCP",
+org:"AT&T Information Systems Laboratories, Denver",
+refs:"<451@burl.UUCP>",
+subj:"Re: Root filesystem bad free list problem -- HELP!!  {whimper}",
+date:"Thu, 26-Apr-84 17:35:12 EST",
+id:"<227@drutx.UUCP>",
+body:
+"This is almost certainly due to a bug in the concurrency management\nin the UNIX free list handler.\nWe experienced the same problem here for two months!! on 3-8 machines\ninvolving PDP-11's running 3.0, vaxen and 3b-20's running System 5.\nIt is fixed in UNIX/370 (where concurrency is a BIG issue -- many\nusers, lots of CPUs, and a non single-thread kernel),\n\nand (if I recall correctly) the problem went like this:\n\t\n\t1)\tsuperblock free list runs out, and it \n\t\t\tbegins getting rebuilt by the O/S\nwhile\n\t2) someone allocates, then frees a block before 1 completes.\n\n\n\tThis fouls things up, since the free list is not locked\n\tfor the duration of the rebuild.\n\n\tUNIX/370 fixed this by locking the free list for the duration\n\t\tof 1) above.  This makes response time on the machine\n\t\toccasionally glitch, while the free list gets rebuilt.\n\nWe tried the goat, it had absolutely no effect (except for a residual\nsmell, we can't seem to get rid of).\n\nWe NEVER FIXED THE PROBLEM -- It came by itself, then it went away by\nitself, without us ever being able to track it down to the exact logic\nthat was causing the problem.  And we did try mightily.\nThe UNIX/370 folks I talked to indicated that this same problem exists\nin EVERY version of UNIX since Version 7.\n\nYou just get lucky almost all of the time, until you don't get lucky\nanymore.  If you want to file this problem with WECO, please call me,\nand we'll gladly substantiate your claim.  THIS OUGHT TO GET FIXED!!!\n\n\t-- Alan Robertson\n\t   ihnp4!drutx!alanr\n\t   AT&T Information Systems Laboratories\n\t   Denver, Colorado\n\t   Room 31Y-27, x4796"}
+]},
+
+{ name:"net.space", desc:"Space, space programs, space related research", arts:[
+{ real:true,
+from:"al@ames-lm.UUCP (Al Globus)",
+path:"brezvax!decvax!clyde!floyd!harpo!seismo!hao!ames-lm!al",
+pv:"version B 2.10.1 6/24/83; site ames-lm.UUCP",
+org:"NASA-Ames Research Center, Mtn. View, CA",
+refs:"<281@sri-arpa.UUCP>",
+subj:"Re: NASA's Future",
+date:"Fri, 30-Mar-84 21:25:35 EST",
+id:"<190@ames-lm.UUCP>",
+body:
+"Everyone seems very exited about manned bases on the Moon and Mars.  \nThat's all well and good but I suspect that once we get used to space\nstations and space colonies we will turn up our noses at living on\nuninhabitable planets.  I mean, if you go to all the trouble\nto build a life support system, the least you want is permanent sunshine\nand control of gravity.\n\nHere I go out on a limb:\n\n\tManned presence on the Moon, Mars, et. al. will be a side show.\nThe real action is in orbit."},
+{ real:true,
+from:"wombat@uicsl.UUCP",
+path:"brezvax!decvax!clyde!floyd!harpo!ulysses!mhuxl!ihnp4!inuxc!pur-ee!uiucdcs!uicsl!wombat",
+pv:"Notesfiles; site uicsl.UUCP",
+subj:"Interstellar Laser-Pushed Sails - (nf)",
+date:"Wed, 11-Apr-84 14:47:00 EST",
+id:"<11100023@uicsl.UUCP>",
+body:
+"#N:uicsl:11100023:000:846\nuicsl!wombat    Apr 11 13:47:00 1984\n\nThe latest *Journal of Rocketry and Spacecraft* has an article by Robert\nL. (*Dragon's Egg*) Forward on interstellar laser-pushed sails.\nHe gives details on an aluminum sail that would make it to Alpha Centauri\nin ~41 years. The laser would be focused through a Fresnel lens.\nThe sail comes in two main parts: a smaller sail with the payload,\nsurrounded by a sail with a larger surface area and a high reflectivity.\nAt a given point, they separate, and the larger sail is accelerated\naway from the payload sail, plus, its high reflectivity focuses light\nback on the other side of the payload sail, thus slowing it (the p.s.)\ndown for a leisurely glide into the Alpha Centauri system.\nHe also writes about a three stage sail that would go to Epsilon\nEridani and return, but I haven't read that far yet.\n\t\t\t\t\tWombat\n\t\t\t\t\tihnp4!uiucdcs!uicsl!wombat"},
+{ real:true,
+from:"ks@astrovax.UUCP (Karl Stapelfeldt)",
+path:"brezvax!decvax!clyde!burl!ulysses!allegra!princeton!astrovax!ks",
+pv:"version B 2.10.1 6/24/83; site astrovax.UUCP",
+org:"Princeton Univ. Astrophysics",
+subj:"Re: Arthur C. Clarke's 2010",
+date:"Tue, 1-May-84 16:20:13 EDT",
+id:"<321@astrovax.UUCP>",
+body:
+"I have just learned heard something absolutely terrible about the upcoming\nfilm \"2010: Odyssey 2\", and I heard it directly from Arthur himself (appearing\nat GWU SEDS April 30).  Arthur says that the writer of the screenplay for his\nfilm will be Peter Hyams.  Who is he, you say?  You're not going to like it.\nPeter Hyams wrote and directed \"Capricorn One\", the biggest piece of anti-space\nfilth ever brought to deface the silver screen.  And it wasn't a good adventure\nstory either, even if you don't mind the political intonations.  Arthur says\nthat he's never met Hyams, but will meet him soon.  Evidently MGM assigned him\nto the project.  My expectations for the film have dropped greatly.\n     We are also told that Tony Banks (??) will be writing an original score\nfor the film, i.e. not much old classical music will be used."}
+]},
+
+{ name:"net.micro", desc:"Micro computers of all kinds", arts:[
+{ real:true,
+from:"mmt@dciem.UUCP (Martin Taylor)",
+path:"brezvax!decvax!utzoo!dciem!mmt",
+pv:"version B 2.10.1 6/24/83; site dciem.UUCP",
+org:"D.C.I.E.M., Toronto, Canada",
+refs:"<7551@watmath.UUCP>",
+subj:"Re: Well written Macintosh overview (comments on comments)",
+date:"Tue, 17-Apr-84 17:38:07 EST",
+id:"<860@dciem.UUCP>",
+body:
+"When the Mac was first announced officially, and could be seen here,\nthe people with most immediately enthusiastic responses were precisely\nthose people who have been deeply into computers for years.  They could\nappreciate the wonder of the Mac faster than the \"users\" (non-novice but\nnon-wizard).  Having been involved with computers for 30 years now, I\nfound myself with that quick \"This is a real machine -- it's RIGHT\" reaction.\nAfter 6 weeks of using one, my main finding is that now my writings\nhave many more figures in them and are easier to read.  No programming\nsupport yet, but what a joy it is to use the things that are there.\nProgramming will come.\n-- \n\nMartin Taylor\n{allegra,linus,ihnp4,uw-beaver,floyd,ubc-vision}!utzoo!dciem!mmt"},
+{ real:true,
+from:"dmt@hocsl.UUCP",
+path:"brezvax!decvax!clyde!burl!ulysses!mhuxl!houxm!hogpc!pegasus!hocsl!dmt",
+pv:"version B 2.10.PCS 1/10/84; site hocsl.UUCP",
+org:"AT&T Information Systems Labs, Holmdel NJ",
+subj:"Unplanned April Foolery in BYTE",
+date:"Mon, 23-Apr-84 08:17:38 EST",
+id:"<118@hocsl.UUCP>",
+body:
+"I wonder if the editors of BYTE ever read the ads they print.\nA few amusing examples from the April issue:\n    -\tTwo competitive manufacturers of semiconductor buffers\n\tfor print spooling use the same pun in their slogan\n\t-- \"wait reduction\". (pages 79 and 103)\n    -\tA reader \"asks Steve [Ciarcia]\" for a source of a 512K\n\tS-100 board for his Z-100 computer. Steve replies,\n\t\"the largest dynamic RAM boards that I have seen\n\ton the commercial market for the S-100\n\tbus are 256K.\" The ad ON THE FACING PAGE (413) is for\n\tS-100 boards of 384K to 896K, specifically for the Z-100.\nMy kids get their laughs from MAD comics; I read the ads in BYTE.\n\n\t\t\tDave Tutelman\n\nPS - to compete with the WAFERVAX discussion on the net, see the\nletter in \"user-to-user\" (page 404) asking about the rumor that\nAT&T will bring out the 3B20D on a single chip; the reader asserts\nthat \"it's a board-level product now.\" (The 3B20D, for those who\ndon't recall, is the duplicated-for-reliability supermini.)"},
+{ real:true,
+from:"upstill@ucbvax.UUCP (Steve Upstill)",
+path:"brezvax!decvax!clyde!burl!ulysses!harpo!decvax!ucbvax!upstill",
+pv:"version B 2.10.1 6/24/83; site ucbvax.UUCP",
+org:"U.C. Berkeley",
+groups:"net.micro,net.rumor",
+refs:"<266@nmtvax.UUCP>",
+subj:"Re: New Half gegabyte ROM, This is no joke!",
+date:"Thu, 26-Apr-84 14:09:50 EST",
+id:"<462@ucbvax.UUCP>",
+body:
+"    Well, yes, but if you think that the big news is \"putting all of\nUNIX on one cheap device\", you're missing the boat.  The REAL significance\nof 1/2GB ROM is for what you might call \"vast-storage\".  Think of it:\nthe database for an entire profession could be stored on a single $500\ndevice, updatable weekly or monthly.  For example, an auto-parts store\nwould no longer need a five-foot rack of parts catalogs, but could get\nall its information, intelligently indexed, instantly (or secondly, \nanyway).  I would expect Apple to be delighted at the prospect of their\nN-million \"knowledge workers\" having such easy access to so much \ninformation.  Face it: we are looking at the start of a whole new\nsub-industry.  I predict billions in two years.\n\nSteve Upstill"},
+{ real:true,
+from:"geller@rlgvax.UUCP (David Geller)",
+path:"brezvax!decvax!clyde!burl!ulysses!harpo!seismo!rlgvax!geller",
+pv:"version B 2.10.1a 12/4/83; site rlgvax.UUCP",
+org:"CCI Office Systems Group, Reston, VA",
+refs:"<10400137@uiucdcs.UUCP> <4400061@uiuccsb.UUCP>",
+subj:"Re: Inexperienced Buyer",
+date:"Sun, 29-Apr-84 16:16:11 EDT",
+id:"<1887@rlgvax.UUCP>",
+body:
+"I had my ATARI 800 system at college for two years. It got more\nuse than my text books. Therein lies the reason for me now being out\nof college.  Such are the perils of hacking and of life...\n\n\t\t\t\t\trlgvax!geller"}
+]},
+
+{ name:"net.nlang", desc:"Natural languages, cultures, heritages", arts:[
+{ real:true,
+from:"donn@sdchema.UUCP",
+path:"brezvax!decvax!clyde!floyd!harpo!decvax!ittvax!dcdwest!sdcsvax!sdchema!donn",
+pv:"version B 2.10.1 6/24/83; site sdchema.UUCP",
+org:"Used Softwear Jobbers, Inc. (Clandestine Computer Services)",
+groups:"net.nlang,net.puzzle",
+subj:"Yreka Bakery",
+date:"Wed, 28-Mar-84 02:57:34 EST",
+id:"<1102@sdchema.UUCP>",
+body:
+"Someone said some time back that they had been in Yreka, California,\nand had gotten a kick out of the sign 'Yreka Bakery'.  I remember\nthinking at the time what a remarkable coincidence it was that the\nwords formed a palindrome...\n\nLast night I happened to read what Sam Clemens had to say about Yreka:\n\n\t'... Yreka... acquired its curious name -- when in its first\n\tdays it much needed a name -- through an accident.  There was a\n\tbakeshop with a canvas sign which had not yet been put up but\n\thad been painted and stretched to dry in such a way that the\n\tword BAKERY, all but the B, showed through and was reversed.  A\n\tstranger read it wrong end first, YREKA, and supposed that that\n\twas the name of the camp.  The campers were satisfied with it\n\tand adopted it.'\n\nOf course Sam was never noted for being a sober reporter of the facts,\nbut he WAS in San Francisco in 1864, and the town of Yreka must have\nbeen founded during or after the Gold Rush of 1849, so the story has\nat least some small probability of being veracious...\n\nWill wonders never cease,\n\nDonn Seeley    UCSD Chemistry Dept.       ucbvax!sdcsvax!sdchema!donn"},
+{ real:true,
+from:"mmt@dciem.UUCP (Martin Taylor)",
+path:"brezvax!decvax!utzoo!dciem!mmt",
+pv:"version B 2.10.1 6/24/83; site dciem.UUCP",
+org:"D.C.I.E.M., Toronto, Canada",
+subj:"word pair - wordpair antonyms",
+date:"Thu, 12-Apr-84 18:08:04 EST",
+id:"<848@dciem.UUCP>",
+body:
+"One of our people went home today, feeling unwell.  It occurred to\nme that if she was home sick, she couldn't be homesick.  Is there a\nword for this kind of almost self-antonym?  Last year we had a\ndiscussion on this group about real self-antonyms (e.g. cleave),\nbut that's not what I mean this time.  Are there any other neat\nexamples of the kind?\n-- \n\nMartin Taylor\n{allegra,linus,ihnp4,uw-beaver,floyd,ubc-vision}!utzoo!dciem!mmt"},
+{ real:true,
+from:"mac@uvacs.UUCP",
+path:"brezvax!decvax!clyde!akgua!mcnc!ncsu!uvacs!mac",
+subj:"Defense Advanced Research Projects Administration",
+date:"Sat, 28-Apr-84 14:50:10 EDT",
+id:"<1267@uvacs.UUCP>",
+body:
+"Interesting note:\nIn Sanskrit \"DARPA\" is translated as \"wildness, wantonness, impudence,\npride\" from the verbal root /drp/ \"be crazed, wild, proud, insolent, or\narrogant\"."}
 ]},
 
 { name:"net.jokes", desc:"Jokes and the like. May be somewhat offensive", arts:[
@@ -458,9 +650,125 @@ body:
 `I would like a copy of the complete "Hitchhiker's Guide to the Net".
 I can't seem to mail to sf-lovers-request@rutgers, as was suggested, nor
 do I know anything about FTP or ARPANET. Thanx.
-	{Bell labs}!charm!mam`}
+	{Bell labs}!charm!mam`},
+{ real:true,
+from:"flinn@seismo.UUCP (E. A. Flinn)",
+path:"brezvax!decvax!clyde!floyd!harpo!seismo!flinn",
+pv:"version B 2.10.2 alpha 3/24/83; site seismo.UUCP",
+org:"Center for Seismic Studies, Arlington, VA",
+groups:"net.physics,net.jokes",
+subj:"Heaven is hotter than hell",
+date:"Fri, 6-Apr-84 11:02:01 EST",
+id:"<842@seismo.UUCP>",
+body:
+"The temperature of Heaven can be rather accurately computed from\navailable data.  Our authority is Isaiah 30:26, \"Moreover, the light\nof the Moon shall be as the light of the Sun and the light of the Sun\nshall be sevenfold, as the light of seven days.\"  Thus Heaven receives\nfrom the Moon as much radiation as we do from the Sun, and in addition\nseven times seven (49) times as much as the Earth does from the Sun,\nor fifty times in all.  The light we receive from the Moon is one\nten-thousandth of the light we receive from the Sun, so we can ignore\nthat.  With these data we can compute the temperature of Heaven.  The\nradiation falling on Heaven will heat it to the point where the heat\nlost by radiation is just equal to the heat received by radiation,\ni.e., Heaven loses fifty times as much heat as the Earth by radiation.\nUsing the Stefan-Boltzmann law for radiation, \n\n\t(H/E)^4 = 50\n\nwhere E is the absolute temperature of the earth (-300K), gives H as\n798K (525C).\n\nThe exact temperature of Hell cannot be computed, but it must be less\nthan 444.6C, the temperature at which brimstone or sulphur changes\nfrom a liquid to a gas.  Revelations 21:8 says \"But the fearful, and\nunbelieving...shall have their part in the lake which burneth with\nfire and brimstone.\"  A lake of molten brimstone means that its\ntemperature must be at or below the boiling point, or 444.6C (Above\nthis point it would be a vapor, not a lake.)\n\nWe have, then, that Heaven, at 525C is hotter than Hell at 445C.\n\n[From \"Applied Optics\" vol. 11, A14, 1972]"},
+{ real:true,
+from:"tom@felix.UUCP",
+path:"brezvax!decvax!clyde!burl!ulysses!harpo!decvax!ittvax!dcdwest!sdcsvax!bmcg!felix!tom",
+pv:"version B 2.10.1 6/24/83; site felix.UUCP",
+org:"FileNet Corp., Costa Mesa, Ca.",
+subj:"Numerical joke",
+date:"Thu, 19-Apr-84 12:47:06 EST",
+id:"<245@felix.UUCP>",
+body:
+"Q: Why do hackers have trouble telling the difference between\n   Halloween and Christmas?\n\nA: Because 31OCT = 25DEC"}
 ]},
 
+{ name:"net.sf-lovers", desc:"Science fiction lovers' newsgroup", arts:[
+{ real:true,
+from:"karl@dartvax.UUCP (Karl Berry)",
+path:"brezvax!decvax!clyde!floyd!harpo!decvax!dartvax!karl",
+pv:"version B 2.10.1 6/24/83; site dartvax.UUCP",
+org:"Dartmouth College",
+subj:"Gusliar Wonders.",
+date:"Sat, 24-Mar-84 09:54:56 EST",
+id:"<977@dartvax.UUCP>",
+body:
+"   A number of people have recently mentioned Soviet science fiction,\nwhich has reminded me of an excellent collection of short stories I\nrecently read by Kirill Bulychev. ( I hope I spelled the name right.\n) The book is titled Gusliar Wonders, and has a number of truly\nremarkable stories in it. ( It also has some that aren't so\nremarkable. ) It is put out by Macmillan, and one of the blurbs on\nthe cover informed me \"This is part of a continuing effort by\nMacmillan to expand the horizons of modern science fiction with this\nSoviet series.\" Or words to that effect. Has anyone read any of the\nother books in the Macmillan series? Or indeed any Russian authors at\nall?\n\n{cornell,decvax}!dartvax!karl // karl@dartmouth"},
+{ real:true,
+from:"moret@unmvax.UUCP",
+path:"brezvax!decvax!clyde!burl!ulysses!mhuxl!houxm!hogpc!houti!ariel!vax135!floyd!cmcl2!lanl-a!unm-cvax!unmvax!moret",
+pv:"version B 2.10.1 6/24/83; site unmvax.UUCP",
+org:"Univ. of New Mexico, Albuquerque",
+subj:"Man in the High Castle et alia",
+date:"Tue, 1-May-84 11:20:08 EDT",
+id:"<316@unmvax.UUCP>",
+body:
+"I am getting *very* irritated with net.sf-lovers.  After a flurry of articles\nfinding Solaris--which is one of the 10-20 greatest SF novels ever, and surely\na masterpiece on the nature of communication--I had to encounter two articles\nwondering what everybody thought was so great about Dick's\nMan in the High Castle...  (I don't think that one has to remember WWII\nto react to that book; I wasn't born by 1945.  There is a lot to get out\nof Dick's novel, about everyday life, about cultural influence, about\nhuman values, but most of all about the meaning of reality.\nWhy is it SF?  Well, why is LeGuin's magnificent The Dispossessed classified\nas SF?  It's just a label and should not imply anything more than \"fiction\nbased upon a different view of the world\";  doesn't SF mean Speculative\nFiction?)\n>From the content of these articles about Lem and Dick and several other news\narticles (such as the running commentary about FTL travel and high-speed\ncameras), I must conclude that I have subscribed to the wrong newsgroup.\nImagine: I thought that this newsgroup was for people interested in SF\n*literature*, for people who considered SF a form of *art*, NOT a form\nof technical writing."},
+{ real:true,
+from:"ks@astrovax.UUCP (Karl Stapelfeldt)",
+path:"brezvax!decvax!clyde!burl!ulysses!allegra!princeton!astrovax!ks",
+pv:"version B 2.10.1 6/24/83; site astrovax.UUCP",
+org:"Princeton Univ. Astrophysics",
+subj:"Re: Arthur C. Clarke's 2010",
+date:"Tue, 1-May-84 16:24:26 EDT",
+id:"<323@astrovax.UUCP>",
+body:
+"I have just learned heard something absolutely terrible about the upcoming\nfilm \"2010: Odyssey 2\", and I heard it directly from Arthur himself (appearing\nat GWU SEDS April 30).  Arthur says that the writer of the screenplay for his\nfilm will be Peter Hyams.  Who is he, you say?  You're not going to like it.\nPeter Hyams wrote and directed \"Capricorn One\", the biggest piece of anti-space\nfilth ever brought to deface the silver screen.  And it wasn't a good adventure\nstory either, even if you don't mind the political intonations.  Arthur says\nthat he's never met Hyams, but will meet him soon.  Evidently MGM assigned him\nto the project.  My expectations for the film have dropped greatly.\n     We are also told that Tony Banks (??) will be writing an original score\nfor the film, i.e. not much old classical music will be used."}
+]}
+];
+
+/* ------------------------------------------------------------------ */
+/*  guest mailbox — real net.announce postings, spring 1984            */
+/*  (verbatim from the utzoo tapes; only the delivery is invented)     */
+/* ------------------------------------------------------------------ */
+
+const MAIL = [
+{ env:"allegra!karn",
+ctime:"Fri Mar 23 17:59",
+ctimeFull:"Fri Mar 23 17:59:43 1984",
+size:"31/1550",
+from:"karn@allegra.UUCP (Phil Karn)",
+subj:"uucp mail abuse of allegra",
+id:"<1145@cbosgd.UUCP>",
+date:"Fri, 23-Mar-84 17:59:43 EST",
+org:"AT&T Bell Laboratories, Columbus",
+body:
+"Recently, the mail forwarding load on allegra has gotten out of hand. \nPeople are mailing 180K byte files, 20 person mailing lists and the like\nthrough allegra (and multiple other sites as well) to sites all over the\ncontinent.\n\nGateways such as allegra are provided as a courtesy service for\noccasional, light use ONLY.  Should there be a need for large or regular\nmail traffic between two sites, common courtesy dictates the\nestablishment of direct uucp connections, which are also much faster and\nmore reliable. The telephone company does an excellent job of routing\nconnections between any arbitrary pair of telephone numbers; therefore\nthere is little excuse for not having an almost fully interconnected\nnetwork.\n\nWe don't want to follow the practice of some other sites and disallow\nmail forwarding; this only seems to result in increased use of netnews\nfor personal messages of the type \"so-and-so ##*@! system won't forward\nmail, so I'm posting my reply here.\"  On the other hand, allegra simply\ncannot continue to carry the amount of traffic it has been seeing\nrecently. Its puny dialers are perpetually busy, and the machine's load\naverage is often 7 or 8 even at 3 in the morning.\n\nTherefore, we are strongly urging all mail users, particularly those who\nmoderate mailing lists, to establish direct links to their destination\nsites. Use allegra if you wish to exchange uucp coordination messages\nwith other sites, but please don't abuse it.\n\nThank you.\n\nJohn Linderman (allegra!jpl)\nPhil Karn\t(allegra!karn)"},
+{ env:"cbosgd!mark",
+ctime:"Sun Mar 25 14:00",
+ctimeFull:"Sun Mar 25 14:00:42 1984",
+size:"22/1104",
+from:"mark@cbosgd.UUCP (Mark Horton)",
+subj:"old news breaking loose",
+id:"<1150@cbosgd.UUCP>",
+date:"Sun, 25-Mar-84 14:00:42 EST",
+org:"AT&T Bell Laboratories, Columbus",
+body:
+"An old logjam of news has once again burst free, and we are being\ndeluged with news from last month that we've all seen before.\nErik Fair was the first to report the problem, and has located\nthe log jam.  However, the news has already gotten loose and there\nis nothing we can do to keep it from circulating.\n\nI am posting this so we won't see another deluge of articles in\nvarious newsgroups saying \"Gee, I think some old news is coming\naround.  Does anyone know why?\"  Such queries accomplish nothing,\nand just provide even more uninteresting news to wade through.\n\nReadnews and vnews give the date on each article they offer you.\nIf you see an article dated in Feb, you can just type n.  You'll\nsee plenty of such articles over the next few days, I'm sorry to say.\n\nIf someone wants to make the necessary modifications to expire to\nprevent this problem (by keeping history for a longer time, even\nwhen the articles themselves are expired) it will make a valuable\naddition to the news software.  If you want to discuss this, please\nconfine the discussion to net.news.\n\n\tMark Horton"},
+{ env:"cbosgd!ksh",
+ctime:"Sat Mar 31 19:21",
+ctimeFull:"Sat Mar 31 19:21:05 1984",
+size:"19/689",
+from:"ksh@cbosgd.UUCP (Karen Summers-Horton)",
+subj:"Usenet directory",
+id:"<1182@cbosgd.UUCP>",
+date:"Sat, 31-Mar-84 19:21:05 EST",
+org:"AT&T Bell Laboratories, Columbus",
+body:
+"The current Usenet maps are available in net.news.map as of midnight\nMarch 31.  I will be posting this in net.announce every month, since\nmany people do not know about the maps and many of our European sites\ndo not get net.general.  [The monthly postings may go in\nnet.announce.newusers, depending on public opinion - MRH]\n\nThis month we officially welcome Alabama, Hawaii and Korea to Usenet.\nKorea is receiving news, but due to a bug involving time zones, cannot\npost news.  Hopefully, this will be fixed soon.\n\nStatistics for this month:\n\n\t829 Usenet sites\n\t171 net.all newsgroups\n\t223 articles per day (average over last 2 weeks).\n\n\n\tKaren Summers-Horton\n\tcbosgd!map"},
+{ env:"seismo!rick",
+ctime:"Mon Apr  2 23:40",
+ctimeFull:"Mon Apr  2 23:40:20 1984",
+size:"12/474",
+from:"rick@seismo.UUCP (Rick Adams)",
+subj:"Please don't send mail to kremvax",
+id:"<1210@cbosgd.UUCP>",
+date:"Mon, 2-Apr-84 23:40:20 EST",
+org:"AT&T Bell Laboratories, Columbus",
+body:
+"Please don't send mail to kremvax. For those of you that missed the point,\nit was posted on April 1.\n\nEvery letter you send to kremvax will get sent across the Atlantic ocean\nto mcvax (which is not a cheap phone call) before it gets rejected as\nan unknown site. Then, it may even get returned to sender generating even\nmore unnecessary trans-atlantic phone calls.\n\n(I have already seen mail going through seismo, so some people did\nnot get the joke).\n\nRick Adams"},
+{ env:"cbosgd!mark",
+ctime:"Sun Apr 29 15:43",
+ctimeFull:"Sun Apr 29 15:43:32 1984",
+size:"22/1082",
+from:"mark@cbosgd.UUCP (Mark Horton)",
+subj:"use of bell.all",
+id:"<1310@cbosgd.UUCP>",
+date:"Sun, 29-Apr-84 15:43:32 EDT",
+org:"AT&T Bell Laboratories, Columbus",
+body:
+"Scott Orshan of Bell Communications Research has asked me to remind\nthe network that AT&T and the world at large should no longer be using\nthe bell.all newsgroups.  These newsgroups now belong exclusively to\nthe 7 divested Regional Bell Operating Companies and to BCR.  He has\nseen a lot of traffic with newsgroup lists like\n\tnet.wanted,btl.wanted,bell.wanted\nand this is blatantly in violation of the divestiture.\n\nIn fact, I would like to remind people that it is almost NEVER\nappropriate to list more than one \"*.wanted\" newsgroup.  Either post\nto net.wanted, or to att.wanted, or to bell.wanted, or if you have\nsomething like a car or house for sale, restrict it locally with a\nnewsgroup like nj.wanted.  Almost all such abuse seems to originate\nfrom within AT&T, for some reason.  AT&T employees should be especially\ncareful about misusing these newsgroups, since you don't want trouble\nfrom Judge Green.\n\nA reminder to all Usenet contacts - if your sys file still\nmentions bell.all and you are not part of an RBOC or BCR, please\nfix it now.\n\n\tMark Horton"}
 ];
 
 /* ------------------------------------------------------------------ */
@@ -640,7 +948,8 @@ function showHelp(){
 "",
 "Everything is also tappable, because it is not actually",
 "1984, whatever the phosphor says.  The shell that q drops",
-"you into works.  Read the message of the day.",
+"you into works: it has your mail, and the message of the",
+"day is worth believing.",
 "",
 '<span class="hdr">WHAT IS REAL HERE</span>',
 "",
@@ -648,11 +957,13 @@ function showHelp(){
 "wires in April 1984 and are reprinted verbatim from the",
 "utzoo tapes (Henry Spencer's archive, via archive.org/",
 "details/usenet-net), with only the Path: rewritten for",
-"brezvax's feed: the kremvax hoax of April 1 and four of",
-"its replies, Piet Beertema's EXPIRED-news post (he forged",
-"kremvax five months later; the wire remembers), every",
-"net.columbia article on the Solar Max repair flight, and",
-"every net.jokes article.",
+"brezvax's feed.  Among them: the kremvax hoax of April 1",
+"and four of its replies, Piet Beertema's EXPIRED-news",
+"post (he forged kremvax five months later; the wire",
+"remembers), the Solar Max repair flight, a young Guido",
+"van Rossum complaining about vi, a goat deployed against",
+"a filesystem bug, the Sanskrit reading of DARPA, and",
+"Arthur C. Clarke news heard live at GWU.",
 "",
 "Also real: the net.* groups and their descriptions (this",
 "is before the Great Renaming of 1987), B news 2.10.1 and",
@@ -660,6 +971,12 @@ function showHelp(){
 "and the [x] key, and the census -- some 900 sites moving",
 "225 articles a day, doubling yearly, death imminent since",
 "'83 at least.",
+"",
+"The mailbox too: type mail in the shell for the season's",
+"real net.announce postings -- the monthly Usenet census,",
+"and Rick Adams asking everyone to please stop mailing",
+"kremvax.  Only their delivery to guest's spool is",
+"invented.",
 "",
 '<span class="hdr">WHAT IS INVENTED</span>',
 "",
@@ -734,6 +1051,56 @@ rowSpan("        REPAINT         [ "+BAUDS[bi].name+" ]", null, ()=>{ bi=(bi+1)%
   setKeys([["exit set-up", ()=>{ showGroups(); }]]);
 }
 
+/* ------------------------- mail ----------------------------------- */
+/* Bell Labs Mail, 4.2BSD flavor.  The spool holds the season's        */
+/* net.announce postings, delivered by the news gateway.               */
+
+let mi = 0;
+
+function showMail(){
+  mode = "mail";
+  const lines = [];
+  lines.push(esc("Mail version 2.18 5/19/83.  Type ? for help."));
+  lines.push(esc('"/usr/spool/mail/guest": '+MAIL.length+" messages "+MAIL.length+" new"));
+  MAIL.forEach((m,idx)=>{
+    const n = String(idx+1).padStart(2," ");
+    const flag = (idx===mi ? ">" : " ") + "N";
+    lines.push(rowSpan(esc(flag+n+" "+m.env.padEnd(15," ").slice(0,15)+" "+m.ctime+" "+m.size.padStart(8," ")+' "'+m.subj+'"'), "trunc", ()=>{ mi=idx; showMailMsg(); }));
+  });
+  lines.push("");
+  lines.push('<span class="dim">tap a message, or press its number.  q returns to the shell.</span>');
+  paint(lines);
+  setStatus("mail -- [1-"+MAIL.length+"] read  [q] shell");
+  setKeys([["<b>q</b> shell", quitToShell]]);
+}
+
+function showMailMsg(){
+  mode = "mailmsg";
+  const m = MAIL[mi];
+  const lines = [];
+  lines.push('<span class="inv"> message '+(mi+1)+' of '+MAIL.length+' </span>');
+  lines.push("");
+  lines.push('<span class="hdr">'+esc("From news "+m.ctimeFull)+"</span>");
+  lines.push('<span class="hdr">'+esc("From: "+m.from)+"</span>");
+  lines.push('<span class="hdr">'+esc("Newsgroups: net.announce")+"</span>");
+  lines.push('<span class="hdr">'+esc("Subject: "+m.subj)+"</span>");
+  lines.push('<span class="hdr">'+esc("Message-ID: "+m.id)+"</span>");
+  lines.push('<span class="hdr">'+esc("Date: "+m.date)+"</span>");
+  if(m.org) lines.push('<span class="hdr">'+esc("Organization: "+m.org)+"</span>");
+  lines.push("");
+  m.body.split("\n").forEach(l=>lines.push(esc(l)));
+  lines.push("");
+  lines.push('<span class="dim">-- end of message '+(mi+1)+' --</span>');
+  paint(lines, ()=>{ screen.scrollTop = 0; });
+  setStatus("mail #"+(mi+1)+" -- [n]ext [p]rev [b]ack [q] shell");
+  setKeys([
+    ["<b>n</b> next", ()=>{ if(mi<MAIL.length-1){mi++; showMailMsg();} else showMail(); }],
+    ["<b>p</b> prev", ()=>{ if(mi>0){mi--; showMailMsg();} else showMail(); }],
+    ["<b>b</b> list", showMail],
+    ["<b>q</b> shell", quitToShell]
+  ]);
+}
+
 /* ------------------------- shell & the wire down ------------------ */
 /* q drops you to a real (almost) shell.  the motd told you the word. */
 
@@ -748,9 +1115,10 @@ function quitToShell(){
     "",
     el=>{ shellLine = document.createElement("span"); el.appendChild(shellLine); renderShell(); }
   ]);
-  setStatus("brezvax sh -- the motd mentioned a number");
+  setStatus("brezvax sh -- you have mail, and the motd mentioned a number");
   setKeys([
     ["$ readnews", ()=>{ if(mode==="shell") showGroups(); }],
+    ["$ mail",     ()=>{ if(mode==="shell") showMail(); }],
     ["$ tip arpa", ()=>{ if(mode==="shell") dialArpanet(); }],
     ["$ logout",   ()=>{ if(mode==="shell") shellLogout(); }]
   ]);
@@ -764,6 +1132,7 @@ function shellExec(){
   shellBuf = "";
   if(cmd === "tip arpa"){ dialArpanet(); return; }
   if(cmd === "readnews" || cmd === "news"){ showGroups(); return; }
+  if(cmd === "mail"){ showMail(); return; }
   if(cmd === "logout" || cmd === "exit"){ shellLogout(); return; }
   if(cmd === "tip" || cmd.startsWith("tip ")){
     shellSay("usage: tip system-name   (only one system in /etc/remote)");
@@ -849,6 +1218,8 @@ function boot(){
     ["arpanet dialout is STILL in /etc/remote (\"tip arpa\").",  90],
     ["It should not answer anymore.  It answers.  Leave it",     90],
     ["alone.                                       -- root",     90],
+    ["",                                                         140],
+    ["You have mail.",                                           180],
     ["",                                                         160],
     ["$ ",                                                       200, "readnews"],
     ["",                                                         400]
@@ -906,6 +1277,16 @@ document.addEventListener("keydown", e=>{
     if(k === "b") showList();
     if(k === "g") showGroups();
     if(k === "x") toggleRot();
+    if(k === " "){ e.preventDefault(); screen.scrollBy({top: screen.clientHeight*0.85, behavior:"smooth"}); }
+  } else if(mode === "mail"){
+    const n = parseInt(k,10);
+    if(n >= 1 && n <= MAIL.length){ mi = n-1; showMailMsg(); }
+    if(k === "q") quitToShell();
+  } else if(mode === "mailmsg"){
+    if(k === "n"){ if(mi<MAIL.length-1){mi++; showMailMsg();} else showMail(); }
+    if(k === "p"){ if(mi>0){mi--; showMailMsg();} else showMail(); }
+    if(k === "b" || k === "h") showMail();
+    if(k === "q") quitToShell();
     if(k === " "){ e.preventDefault(); screen.scrollBy({top: screen.clientHeight*0.85, behavior:"smooth"}); }
   } else if(mode === "dead" && k === "enter"){
     boot();
