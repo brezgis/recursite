@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>brezvax — netnews — April 1984</title>
+<title>brezvax</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2304120a'/%3E%3Crect x='3' y='7' width='10' height='2' fill='%233dff70'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -78,9 +78,6 @@
   .hdr{opacity:.78}
   .cursor::after{content:"█";animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
-  /* a hotspot buried in body text: terminal underline, live to the touch */
-  .wire{cursor:pointer;border-bottom:1px dotted var(--phos-dim)}
-  .wire:hover,.wire:focus-visible{border-bottom:1px solid var(--phos);background:rgba(61,255,112,.14);outline:none}
   @media (prefers-reduced-motion:reduce){
     #tube{animation:none}
     .cursor::after{animation:none}
@@ -134,36 +131,18 @@
 "use strict";
 
 /* ------------------------------------------------------------------ */
-/*  news spool — brezvax, Wednesday April 11, 1984                     */
-/*  (data block: articles marked real:true are verbatim from the      */
-/*   archives; the rest are local fiction. see the help screen.)      */
+/*  news spool — brezvax, Tuesday May 1, 1984                          */
+/*  Every article is verbatim from the utzoo tape archive (Henry       */
+/*  Spencer's tapes, archive.org/details/usenet-net), with only the    */
+/*  Path: rewritten for brezvax's feed and stray artifacts dropped.    */
+/*  Only the machine is invented.                                      */
 /* ------------------------------------------------------------------ */
 
 const SITE  = "brezvax";
 const BNEWS = "version B 2.10.1 6/24/83";
 
-/* Articles marked real:true are verbatim from the utzoo tape archive
-   (Henry Spencer's tapes, archive.org/details/usenet-net), with only
-   the Path: rewritten for brezvax's feed and stray artifacts dropped.
-   The rest is local fiction; the help screen keeps the ledger. */
-
 const GROUPS = [
 { name:"net.general", desc:"*Important* and timely announcements", arts:[
-{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
-org:"brezvax, somewhere east of decvax",
-subj:"new site: brezvax", date:"Mon, 2-Apr-84 08:14:31 EST", id:"<101@brezvax.UUCP>",
-body:
-`Announcing brezvax (VAX-11/750, 4.2bsd), now on the net
-via decvax.  We take most net.* groups; volume willing,
-we'll keep them.
-
-Mail:  ...!decvax!brezvax!anna
-
-The name is from a farmstead in Vidzeme my family comes
-from.  Long story; buy me a coffee at Usenix and lose an
-afternoon.
-
-anna`},
 { real:true, from:"chernenko@kremvax.UUCP (K. Chernenko)", path:"brezvax!decvax!mcvax!moskvax!kremvax!chernenko",
 pv:"version B 2.10.1 4/1/83 (SU840401); site kremvax.UUCP",
 org:"MIIA, Moscow", groups:"net.general,eunet.general,net.politics,eunet.politics",
@@ -349,64 +328,7 @@ seem to ever expire their news....
 --
     Piet Beertema
     CWI (Center for Math. & Comp. Science), Amsterdam
-    ...{decvax,philabs}!mcvax!piet
-
-[archivist's note, 2026: five months after complaining about forged-
- looking headers arriving at mcvax, the author of this post forged
- kremvax.  see net.general.  the wire remembers.]`},
-{ from:"kls@decvax.UUCP (K. Larsen)", path:"brezvax!decvax!kls",
-org:"DEC, Merrimack NH",
-subj:"net volume: Imminent Death of the Net Predicted", date:"Fri, 27-Apr-84 11:40:02 EST", id:"<3117@decvax.UUCP>",
-body:
-`Ran the numbers on our spool.  The net is now some 900
-sites moving 225 articles a day -- roughly double last
-year, which was roughly double the year before.  Everyone
-who can multiply arrives at the same date and the same
-headline: IMMINENT DEATH OF THE NET PREDICTED.
-
-(The headline is older than the numbers.  It has been
-imminent since '83 at least.  It will be imminent for
-some time.)
-
-Add the disk: net.flame and net.politics together are
-pushing 40% of my spool by bytes, 90% by regret.
-
-Something has to give -- moderation, hierarchy reform,
-sites dropping groups, cleverer batching.  Or nothing
-gives, the phone bills get paid, and we all meet back
-here next year to predict it again.
-
-Film at 11.`},
-{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
-org:"brezvax, somewhere east of decvax",
-subj:"ghost on the wire: a TIP that still answers", date:"Mon, 30-Apr-84 23:54:09 EST", id:"<117@brezvax.UUCP>",
-wire:"tip arpa",
-body:
-`Late-night find.  Cleaning out /etc/remote on this vax I
-found an entry the previous owner left behind:
-
-  arpa:dv=/dev/cua0:br#300:pn=...
-
-The number has a Cambridge exchange.  I assumed dead
-metal -- the TIPs are all being retired, and what is
-left of that world has moved on to TACs, with logins
-and paperwork.  For science, I let it ring.
-
-It answered.  300 baud, hard carrier, and a herald with
-a date in it that I will not repeat here, because you
-will not believe me.  Whatever is on the other end has
-not been told the seventies ended.
-
-I am not brave enough to log in twice.  If you are:
-type "tip arpa" from a shell here on brezvax.  And mind
-the paper -- it prints.
-
-She who dials, finds.
-
-anna
---
-anna@brezvax.UUCP           ...!decvax!brezvax!anna
-"two blues, no waiting"`}
+    ...{decvax,philabs}!mcvax!piet`},
 ]},
 
 { name:"net.columbia", desc:"The space shuttle and the STS program", arts:[
@@ -485,170 +407,6 @@ body:
    oxygen (not to mention the cost of an external tank)?`}
 ]},
 
-{ name:"net.unix-wizards", desc:"Discussions, bugs, fixes on and for UNIX", arts:[
-{ from:"rob@sdcsvax.UUCP (Rob M.)", path:"brezvax!decvax!ucbvax!sdcsvax!rob",
-org:"UC San Diego",
-subj:"sendmail.cf considered a cry for help", date:"Tue, 24-Apr-84 23:18:56 PST", id:"<1490@sdcsvax.UUCP>",
-body:
-`Three days ago I opened sendmail.cf to change one
-rewriting rule.
-
-I have since learned the following:
-
-  1. $ means four different things.
-  2. Tabs are load-bearing.
-  3. There is a rule beginning R$+ that I believe
-     fires when it senses fear.
-
-The file has begun to read like scripture in a language
-I almost remember.  If anyone has a working config for a
-vax with one uucp link and no ambition, mail it.  I will
-name a variable after you.
-
-        rob     ...!sdcsvax!rob
-        "wizard" is a job title, not a mood`},
-{ from:"pat@ihnp4.UUCP (Pat D.)", path:"brezvax!decvax!ihnp4!pat",
-org:"AT&T Bell Laboratories",
-subj:"vi vs emacs: closing the quarterly flamewar", date:"Mon, 30-Apr-84 10:02:33 EST", id:"<5561@ihnp4.UUCP>",
-body:
-`As a public service, this quarter's summary, so that
-nobody has to post it again:
-
-  - vi fits in memory.  All of it.  Even yours.
-  - emacs will edit anything: text, mail, your login
-    shell, eventually your worldview.
-  - vi users think in verbs.  emacs users think in
-    chords.  Musicians are unemployable either way.
-  - both are better than ed.
-  - ed users: we know.  It is the one true editor.
-    Please put down the manual.
-
-This thread is now closed.
-
-(It is not.  It will never be.  See you in July.)`}
-]},
-
-{ name:"net.micro", desc:"Micro computers of all kinds", arts:[
-{ from:"gjf@dartvax.UUCP (G. Freeman)", path:"brezvax!decvax!dartvax!gjf",
-org:"Dartmouth College",
-subj:"Macintosh, week ten: a review from the trenches", date:"Thu, 5-Apr-84 19:22:10 EST", id:"<766@dartvax.UUCP>",
-body:
-`Verdict so far: it is the most delightful machine I
-have ever wanted to throw out a window.
-
-The good: MacPaint is witchcraft.  Show it to anyone
-and watch their face do the thing.
-
-The bad: 128K.  One drive.  Copying a disk is an
-aerobic activity -- insert, eject, insert, eject, the
-machine and I taking turns asking each other for disks
-like a couple who cannot remember who has the keys.
-
-Also there are no arrow keys.  On purpose.  Cupertino
-says use the mouse.  My wrists have filed a protest.
-
-Rumor says a 512K model is coming.  Rumor had better
-be right.`},
-{ from:"liz@allegra.UUCP (Liz P.)", path:"brezvax!decvax!ihnp4!allegra!liz",
-org:"AT&T Bell Laboratories", refs:"<766@dartvax.UUCP>",
-subj:"Re: Macintosh, week ten", date:"Fri, 6-Apr-84 12:48:37 EST", id:"<2291@allegra.UUCP>",
-body:
-`In article <766@dartvax.UUCP> gjf@dartvax writes:
-> it is the most delightful machine I have ever
-> wanted to throw out a window.
-
-You are reviewing the wrong thing.  The 128K is a demo.
-What is being demonstrated is that a computer can meet
-you more than halfway -- and once people have seen
-that, there is no walking it back.
-
-In five years every machine will work this way, and
-everyone flaming the Mac today will explain that they
-always knew.  Save your posts.  I am saving mine.`}
-]},
-
-{ name:"net.nlang", desc:"Natural languages, cultures, heritages", arts:[
-{ from:"mira@ucbvax.ARPA (Mira S.)", path:"brezvax!decvax!ucbvax!mira",
-org:"UC Berkeley",
-subj:"Russian 'blue': one basic term or two?", date:"Sat, 7-Apr-84 14:26:08 PST", id:"<2214@ucbvax.ARPA>",
-body:
-`I have been working through Berlin & Kay's "Basic Color
-Terms" (1969) and hit the famous claim: Russian may have
-TWELVE basic terms rather than eleven, because it splits
-blue into "sinij" (dark blue) and "goluboj" (light
-blue).  (Apologies for the transliteration -- my
-terminal speaks ASCII and nothing else.)
-
-Question for native speakers on the net: is goluboj
-REALLY basic?  English has "navy" and "sky blue," but
-nobody thinks those are basic terms -- they are plainly
-kinds of blue.  Does goluboj feel like a kind of sinij,
-or are the two as separate as red and pink?
-
-If they are truly separate, the interesting question is
-what that does to perception, if anything.  Whorf is out
-of fashion, but the blues look like a clean test case.
-
-mira`},
-{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
-org:"brezvax, somewhere east of decvax", refs:"<2214@ucbvax.ARPA>",
-subj:"Re: Russian 'blue': one basic term or two?", date:"Sun, 8-Apr-84 21:44:12 EST", id:"<108@brezvax.UUCP>",
-body:
-`In article <2214@ucbvax.ARPA> mira@ucbvax writes:
-> Does goluboj feel like a kind of sinij, or are the
-> two as separate as red and pink?
-
-Separate.  Red and pink is exactly the right analogy.
-
-Try this test: the neutral, unmarked way to describe a
-clear daytime sky is "goluboe nebo."  Call the same sky
-"sinee" and you have not said something slightly odd --
-you have said something DIFFERENT (a deep evening blue,
-a storm coming, a poem happening).
-
-No speaker stops to compute "light blue."  Goluboj is
-not built out of sinij any more than pink is built out
-of red in your head.
-
-And you cannot escape the choice.  There is no neutral
-superordinate "blue" to retreat to when buying paint.
-The lexicon makes you commit.
-
-Whether the stopwatch would notice, I do not know.  But
-the dictionary already has.
-
-anna
---
-anna@brezvax.UUCP           ...!decvax!brezvax!anna
-"two blues, no waiting"`},
-{ from:"dl@sdcsvax.UUCP (D. Lindqvist)", path:"brezvax!decvax!ucbvax!sdcsvax!dl",
-org:"UC San Diego, Dept. of Psychology", refs:"<108@brezvax.UUCP>",
-subj:"Re: Russian 'blue' (an experiment, free to a good lab)", date:"Tue, 10-Apr-84 09:31:50 PST", id:"<1502@sdcsvax.UUCP>",
-body:
-`In article <108@brezvax.UUCP> anna@brezvax writes:
-> Whether the stopwatch would notice, I do not know.
-
-Someone should ask it.  Proposal, free to a good lab:
-
-Take color chips spanning the blue region.  Show a
-target, then two chips; the subject says which chip
-matches, and you time them.  Prediction: Russian
-speakers get a speed edge exactly when the two chips
-straddle the sinij/goluboj line, and nowhere else.
-English speakers show nothing, having nothing to show.
-
-If the lexicon carves the spectrum, the reaction times
-should have a seam in them right at the boundary.
-
-All it takes is a tachistoscope, some Munsell chips,
-and a department that will not ask why.  In twenty
-years or so somebody will run this and act surprised.
-
-(See also Kay & McDaniel 1978 if your library has it.)
-
-                                        -- dl`}
-]},
-
 { name:"net.jokes", desc:"Jokes and the like. May be somewhat offensive", arts:[
 { real:true, from:"ken@ihuxq.UUCP (ken perlow)", path:"brezvax!decvax!ihnp4!ihuxq!ken",
 pv:"version B 2.10.1 exptools 1/6/84; site ihuxq.UUCP",
@@ -700,57 +458,9 @@ body:
 `I would like a copy of the complete "Hitchhiker's Guide to the Net".
 I can't seem to mail to sf-lovers-request@rutgers, as was suggested, nor
 do I know anything about FTP or ARPANET. Thanx.
-	{Bell labs}!charm!mam
-
-[archivist's note, 2026: look at that Path: header.  eight
- machines named mhux-something, all inside Bell Labs, before
- the message ever saw daylight.  the eighties were a maze.]`}
+	{Bell labs}!charm!mam`}
 ]},
 
-{ name:"net.sf-lovers", desc:"Science fiction lovers' newsgroup", arts:[
-{ from:"ed@sri-unix.UUCP (Ed R.)", path:"brezvax!decvax!ucbvax!sri-unix!ed",
-org:"SRI International",
-subj:"it is now 1984.  scorecard.", date:"Wed, 4-Apr-84 18:20:15 PST", id:"<2740@sri-unix.UUCP>",
-body:
-`We are a third of the way through the year of the
-book, so: an honest audit.
-
-  Telescreens: not yet.  Though I typed my thoughts
-  into a machine all day and it kept a log, so call
-  it partial credit.
-
-  Newspeak: nothing so tidy.  We grew marketing-speak
-  instead, which does not shrink the dictionary, just
-  bruises it.
-
-  Memory hole: still manual.  You have to grep for
-  things yourself and burn them one at a time.
-
-  Two Minutes Hate: replaced by net.flame, which runs
-  considerably longer.
-
-Overall: Orwell 4/10 on hardware, 8/10 on mood.  Big
-Brother is not watching; he is cross-posting.`},
-{ from:"ky@hplabs.UUCP (K. Yee)", path:"brezvax!decvax!ucbvax!hplabs!ky",
-org:"HP Labs, Palo Alto",
-subj:"Star Trek III opens in June -- spoiler rules", date:"Tue, 24-Apr-84 20:03:41 PST", id:"<1861@hplabs.UUCP>",
-body:
-`House rules, proposed, before the flames start:
-
-1. NO plot details in Subject: lines.  People read
-   spool directories, you monsters.
-
-2. Anything real goes through rot13.  If your reader
-   cannot rotate, that is what the X key is for.
-
-3. Speculation is fair game.  We all saw how II
-   ended.  We all have theories.  (Mine follows,
-   encrypted, so nobody yells at me.)
-
-   Zl gurbel: Fcbpx yvirf.
-
-That is all.  June cannot come fast enough.`}
-]}
 ];
 
 /* ------------------------------------------------------------------ */
@@ -815,17 +525,6 @@ function rowSpan(text, cls, onTap){
     s.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); onTap(); }});
     el.appendChild(s);
   };
-}
-
-/* a tappable span hidden inside article text */
-function wire(el, marker, onTap, label){
-  el.querySelectorAll("span._w").forEach(s=>{
-    s.className = "wire"; s.tabIndex = 0;
-    s.setAttribute("role","link");
-    s.setAttribute("aria-label", label || "hidden connection");
-    s.addEventListener("click", onTap);
-    s.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); onTap(); }});
-  });
 }
 
 /* ------------------------- screens ------------------------------- */
@@ -899,14 +598,7 @@ function showArticle(){
   if(a.org) lines.push('<span class="hdr">'+esc("Organization: "+a.org)+"</span>");
   lines.push('<span class="hdr">'+esc("Lines: "+nlines)+"</span>");
   lines.push("");
-  body.split("\n").forEach(l=>{
-    if(!rotOn && a.wire && l.includes(a.wire)){
-      const html = esc(l).replace(esc(a.wire), '<span class="_w">'+esc(a.wire)+'</span>');
-      lines.push(el=>{ el.innerHTML = html; wire(el, a.wire, dialArpanet, "place the call"); });
-    } else {
-      lines.push(esc(l));
-    }
-  });
+  body.split("\n").forEach(l=>lines.push(esc(l)));
   lines.push("");
   lines.push('<span class="dim">-- end of article '+(ai+1)+" --</span>");
   paint(lines, ()=>{ screen.scrollTop = 0; });
@@ -947,18 +639,20 @@ function showHelp(){
 "       `    terminal set-up screen",
 "",
 "Everything is also tappable, because it is not actually",
-"1984, whatever the phosphor says.",
+"1984, whatever the phosphor says.  The shell that q drops",
+"you into works.  Read the message of the day.",
 "",
 '<span class="hdr">WHAT IS REAL HERE</span>',
 "",
-"Most of the spool.  These arrived on real wires in April",
-"1984 and are reprinted verbatim from the utzoo tapes",
-"(Henry Spencer's archive, via archive.org/details/",
-"usenet-net), with only the Path: rewritten for brezvax's",
-"feed: the kremvax hoax of April 1 and all four replies,",
-"Piet Beertema's EXPIRED-news post (he forged kremvax five",
-"months later; the wire remembers), every net.columbia",
-"article, and every net.jokes article.",
+"Every article in the spool.  All of them arrived on real",
+"wires in April 1984 and are reprinted verbatim from the",
+"utzoo tapes (Henry Spencer's archive, via archive.org/",
+"details/usenet-net), with only the Path: rewritten for",
+"brezvax's feed: the kremvax hoax of April 1 and four of",
+"its replies, Piet Beertema's EXPIRED-news post (he forged",
+"kremvax five months later; the wire remembers), every",
+"net.columbia article on the Solar Max repair flight, and",
+"every net.jokes article.",
 "",
 "Also real: the net.* groups and their descriptions (this",
 "is before the Great Renaming of 1987), B news 2.10.1 and",
@@ -969,14 +663,10 @@ function showHelp(){
 "",
 '<span class="hdr">WHAT IS INVENTED</span>',
 "",
-"The site brezvax and its people: anna's announcement, the",
-"ghost-TIP letter in net.news, the net volume post, the",
-"Russian-blues thread, the sendmail and vi-vs-emacs posts,",
-"the Macintosh review and its reply, and both net.sf-lovers",
-"articles.  Invented, but period-checked: the 512K Mac",
-"rumor, for one, comes true in September.  (Brezvax's",
-"namesake farmstead in Vidzeme is quite real, and older",
-"than the telegraph.)",
+"Only the machine you are reading them on: brezvax, its",
+"login, its shell, and the number in its /etc/remote that",
+"should not answer anymore.  (Brezvax's namesake farmstead",
+"in Vidzeme is quite real, and older than the telegraph.)",
 "",
 "The archived articles are quoted with love and for",
 "history; their words belong to their authors.",
@@ -1045,9 +735,55 @@ rowSpan("        REPAINT         [ "+BAUDS[bi].name+" ]", null, ()=>{ bi=(bi+1)%
 }
 
 /* ------------------------- shell & the wire down ------------------ */
+/* q drops you to a real (almost) shell.  the motd told you the word. */
+
+let shellBuf = "";
+let shellLine = null;
 
 function quitToShell(){
   mode = "shell";
+  shellBuf = "";
+  paint([
+    '<span class="dim">readnews: exiting -- .newsrc updated</span>',
+    "",
+    el=>{ shellLine = document.createElement("span"); el.appendChild(shellLine); renderShell(); }
+  ]);
+  setStatus("brezvax sh -- the motd mentioned a number");
+  setKeys([
+    ["$ readnews", ()=>{ if(mode==="shell") showGroups(); }],
+    ["$ tip arpa", ()=>{ if(mode==="shell") dialArpanet(); }],
+    ["$ logout",   ()=>{ if(mode==="shell") shellLogout(); }]
+  ]);
+}
+function renderShell(){
+  if(shellLine) shellLine.innerHTML = "$ " + esc(shellBuf) + '<span class="cursor"></span>';
+}
+function shellExec(){
+  const cmd = shellBuf.trim().toLowerCase();
+  if(shellLine) shellLine.innerHTML = "$ " + esc(shellBuf);   // freeze the typed line
+  shellBuf = "";
+  if(cmd === "tip arpa"){ dialArpanet(); return; }
+  if(cmd === "readnews" || cmd === "news"){ showGroups(); return; }
+  if(cmd === "logout" || cmd === "exit"){ shellLogout(); return; }
+  if(cmd === "tip" || cmd.startsWith("tip ")){
+    shellSay("usage: tip system-name   (only one system in /etc/remote)");
+  } else if(cmd !== ""){
+    shellSay(cmd.split(/\s+/)[0] + ": not found");
+  }
+  const d = document.createElement("div");
+  shellLine = document.createElement("span");
+  d.appendChild(shellLine);
+  screen.appendChild(d);
+  renderShell();
+  screen.scrollTop = screen.scrollHeight;
+}
+function shellSay(t){
+  const d = document.createElement("div");
+  d.textContent = t;
+  screen.appendChild(d);
+}
+function shellLogout(){
+  mode = "dead";
   paint([
     "",
     esc("$ logout"),
@@ -1102,16 +838,17 @@ function boot(){
     ["",                                                         200],
     ["4.2 BSD UNIX (brezvax)",                                   350],
     ["",                                                         250],
-    ["login: ",                                                  120, "anna"],
+    ["login: ",                                                  120, "guest"],
     ["Password:",                                                160, "......", true],
     ["",                                                         220],
     ["Last login: Mon Apr 30 22:41:07 on tty02",                 120],
     ["4.2 BSD UNIX #12: Fri Mar 30 18:02:11 EST 1984",           140],
     ["",                                                         160],
     ["Would the person leaving 300-baud sessions parked on",     90],
-    ["the dialin PLEASE hang up when done.        -- root",      90],
-    ["",                                                         140],
-    ["You have new mail.",                                       180],
+    ["the dialin PLEASE hang up when done.  Also: the old",      90],
+    ["arpanet dialout is STILL in /etc/remote (\"tip arpa\").",  90],
+    ["It should not answer anymore.  It answers.  Leave it",     90],
+    ["alone.                                       -- root",     90],
     ["",                                                         160],
     ["$ ",                                                       200, "readnews"],
     ["",                                                         400]
@@ -1144,6 +881,12 @@ document.addEventListener("keydown", e=>{
   if(e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key.toLowerCase();
   if(mode === "dial" || mode === "boot") return;
+  if(mode === "shell"){
+    if(e.key === "Enter"){ e.preventDefault(); shellExec(); }
+    else if(e.key === "Backspace"){ e.preventDefault(); shellBuf = shellBuf.slice(0,-1); renderShell(); }
+    else if(e.key.length === 1){ e.preventDefault(); shellBuf += e.key; renderShell(); }
+    return;
+  }
   if(k === "`"){ if(mode==="setup"){ showGroups(); } else showSetup(); return; }
   if(mode === "setup"){ if(k==="escape") showGroups(); return; }
   if(mode === "help"){ backFromHelp(); return; }
@@ -1164,7 +907,7 @@ document.addEventListener("keydown", e=>{
     if(k === "g") showGroups();
     if(k === "x") toggleRot();
     if(k === " "){ e.preventDefault(); screen.scrollBy({top: screen.clientHeight*0.85, behavior:"smooth"}); }
-  } else if(mode === "shell" && k === "enter"){
+  } else if(mode === "dead" && k === "enter"){
     boot();
   }
 });

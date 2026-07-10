@@ -620,7 +620,7 @@ return ` BBN-TENEXB  ${date77()} ${time77()}  UP 101:17:44
    3  DET   MAILER   VITTAL     LOCAL
   12    6   LISP     HEWITT     NET: MIT-AI
   15   31   FTP      MCKENZIE   LOCAL
-  17   41   EXEC     ANNA       NET: TIP(5)  <- YOU
+  17   41   EXEC     GUEST      NET: TIP(5)  <- YOU
 `;
 }
 
@@ -675,7 +675,7 @@ function logout(){
   const used = "0:"+(3+Math.floor(Math.random()*5))+":"+secs;
   const inDur = "1:"+(22+Math.floor(Math.random()*30))+":"+secs;
   println("");
-  println("KILLED JOB 17, USER ANNA, ACCOUNT 341, TTY 41,");
+  println("KILLED JOB 17, USER GUEST, ACCOUNT 341, TTY 41,");
   println(" AT "+date77()+" "+time77()+", USED "+used+" IN "+inDur);
   println("");
   println("CONNECTION CLOSED BY FOREIGN HOST.");
@@ -948,7 +948,7 @@ function intro(){
   println("");
   println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54");
   println("");
-  print("@LOGIN ANNA\n","usr");
+  print("@LOGIN GUEST\n","usr");
   println(" PASSWORD:");
   println("");
   println(" JOB 17 ON LINE 41  "+date77()+" "+time77());
