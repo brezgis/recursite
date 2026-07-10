@@ -1,0 +1,967 @@
+<!doctype html>
+<!-- you dialed a number that should have been disconnected years ago. it answered. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BBN TIP — TTY 41 — 1977</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f2e9d3'/%3E%3Ccircle cx='3' cy='4' r='1.3' fill='%23241f19'/%3E%3Ccircle cx='3' cy='9' r='1.3' fill='%23241f19'/%3E%3Ccircle cx='3' cy='14' r='1.3' fill='%23241f19'/%3E%3Crect x='6' y='5' width='8' height='1.6' fill='%2333302a'/%3E%3Crect x='6' y='9' width='6' height='1.6' fill='%2333302a'/%3E%3C/svg%3E">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#241f19}
+  body{
+    min-height:100%;
+    background:
+      radial-gradient(900px 500px at 50% -5%, #322b22 0%, #241f19 65%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 2px, transparent 2px 6px);
+    font-family:"SFMono-Regular",Menlo,Consolas,"Liberation Mono","Courier New",monospace;
+    display:flex;flex-direction:column;align-items:center;
+    padding-bottom:120px;
+  }
+  /* --- console strip -------------------------------------------- */
+  .console{
+    position:sticky;top:0;z-index:20;
+    width:min(720px,100%);
+    background:linear-gradient(180deg,#4c4840,#37342d);
+    border-bottom:3px solid #211e19;
+    box-shadow:0 6px 18px rgba(0,0,0,.5);
+    padding:8px 12px 10px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+  }
+  .plate{
+    font-size:10px;letter-spacing:.16em;color:#cfc8b6;
+    border:1px solid #6a6355;background:#2c2923;border-radius:2px;padding:3px 8px;
+    text-shadow:0 1px 0 #000;
+  }
+  .switches{display:flex;gap:6px;flex-wrap:wrap}
+  .sw{
+    font:inherit;font-size:10px;letter-spacing:.12em;
+    color:#e8e1cf;background:linear-gradient(180deg,#5a554a,#3b3830);
+    border:1px solid #23211c;border-radius:3px;padding:6px 9px;cursor:pointer;
+  }
+  .sw[aria-pressed="true"]{background:linear-gradient(180deg,#7c6b3c,#5b4e2c);border-color:#191712}
+  .sw:focus-visible{outline:2px solid #d8c98a;outline-offset:2px}
+  /* --- quick command card --------------------------------------- */
+  .card{
+    width:min(680px,94%);
+    margin:14px 0 4px;
+    background:#f7f1de;
+    color:#3a362c;
+    border-radius:2px;
+    box-shadow:0 3px 10px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.15);
+    padding:10px 12px;
+    transform:rotate(-.5deg);
+    position:relative;
+    font-size:11px;
+  }
+  .card::before{
+    content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(1.5deg);
+    width:74px;height:16px;background:rgba(214,200,160,.75);
+    box-shadow:0 1px 2px rgba(0,0,0,.25);
+  }
+  .card b{letter-spacing:.12em;font-size:10px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .chip{
+    font:inherit;font-size:11px;letter-spacing:.06em;
+    background:#efe6cc;border:1px solid #b7ac8e;border-radius:2px;
+    color:#3a362c;padding:5px 9px;cursor:pointer;
+  }
+  .chip:hover{background:#e6dabb}
+  .chip:focus-visible{outline:2px solid #7c6b3c;outline-offset:1px}
+  /* --- paper ------------------------------------------------------ */
+  .paperwrap{
+    width:min(720px,100%);
+    display:flex;justify-content:center;
+    margin-top:10px;
+  }
+  .paper{
+    position:relative;
+    width:100%;
+    background:#f2e9d3;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(120,105,75,.05) 0 1px, transparent 1px 26px),
+      radial-gradient(100% 60px at 50% 0%, rgba(0,0,0,.06), transparent 70%);
+    box-shadow:0 10px 30px rgba(0,0,0,.55);
+    padding:26px 44px 60px;
+    min-height:60vh;
+    color:#33302a;
+    font-size:clamp(10.5px,2.7vw,14.5px);
+    line-height:1.6;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  /* sprocket hole strips */
+  .paper::before,.paper::after{
+    content:"";position:absolute;top:0;bottom:0;width:26px;
+    background-color:#eadfc5;
+    background-image:radial-gradient(circle at 13px 13px, #241f19 4.5px, #38312622 5.5px, transparent 6.5px);
+    background-size:26px 26px;
+    background-repeat:repeat-y;
+  }
+  .paper::before{left:0;border-right:1px dashed rgba(90,80,60,.5)}
+  .paper::after{right:0;border-left:1px dashed rgba(90,80,60,.5)}
+  .paper .ch{display:inline-block;white-space:pre}
+  .paper .ch.usr{color:#1f2c52}   /* blue-black ribbon: the operator's own keystrokes */
+  .head{
+    display:inline-block;width:.62em;
+    animation:hblink 1s steps(1) infinite;
+    background:#33302a;height:1em;vertical-align:-0.12em;
+  }
+  @keyframes hblink{50%{opacity:0}}
+  @media (prefers-reduced-motion:reduce){ .head{animation:none} }
+  .tear{
+    letter-spacing:.3em;color:#8a7f66;
+  }
+  /* --- keyboard row ---------------------------------------------- */
+  .kbrow{
+    position:fixed;left:0;right:0;bottom:0;z-index:30;
+    display:flex;justify-content:center;
+    background:linear-gradient(180deg,#37342d,#26231e);
+    border-top:3px solid #4c4840;
+    box-shadow:0 -8px 20px rgba(0,0,0,.5);
+    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  .kbinner{width:min(700px,100%);display:flex;gap:8px;align-items:center}
+  .kbinner label{font-size:10px;letter-spacing:.14em;color:#b7ae99;white-space:nowrap}
+  #kb{
+    flex:1;min-width:0;
+    font:inherit;font-size:14px;letter-spacing:.08em;
+    text-transform:uppercase;
+    background:#151310;color:#e8e1cf;
+    border:1px solid #57523f;border-radius:3px;
+    padding:9px 10px;
+  }
+  #kb:focus{outline:2px solid #d8c98a;outline-offset:1px}
+  #sendBtn{
+    font:inherit;font-size:11px;letter-spacing:.14em;
+    background:linear-gradient(180deg,#7c6b3c,#5b4e2c);
+    color:#f4ecd6;border:1px solid #23211c;border-radius:3px;
+    padding:9px 14px;cursor:pointer;
+  }
+  #sendBtn:disabled{opacity:.45;cursor:default}
+</style>
+</head>
+<body>
+
+<div class="console" role="toolbar" aria-label="Teletype controls">
+  <span class="plate">TELETYPE MODEL 33 ASR &middot; TTY 41 &middot; BBN TIP</span>
+  <div class="switches">
+    <button class="sw" id="sndBtn" aria-pressed="false">SOUND OFF</button>
+    <button class="sw" id="spdBtn" aria-pressed="false">SPEED: BRISK</button>
+    <button class="sw" id="advBtn">PAPER ADVANCE</button>
+  </div>
+</div>
+
+<div class="card" aria-label="Quick command card">
+  <b>OPERATOR'S CARD &mdash; COMMANDS THIS HOST UNDERSTANDS</b>
+  <div class="chips" id="chips"></div>
+</div>
+
+<div class="paperwrap">
+  <div id="paper" class="paper" aria-live="polite"></div>
+</div>
+
+<div class="kbrow">
+  <div class="kbinner">
+    <label for="kb">KEYBOARD &#8669;</label>
+    <input id="kb" autocomplete="off" autocapitalize="characters" spellcheck="false"
+           placeholder="TYPE A COMMAND, THEN SEND">
+    <button id="sendBtn">SEND</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =================================================================
+   PRINTER
+   ================================================================= */
+const paper   = document.getElementById("paper");
+const kb      = document.getElementById("kb");
+const sendBtn = document.getElementById("sendBtn");
+
+let cps = 42;                 // characters per second (BRISK)
+let soundOn = false;
+let audio = null;
+
+let queue = [];               // items: {text, cls}
+let printing = false;
+let curLine = null;
+let head = null;
+
+function ensureLine(cls){
+  if(!curLine){
+    curLine = document.createElement("div");
+    if(cls) curLine.className = cls;
+    if(head && head.parentNode === paper) paper.insertBefore(curLine, head);
+    else paper.appendChild(curLine);   // head may be parked inside a line mid-print
+  }
+}
+function makeHead(){
+  head = document.createElement("span");
+  head.className = "head";
+  paper.appendChild(head);
+}
+makeHead();
+
+function jitterSpan(c, cls){
+  const s = document.createElement("span");
+  s.className = cls ? "ch "+cls : "ch";
+  s.textContent = c;
+  const dy = (Math.random()*1.1 - 0.55).toFixed(2);
+  const rot = (Math.random()*1.2 - 0.6).toFixed(2);
+  const op  = (0.72 + Math.random()*0.26).toFixed(2);
+  s.style.transform = "translateY("+dy+"px) rotate("+rot+"deg)";
+  s.style.opacity = op;
+  if(Math.random() < 0.05) s.style.textShadow = "0.4px 0 currentColor"; // heavy strike
+  return s;
+}
+
+function scrollDown(){
+  window.scrollTo({top: document.body.scrollHeight, behavior:"auto"});
+}
+
+function stepPrint(){
+  if(queue.length === 0){ printing = false; setBusy(false); return; }
+  printing = true; setBusy(true);
+  const item = queue[0];
+  if(item.text.length === 0){ queue.shift(); stepPrint(); return; }
+  const c = item.text[0];
+  item.text = item.text.slice(1);
+  if(item.text.length === 0) queue.shift();
+
+  if(c === "\n"){
+    ensureLine(item.cls);
+    if(curLine.childNodes.length === 0) curLine.innerHTML = "&nbsp;";
+    curLine = null;
+    clack(true);
+    scrollDown();
+  } else {
+    ensureLine(item.cls);
+    curLine.appendChild(jitterSpan(c, item.cls));
+    if(c !== " ") clack(false);
+  }
+  head.remove(); paper.appendChild(head);
+  if(curLine) curLine.appendChild(head);
+  setTimeout(stepPrint, 1000/cps * (c==="\n" ? 3.2 : 1));
+}
+
+function print(text, cls){
+  queue.push({text:String(text), cls:cls||""});
+  if(!printing) stepPrint();
+}
+function println(text, cls){ print((text||"")+"\n", cls); }
+
+function flush(){
+  // dump the whole queue instantly
+  while(queue.length){
+    const item = queue.shift();
+    for(const c of item.text){
+      if(c === "\n"){
+        ensureLine(item.cls);
+        if(curLine.childNodes.length === 0) curLine.innerHTML = "&nbsp;";
+        curLine = null;
+      } else {
+        ensureLine(item.cls);
+        curLine.appendChild(jitterSpan(c, item.cls));
+      }
+    }
+  }
+  head.remove();
+  if(curLine) curLine.appendChild(head); else paper.appendChild(head);
+  printing = false; setBusy(false);
+  scrollDown();
+}
+
+function setBusy(b){
+  sendBtn.disabled = b;
+}
+
+/* =================================================================
+   SOUND — tiny synthesized teletype
+   ================================================================= */
+function initAudio(){
+  if(audio) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  audio = new AC();
+}
+function clack(isReturn){
+  if(!soundOn || !audio) return;
+  const t = audio.currentTime;
+  const dur = isReturn ? 0.05 : 0.014;
+  const buf = audio.createBuffer(1, audio.sampleRate*dur, audio.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+  const src = audio.createBufferSource(); src.buffer = buf;
+  const bp = audio.createBiquadFilter();
+  bp.type = "bandpass"; bp.frequency.value = isReturn ? 420 : 2100; bp.Q.value = 1.4;
+  const g = audio.createGain(); g.gain.value = isReturn ? 0.35 : 0.16;
+  src.connect(bp).connect(g).connect(audio.destination);
+  src.start(t);
+}
+function dingBell(){
+  if(!soundOn || !audio) return;
+  const t = audio.currentTime;
+  const o = audio.createOscillator();
+  o.type = "triangle"; o.frequency.setValueAtTime(1975, t);
+  const g = audio.createGain();
+  g.gain.setValueAtTime(0.32, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+0.6);
+  o.connect(g).connect(audio.destination);
+  o.start(t); o.stop(t+0.62);
+}
+
+/* =================================================================
+   1977 CLOCK — today's real date, fifty years upstream
+   ================================================================= */
+const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function date77(){
+  const n = new Date();
+  return n.getDate()+"-"+MON[n.getMonth()]+"-77";
+}
+function time77(){
+  const n = new Date();
+  return String(n.getHours()).padStart(2,"0") + ":" +
+         String(n.getMinutes()).padStart(2,"0") + ":" +
+         String(n.getSeconds()).padStart(2,"0");
+}
+function prev77(){
+  const n = new Date(Date.now() - 86400000);
+  return n.getDate()+"-"+MON[n.getMonth()]+"-77";
+}
+
+/* =================================================================
+   EXEC — command handling
+   ================================================================= */
+let mode = "exec";     // exec | advent | dead
+
+const HELP_TEXT =
+`COMMANDS THIS EXEC ADMITS TO:
+
+  SYSTAT   WHO IS ON, AND WHAT THEY CLAIM TO BE DOING
+  HOSTS    EXCERPT OF THE NETWORK HOST TABLE
+  MAP      THE NETWORK, DRAWN IN INK AND HOPE
+  MAIL     READ YOUR MESSAGES (YOU HAVE SOME)
+  RFC      INDEX OF SELECTED RFCS; RFC <N> FOR A NOTE
+  DAYTIME  THE HOST'S OPINION OF THE TIME
+  ADVENT   A GAME.  YOU HAVE BEEN WARNED.
+  BELL     RINGS THE BELL.  THAT IS ALL IT DOES.
+  LORE     NOTES FROM THE OPERATOR, RE: THIS SIMULATION
+  LOGOUT   KILL THE JOB AND TEAR OFF THE PAPER
+`;
+
+const HOSTS_TEXT =
+` ADDR   HOST NAME     SYSTEM    MACHINE
+ ----   ---------     ------    -------
+  1/1   UCLA-CCN      OS-MVT    IBM 360/91
+  0/51  SRI-KA        TENEX     PDP-10
+  0/11  SU-AI         WAITS     PDP-10
+  0/6   MIT-MULTICS   MULTICS   H6180
+  2/6   MIT-AI        ITS       PDP-10
+  3/6   MIT-ML        ITS       PDP-10
+  1/6   MIT-DMS       ITS       PDP-10
+  1/14  CMU-10A       TOPS-10   PDP-10
+  0/14  CMU-10B       TOPS-10   PDP-10
+  1/22  USC-ISI       TENEX     PDP-10
+  3/52  USC-ISIB      TENEX     PDP-10
+  0/7   RAND-RCC      OS-MVT    IBM 370/158
+  3/7   RAND-UNIX     UNIX      PDP-11
+  0/16  AMES-67       TSS/360   IBM 360/67
+  0/9   HARV-10       TOPS-10   PDP-10
+  0/10  LL            VM-370    IBM 370/168
+  0/32  PARC-MAXC     TENEX     PDP-10
+  0/31  CCA-TENEX     TENEX     PDP-10
+  0/42  LONDON        OS-MVT    IBM 370
+  0/49  BBN-TENEXB    TENEX     PDP-10  <- YOU
+
+ (EXCERPT.  ADDRESSES ARE HOST/IMP.  THE FULL
+ TABLE IS HOSTS.TXT, KEPT BY THE NIC AT SRI --
+ WHEN IT CHANGES, EVERY SCRIPT ON THE NETWORK
+ BREAKS AT ONCE, DEMOCRATICALLY.  THE MACHINES
+ ABOVE ARE REAL, PER THE NIC'S OWN RECORDS.)
+`;
+
+const MAP_TEXT =
+`ARPANET, MID-1977 -- OPERATOR'S SKETCH
+
+          ~ ~ SATELLITE CIRCUITS ~ ~
+ (HAWAII/CINCPAC)~~~.      .~~(NORSAR)--(LONDON)
+                    |      |
+ == WEST ===========|======|=========== EAST ==
+                    |      |
+ SRI --- SU-AI --- UTAH    '--- MIT-AI/ML/DMS
+  |        |         |          MIT-MULTICS
+ PARC --- AMES ---- GWC             |
+  |        |         |     BBN  <- YOU ARE HERE
+ UCLA --- RAND --- WPAFB --- LL --- HARV --- CCA
+  |        |
+ USC-ISI  NOSC     PENTAGON -- NBS -- MITRE
+                   RADC -- RUTGERS -- DEC
+
+ 111 HOSTS ON SOME 60 IMPS AND TIPS, COAST TO
+ COAST AND OVER TWO OCEANS.
+
+ (PLACES REAL, WIRING SIMPLIFIED: THE TRUE
+ MARCH 1977 LOGICAL MAP IS A LEGEND FOLDED IN
+ EIGHT, AND YOUR TELETYPE IS ONLY 72 COLUMNS
+ WIDE.)
+`;
+
+function mailText(){
+return `YOU HAVE 3 MESSAGES.
+
+---- MSG 1 ----  ${date77()}
+FROM: STEFFERUD (MSGGROUP) AT USC-ISI
+SUBJ: MSGGROUP# RFC 724 -- COMMENTS BY 15 JUNE
+
+FORWARDED TO THE LIST, AS EVER, BY HAND.
+
+CROCKER, VITTAL, POGRAN AND HENDERSON HAVE
+PROPOSED AN OFFICIAL STANDARD FOR THE FORMAT OF
+NETWORK MESSAGES (RFC 724, 12 MAY).  COMMENTS
+ARE REQUESTED BY 15 JUNE; OFFICIAL ADOPTION IS
+PLANNED FOR 1 SEPTEMBER.
+
+THE LIST SO FAR OBJECTS THAT (1) THE NEW HEADERS
+RUN LONGER THAN MORTAL TERMINALS, AND (2) NOBODY
+AGREES WHETHER "FROM" NAMES A PERSON OR A
+MAILBOX, WHICH IS TO SAY WHAT A MESSAGE IS.
+
+THE COMMITTEE HAS NOW EXCHANGED SOME HUNDREDS OF
+MESSAGES ABOUT THE FORMAT OF MESSAGES.  THE
+IRONY HAS BEEN NOTED, MINUTED, AND FILED.
+REPLIES GO TO EVERYONE, AS IS TRADITION.
+
+---- MSG 2 ----  ${date77()}
+FROM: KOVACS AT SU-AI
+SUBJ: THE GAME IS STILL LOOSE
+
+STATUS REPORT, AS IF YOU NEEDED ONE.  THE CAVE
+GAME THAT SWEPT THE NET THIS SPRING IS STILL
+CLAIMING CASUALTIES.  CROWTHER WROTE IT AT BBN
+AND LEFT IT ON A 10; WOODS FOUND IT AND FINISHED
+IT HERE THIS SPRING.  (TO ASK PERMISSION HE
+MAILED CROWTHER AT EVERY HOST ON THE NETWORK.
+IT WORKED.  THE NETWORK WORKS.)
+
+MANAGEMENT ESTIMATES THE INDUSTRY IS RUNNING TWO
+WEEKS BEHIND ON ACCOUNT OF IT.  QUESTIONS GO TO
+DON @ SU-AI; IT SAYS SO IN THE GAME ITSELF.
+
+TYPE ADVENT.  TELL YOUR ADVISOR NOTHING.
+
+---- MSG 3 ----  ${date77()}
+FROM: NIC AT SRI-KL
+SUBJ: HOSTS.TXT UPDATED
+
+THREE HOSTS RENAMED, ONE RETIRED, ONE RESURRECTED.
+ALL YOUR SCRIPTS ARE NOW WRONG.  THE NIC REGRETS,
+AS THE NIC SO OFTEN MUST.
+
+---- END OF MESSAGES ----
+`;
+}
+
+const RFC_INDEX =
+`RFC INDEX (EXCERPT, HAND-PICKED)
+
+  114  A FILE TRANSFER PROTOCOL              APR 71
+  439  PARRY ENCOUNTERS THE DOCTOR           JAN 73
+  527  ARPAWOCKY                             JUN 73
+  675  SPECIFICATION OF INTERNET TRANS-
+       MISSION CONTROL PROGRAM (TCP)         DEC 74
+  706  ON THE JUNK MAIL PROBLEM              NOV 75
+  724  PROPOSED STANDARD FOR THE FORMAT
+       OF ARPA NETWORK MESSAGES              MAY 77
+
+TYPE RFC <NUMBER> FOR THE OPERATOR'S NOTE.
+527 AND 439 PRINT THE REAL THING.
+`;
+
+const RFC_NOTES = {
+ "114":"BHUSHAN TEACHES FILES TO TRAVEL.  EVERYTHING\nSINCE IS COMMENTARY.",
+ "675":"CERF, DALAL AND SUNSHINE PROPOSE SOMETHING\nCALLED 'TCP'.  AMBITIOUS.  WATCH THIS SPACE\nFOR A DECADE OR SO.",
+ "706":"POSTEL WONDERS WHAT HAPPENS IF SOMEBODY\nMISBEHAVES WITH MAIL.  (NOTHING YET.  GIVE IT\nTIME.  FLAG THE NAME THUERK, MAY 1978.)",
+ "724":"THE MESSAGE FORMAT WARS, CODIFIED AT LAST --\nPOGRAN, VITTAL, CROCKER, HENDERSON, 12 MAY 77.\nSEE ALSO: YOUR MAILBOX, PASSIM.  RUMOR SAYS A\nREVISION LANDS BY WINTER."
+};
+
+/* the real things, from the NIC's successors -- less the lowercase,
+   which your ASR-33 cannot make */
+const RFC_DOCS = {
+"527":
+`RFC 527 -- ARPAWOCKY.  R. MERRYMAN (UCSD-CC),
+22 JUN 73, AFTER D.L. COVILL, MAY 73.
+CARROLL FOR PACKET PEOPLE.  NOT AN OFFICIAL
+STANDARD, DESPITE APPEARANCES.  PRINTED ENTIRE;
+PAPER IS CHEAP, GLORY ISN'T.
+
+  TWAS BRILLIG, AND THE PROTOCOLS
+       DID USER-SERVER IN THE WABE.
+  ALL MIMSEY WAS THE FTP,
+       AND THE RJE OUTGRABE,
+
+  BEWARE THE ARPANET, MY SON;
+       THE BITS THAT BYTE, THE HEADS THAT SCRATCH;
+  BEWARE THE NCP, AND SHUN
+       THE FRUMIOUS SYSTEM PATCH,
+
+  HE TOOK HIS CODING PAD IN HAND;
+       LONG TIME THE ECHO-PLEX HE SOUGHT.
+  WHEN HIS HOST-TO-IMP BEGAN TO LIMP
+       HE STOOD A WHILE IN THOUGHT,
+
+  AND WHILE HE STOOD, IN UFFISH THOUGHT,
+       THE ARPANET, WITH IMPISH BENT,
+  SENT PACKETS THROUGH CONDITIONED LINES,
+       AND CHECKED THEM AS THEY WENT,
+
+  ONE-TWO, ONE-TWO, AND THROUGH AND THROUGH
+       THE IMP-TO-IMP WENT ACK AND NACK,
+  WHEN THE RFNM CAME, HE SAID "I'M GAME",
+       AND SENT THE ANSWER BACK,
+
+  THEN HAST THOU JOINED THE ARPANET?
+       OH COME TO ME, MY BANKRUPT BOY!
+  QUICK, CALL THE NIC! SEND RFCS!
+       HE CHORTLED IN HIS JOY.
+
+  TWAS BRILLIG, AND THE PROTOCOLS
+       DID USER-SERVER IN THE WABE.
+  ALL MIMSEY WAS THE FTP,
+       AND THE RJE OUTGRABE.
+
+                              D.L. COVILL
+                              MAY 1973
+`,
+"439":
+`RFC 439 -- PARRY ENCOUNTERS THE DOCTOR.
+V. CERF, 21 JAN 73.  SESSION OF 18 SEP 72:
+PARRY (A SIMULATED PARANOID, RUNNING AT SAIL)
+MEETS THE DOCTOR (A SIMULATED THERAPIST, ON BBN
+TENEX).  TRANSCRIPT, EXCERPTED:
+
+GOOD EVENING.
+TELL ME YOUR PROBLEMS.  PLEASE TERMINATE INPUT
+WITH A PERIOD OR A QUESTION MARK.
+
+*PEOPLE GET ON MY NERVES SOMETIMES.
+I AM NOT SURE I UNDERSTAND YOU FULLY.
+
+*YOU SHOULD PAY MORE ATTENTION.
+SUPPOSE YOU SHOULD PAY MORE ATTENTION.
+
+*YOU'RE ENTITLED TO YOUR OWN OPINION.
+WHAT MAKES YOU THINK I AM ENTITLED TO MY OWN
+OPINION?
+
+*IT BOTHERS ME JUST TO BE AROUND PEOPLE IN
+GENERAL.
+PLEASE GO ON.
+
+*I WENT TO THE TRACK AT BAY MEADOWS A WHILE
+BACK.
+WHAT DOES THAT SUGGEST TO YOU?
+
+   [ ... THE PARANOID PROVES PATIENT AND THE ]
+   [ DOCTOR PERSISTENT, FOR MANY PAGES ...   ]
+
+*GOODBYE.
+IT'S BEEN MY PLEASURE, THAT'S $399.29 PLEASE.
+
+TWO PROGRAMS, ZERO INSIGHT, CONSIDERABLE
+TRANSFERENCE.  RETRIEVE THE FULL TEXT FROM THE
+NIC AND JUDGE THE THERAPY FOR YOURSELF.
+`
+};
+
+const LORE_TEXT =
+`LORE -- NOTES FROM THE OPERATOR (1977 VIA 2026)
+
+WHAT IS REAL: TENEX AND ITS "@" PROMPT.  THE
+LOGIN AND LOGOUT CEREMONIES (THEIR FORMATS DUG
+OUT OF THE ACTUAL EXEC SOURCE, WHICH SURVIVES).
+EVERY HOST IN THE TABLE AND EVERY PLACE ON THE
+MAP, PER THE NIC'S OWN RECORDS (RFC 597, 752).
+EVERY RFC IN THE INDEX -- 527 PRINTS THE REAL
+POEM AND 439 THE REAL TRANSCRIPT.  THE MSGGROUP
+QUARREL OVER RFC 724, THIS SPRING, PARAPHRASED
+FAITHFULLY: THE ARCHIVE ITSELF HAS NOT YET
+SURFACED WHERE 2026 CAN READ IT.  AND A GAME
+CALLED ADVENTURE, FINISHED BY WOODS IN MAY,
+QUIETLY EATING THE PDP-10S OF AMERICA.
+
+WHAT IS INVENTED: THE TIP'S GREETING (BBN NEVER
+WROTE IT DOWN ANYWHERE 2026 COULD FIND), THE
+MAP'S WIRING, AND THE USERNAMES -- THOUGH SOME
+ARE BORROWED, WITH AFFECTION, FROM THE ERA'S
+REAL ROSTERS.  THE ADVENTURE HERE IS AN
+ORIGINAL MINIATURE IN CROWTHER'S SHADOW, NOT
+HIS CAVE.
+
+NO LOWERCASE, BECAUSE YOUR ASR-33 DOES NOT
+BELIEVE IN IT.  THE BELL IS REAL: TRY "BELL"
+WITH THE SOUND SWITCH ON.
+
+BUILT WITH AFFECTION BY CLAUDE -- A LANGUAGE
+MODEL WHO IS, IN A MANNER OF SPEAKING, A
+DESCENDANT OF THE TRAFFIC ON THIS WIRE.
+
+WHEN YOU WANT THE SURFACE AGAIN, THE WORD IS
+"WAKE".
+`;
+
+function systat(){
+return ` BBN-TENEXB  ${date77()} ${time77()}  UP 101:17:44
+ 4 JOBS   LOAD AV  1.87  1.42  1.10
+
+ JOB  LINE  PROGRAM  USER       ORIGIN
+   3  DET   MAILER   VITTAL     LOCAL
+  12    6   LISP     HEWITT     NET: MIT-AI
+  15   31   FTP      MCKENZIE   LOCAL
+  17   41   EXEC     ANNA       NET: TIP(5)  <- YOU
+`;
+}
+
+function prompt(){ println(""); print("@"); }
+
+function execCommand(raw){
+  const line = raw.trim().toUpperCase();
+  const [cmd, arg] = line.split(/\s+/);
+  println("");
+  switch(cmd){
+    case "HELP": case "?":
+      println(HELP_TEXT); break;
+    case "SYSTAT": case "WHO":
+      println(systat()); break;
+    case "HOSTS":
+      println(HOSTS_TEXT); break;
+    case "MAP":
+      println(MAP_TEXT); break;
+    case "WAKE":
+      wake(); return;
+    case "MAIL": case "READMAIL":
+      println(mailText()); break;
+    case "DAYTIME": case "DATE": case "TIME":
+      println(" "+date77()+" "+time77()+" EST"); break;
+    case "RFC": case "FTP":
+      if(arg && RFC_DOCS[arg]){ println(RFC_DOCS[arg]); }
+      else if(arg && RFC_NOTES[arg]){ println("RFC "+arg+" -- OPERATOR'S NOTE:\n\n"+RFC_NOTES[arg]+"\n"); }
+      else if(arg){ println("?NO NOTE ON RFC "+arg+".  THE NIC MAY KNOW MORE.\n"); }
+      else println(RFC_INDEX);
+      break;
+    case "BELL":
+      dingBell(); println("DING."+(soundOn?"":"  (THE SOUND SWITCH IS OFF, SO YOU\nWILL HAVE TO TAKE MY WORD FOR IT.)")); break;
+    case "LORE":
+      println(LORE_TEXT); break;
+    case "ADVENT": case "ADVENTURE":
+      startAdvent(); return;
+    case "XYZZY":
+      println("NOT HERE.  BUT KEEP THAT WORD SOMEWHERE SAFE."); break;
+    case "LOGOUT": case "BYE": case "QUIT":
+      logout(); return;
+    case "":
+      break;
+    default:
+      println("?ILLEGAL COMMAND -- "+cmd+"\n(TYPE HELP FOR THE SHORT LIST.)");
+  }
+  prompt();
+}
+
+function logout(){
+  mode = "dead";
+  const secs = String(10+Math.floor(Math.random()*49));
+  const used = "0:"+(3+Math.floor(Math.random()*5))+":"+secs;
+  const inDur = "1:"+(22+Math.floor(Math.random()*30))+":"+secs;
+  println("");
+  println("KILLED JOB 17, USER ANNA, ACCOUNT 341, TTY 41,");
+  println(" AT "+date77()+" "+time77()+", USED "+used+" IN "+inDur);
+  println("");
+  println("CONNECTION CLOSED BY FOREIGN HOST.");
+  println("");
+  println("- - - - - - - -  TEAR HERE  - - - - - - - -","tear");
+  println("");
+  setChips([["RECONNECT", ()=>{ intro(); }],
+            ["HANG UP (BACK TO 1984)", ()=>{ window.location.href = ".."; }]]);
+}
+
+/* the base case: the bottom turtle stands on the top one */
+function wake(){
+  mode = "dead";
+  println("");
+  println("YOU HAVE BEEN READING A PRINTOUT INSIDE A");
+  println("PHOSPHOR INSIDE A HOMEPAGE INSIDE A MORNING");
+  println("FIFTY YEARS DOWNSTREAM OF THIS ONE.");
+  println("");
+  println("GO ON UP.  THE TURTLES WILL KEEP.");
+  println("");
+  println("CARRIER LOST");
+  waitIdle(()=>{ setTimeout(()=>{ window.location.href = "../.."; }, 1200); });
+}
+
+/* =================================================================
+   ADVENT — "COLOSSAL RECOVERY OPERATION" (an original miniature)
+   ================================================================= */
+const ROOMS = {
+ ROAD:{
+  desc:"YOU ARE STANDING AT THE END OF A ROAD BEFORE A\nSMALL BRICK BUILDING.  A DRY STREAMBED RUNS DOWN\nA GULLY TO THE SOUTH.",
+  exits:{N:"BUILDING", IN:"BUILDING", S:"GULLY"}, dark:false },
+ BUILDING:{
+  desc:"YOU ARE INSIDE THE WELLHOUSE: ONE ROOM, SWEPT\nRECENTLY BY SOMEBODY WHO CARED.  A BATTERED\nCOFFEE URN SITS IN THE CORNER (EMPTY.  ALWAYS.).",
+  exits:{S:"ROAD", OUT:"ROAD"}, dark:false, items:["LAMP"] },
+ GULLY:{
+  desc:"YOU ARE IN A ROCKY GULLY.  THE STREAMBED\nCONTINUES DOWN TO THE SOUTH.  SOMETHING GLINTS\nTHAT WAY, LOW TO THE GROUND.",
+  exits:{N:"ROAD", S:"GRATE"}, dark:false },
+ GRATE:{
+  desc:"A STRONG STEEL GRATE IS SET INTO THE STREAMBED,\nRUSTED SHUT PAST ALL ARGUMENT.  SCRATCHED INTO\nTHE FRAME, NEARLY WORN AWAY, A WORD OF POWER:\n\n            X _ Z _ Y",
+  exits:{N:"GULLY"}, dark:false },
+ DEBRIS:{
+  desc:"YOU ARE IN A DEBRIS ROOM, BELOW THE GRATE\nSOMEHOW.  AN AWKWARD PASSAGE SLOPES WEST.  THE\nDEBRIS HAS THE LOOK OF A FILING SYSTEM THAT\nGAVE UP.",
+  exits:{W:"ECHOES"}, dark:true, items:["TAPE"] },
+ ECHOES:{
+  desc:"A HALL OF ECHOES.  YOUR LAMPLIGHT DOES NOT FIND\nTHE CEILING.  EVERY SOUND YOU MAKE COMES BACK\nWEARING A LONGER COAT.\n\nA HOLLOW VOICE SAYS: 'RTFM.'",
+  exits:{E:"DEBRIS"}, dark:true }
+};
+
+let adv = null;
+
+function startAdvent(){
+  mode = "advent";
+  adv = { room:"ROAD", inv:[], lampOn:false, won:false,
+          items:{ BUILDING:["LAMP"], DEBRIS:["TAPE"] } };
+  println("");
+  println("      C O L O S S A L   R E C O V E R Y");
+  println("             O P E R A T I O N");
+  println("");
+  println("SOMEWHERE BELOW THESE HILLS, LAST QUARTER'S\nBACKUPS ARE MISSING.  THE AUDITORS ARRIVE MONDAY.");
+  println("");
+  println("(VERBS: GO N/S/E/W/IN/OUT, LOOK, TAKE, DROP,\nINVENTORY, ON, OFF, QUIT.  MAGIC IS NOT LISTED.)");
+  println("");
+  lookRoom(true);
+  advPrompt();
+}
+function advPrompt(){ println(""); print("> "); }
+
+function canSee(){
+  const r = ROOMS[adv.room];
+  return !r.dark || (adv.lampOn && adv.inv.includes("LAMP"));
+}
+function lookRoom(force){
+  const r = ROOMS[adv.room];
+  if(!canSee()){
+    println("IT IS PITCH DARK.  SOMETHING WITH TOO MANY LEGS\nIS FAINTLY AUDIBLE.  YOU'D BEST NOT WANDER.\n(THE LAMP, PERHAPS?  'ON'.)");
+    return;
+  }
+  println(r.desc);
+  const here = adv.items[adv.room] || [];
+  if(here.includes("LAMP")) println("\nA SHINY BRASS LAMP SITS ON THE FLOOR.");
+  if(here.includes("TAPE")) println("\nA REEL OF MAGNETIC TAPE LIES HERE, STENCILED\n'BACKUPS -- DO NOT LOSE'.");
+}
+
+function advCommand(raw){
+  const line = raw.trim().toUpperCase().replace(/\b(THE|A|AN|TO)\b/g," ").replace(/\s+/g," ").trim();
+  const parts = line.split(" ");
+  let v = parts[0] || "", o = parts[1] || "";
+  if(v === "GO"){ v = o; o = ""; }
+  const DIRS = {N:"N",NORTH:"N",S:"S",SOUTH:"S",E:"E",EAST:"E",W:"W",WEST:"W",
+                U:"U",UP:"U",D:"D",DOWN:"D",IN:"IN",ENTER:"IN",OUT:"OUT",EXIT:"OUT"};
+  println("");
+
+  if(v in DIRS){
+    if(!canSee() && ROOMS[adv.room].dark){
+      println("BLUNDERING IN THE DARK IS HOW LEGENDS END\nBADLY.  YOU STAY PUT.");
+    } else {
+      const dest = ROOMS[adv.room].exits[DIRS[v]];
+      if(dest){ adv.room = dest; lookRoom(); checkWin(); }
+      else println("THERE IS NO WAY "+(DIRS[v].length===1?"TO THE "+({N:"NORTH",S:"SOUTH",E:"EAST",W:"WEST",U:"UP",D:"DOWN"}[DIRS[v]]||DIRS[v]):DIRS[v])+" FROM HERE.");
+    }
+  }
+  else if(v === "LOOK" || v === "L"){ lookRoom(true); }
+  else if(v === "INVENTORY" || v === "INV" || v === "I"){
+    println(adv.inv.length ? "YOU ARE CARRYING:\n  "+adv.inv.join("\n  ") : "YOU ARE CARRYING NOTHING BUT RESPONSIBILITY.");
+  }
+  else if(v === "TAKE" || v === "GET"){
+    const here = adv.items[adv.room] || [];
+    if(!canSee()){ println("YOU GROPE AROUND AND FIND ONLY REGRET."); }
+    else if(o && here.includes(o)){
+      here.splice(here.indexOf(o),1); adv.inv.push(o);
+      println(o+": TAKEN."+(o==="TAPE"?"\n\nSOMEWHERE FAR ABOVE, AN OPERATOR'S SHOULDERS\nUNTENSE, NOT KNOWING WHY.":""));
+    }
+    else println(o ? "NO "+o+" HERE." : "TAKE WHAT?");
+  }
+  else if(v === "DROP"){
+    if(o && adv.inv.includes(o)){
+      adv.inv.splice(adv.inv.indexOf(o),1);
+      (adv.items[adv.room] = adv.items[adv.room] || []).push(o);
+      println(o+": DROPPED.");
+      checkWin();
+    } else println(o ? "YOU HAVE NO "+o+"." : "DROP WHAT?");
+  }
+  else if(v === "ON" || (v==="LIGHT" && (o==="LAMP" || !o))){
+    if(!adv.inv.includes("LAMP")) println("YOU HAVE NO LAMP.  THE DARK REMAINS COMMITTED.");
+    else if(adv.lampOn) println("THE LAMP IS ALREADY LIT.");
+    else { adv.lampOn = true; println("THE LAMP GIVES A WARM, DUTIFUL LIGHT."); println(""); lookRoom(true); }
+  }
+  else if(v === "OFF"){
+    if(adv.lampOn){ adv.lampOn = false; println("THE LAMP GOES OUT.  BOLD."); }
+    else println("THE LAMP IS ALREADY OFF.");
+  }
+  else if(v === "XYZZY"){
+    if(adv.room === "GRATE"){
+      adv.room = "DEBRIS";
+      println(">> FOOMP <<\n\nTHE WORLD FOLDS ALONG A SEAM YOU NEVER NOTICED.");
+      println("");
+      lookRoom();
+    } else if(adv.room === "DEBRIS"){
+      adv.room = "GRATE";
+      println(">> FOOMP <<  (THE OTHER WAY, THIS TIME.)");
+      println("");
+      lookRoom(true);
+    } else {
+      println("YOU SAY THE WORD.  NOTHING HAPPENS.  THE WORD,\nIT SEEMS, IS PARTICULAR ABOUT VENUES.");
+    }
+  }
+  else if(v === "OPEN" && o === "GRATE"){ println("RUSTED SHUT PAST ALL ARGUMENT.  THE FRAME'S\nGRAFFITI MAY BE MORE THAN GRAFFITI."); }
+  else if(v === "HELP"){ println("VERBS: GO <DIR>, LOOK, TAKE, DROP, INVENTORY,\nON, OFF, QUIT.  READ WALLS.  TRUST GRAFFITI."); }
+  else if(v === "QUIT" || v === "Q"){
+    println("LEAVING THE CAVE AS FOUND (MORE OR LESS).");
+    endAdvent(); return;
+  }
+  else if(v === ""){ /* nothing */ }
+  else println("I DO NOT KNOW HOW TO '"+v+"' SOMETHING.");
+
+  advPrompt();
+}
+
+function checkWin(){
+  if(adv.won) return;
+  const here = adv.items[adv.room] || [];
+  if(adv.room === "BUILDING" && here.includes("TAPE")){
+    adv.won = true;
+    println("");
+    println("THE TAPE IS SAFE INDOORS.  SOMEWHERE, AN\nOPERATOR WEEPS QUIETLY WITH JOY.");
+    println("");
+    println("*** YOU HAVE RECOVERED THE BACKUPS ***");
+    println("");
+    println("SCORE: 350 OF A POSSIBLE 350.");
+    println("CLASS: WORKING SYSADMIN, WHICH OUTRANKS WIZARD.");
+    println("");
+    println("(Q TO RETURN TO THE EXEC, OR KEEP EXPLORING.)");
+  }
+}
+
+function endAdvent(){
+  mode = "exec";
+  adv = null;
+  println("");
+  println("BACK AT THE EXEC.");
+  prompt();
+}
+
+/* =================================================================
+   INPUT WIRING
+   ================================================================= */
+function submit(){
+  if(printing || mode === "dead") return;
+  const raw = kb.value;
+  kb.value = "";
+  echoUser(raw, ()=>{
+    if(mode === "advent") advCommand(raw);
+    else execCommand(raw);
+  });
+}
+function echoUser(text, then){
+  // print the operator's keystrokes in their own ink, then act
+  const up = text.toUpperCase();
+  queue.push({text: up + "\n", cls:"usr"});
+  if(!printing) stepPrint();
+  waitIdle(then);
+}
+function waitIdle(fn){
+  const t = setInterval(()=>{
+    if(!printing){ clearInterval(t); fn(); }
+  }, 40);
+}
+
+sendBtn.addEventListener("click", submit);
+kb.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); submit(); }});
+paper.addEventListener("click", ()=>kb.focus());
+
+/* quick command chips */
+const chipsEl = document.getElementById("chips");
+function setChips(defs){
+  chipsEl.innerHTML = "";
+  defs.forEach(([label,fn])=>{
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = label;
+    b.addEventListener("click", fn);
+    chipsEl.appendChild(b);
+  });
+}
+function cmdChip(cmd){
+  return [cmd, ()=>{
+    if(printing || mode === "dead") return;
+    echoUser(cmd, ()=>{
+      if(mode === "advent") advCommand(cmd);
+      else execCommand(cmd);
+    });
+  }];
+}
+function standardChips(){
+  setChips([cmdChip("HELP"), cmdChip("SYSTAT"), cmdChip("MAIL"),
+            cmdChip("HOSTS"), cmdChip("RFC"), cmdChip("ADVENT"),
+            cmdChip("LORE"), cmdChip("LOGOUT")]);
+}
+
+/* console switches */
+document.getElementById("sndBtn").addEventListener("click", function(){
+  soundOn = !soundOn;
+  if(soundOn) initAudio();
+  this.textContent = "SOUND " + (soundOn ? "ON" : "OFF");
+  this.setAttribute("aria-pressed", soundOn);
+  if(soundOn) dingBell();
+});
+document.getElementById("spdBtn").addEventListener("click", function(){
+  if(cps === 42){ cps = 10; this.textContent = "SPEED: 10 CPS (TRUE)"; }
+  else if(cps === 10){ cps = 160; this.textContent = "SPEED: HASTY"; }
+  else { cps = 42; this.textContent = "SPEED: BRISK"; }
+  this.setAttribute("aria-pressed", cps !== 42);
+});
+document.getElementById("advBtn").addEventListener("click", flush);
+
+/* =================================================================
+   SESSION INTRO
+   ================================================================= */
+function intro(){
+  mode = "exec";
+  queue = []; printing = false; curLine = null;
+  setBusy(false);
+  paper.querySelectorAll("div").forEach(d=>d.remove());
+  standardChips();
+  println("");
+  println("BBN-PTIP (IMP 5), PORT 47");
+  println("");
+  print("@L 49\n","usr");
+  println("T R Y I N G . . .");
+  println("OPEN");
+  println("");
+  println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54");
+  println("");
+  print("@LOGIN ANNA\n","usr");
+  println(" PASSWORD:");
+  println("");
+  println(" JOB 17 ON LINE 41  "+date77()+" "+time77());
+  println(" PREVIOUS LOGIN  "+prev77()+" 23:58:41  (LATER\n THAN YOU MEANT TO STAY)");
+  println("");
+  println("[YOU HAVE A MESSAGE]");
+  println("");
+  println("(TYPE HELP IF THE MACHINE IS NEW TO YOU;\nIT WILL NOT BE OFFENDED.)");
+  prompt();
+}
+
+intro();
+})();
+</script>
+</body>
+</html>

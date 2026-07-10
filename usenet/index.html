@@ -1,0 +1,1176 @@
+<!doctype html>
+<!-- you found the door in the letter U. welcome to 1984. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>brezvax — netnews — April 1984</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2304120a'/%3E%3Crect x='3' y='7' width='10' height='2' fill='%233dff70'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --phos:#3dff70;
+    --phos-dim:#1d8f42;
+    --glow:0 0 6px rgba(61,255,112,.55), 0 0 1px rgba(61,255,112,.9);
+    --bg:#04120a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{background:var(--bg)}
+  body{
+    font-family:"SFMono-Regular",Menlo,Consolas,"Liberation Mono","Courier New",monospace;
+    background:var(--bg);
+    overflow:hidden;
+  }
+  /* the tube: everything lives on the glass */
+  #tube{
+    position:fixed;inset:0;
+    display:flex;flex-direction:column;
+    background:
+      radial-gradient(140% 110% at 50% 40%, rgba(255,255,255,.045) 0%, transparent 55%),
+      var(--bg);
+    animation:flick 7s infinite steps(1), poweron .9s ease-out 1;
+  }
+  @keyframes flick{
+    0%,93%,100%{opacity:1}
+    94%{opacity:.968}
+    95%{opacity:.994}
+    96.5%{opacity:.975}
+  }
+  @keyframes poweron{
+    0%{filter:brightness(0)}
+    12%{filter:brightness(2.6) blur(2px)}
+    40%{filter:brightness(.7) blur(.6px)}
+    100%{filter:brightness(1)}
+  }
+  /* glass artifacts, full bleed, above everything, never intercept */
+  #scan,#vig{position:fixed;inset:0;pointer-events:none}
+  #scan{
+    z-index:8;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
+    mix-blend-mode:multiply;
+  }
+  #vig{
+    z-index:9;
+    background:radial-gradient(120% 105% at 50% 45%, transparent 64%, rgba(0,0,0,.6) 100%);
+  }
+  /* the text plane: full-height scroller, 76-column reading width on big glass */
+  #screen{
+    flex:1 1 auto;min-height:0;
+    overflow-y:auto;
+    padding:2.2vh max(14px, calc((100% - 78ch)/2)) 3vh;
+    color:var(--phos);
+    text-shadow:var(--glow);
+    font-size:clamp(9.5px,2.45vw,15.5px);
+    line-height:1.42;
+    white-space:pre-wrap;
+    word-break:break-word;
+    scrollbar-width:thin;
+    scrollbar-color:var(--phos-dim) transparent;
+  }
+  #screen:focus{outline:none}
+  .row{display:block;cursor:pointer;border-radius:1px}
+  /* menu rows clip at the screen edge, like a real 80-column terminal */
+  .trunc{display:block;white-space:pre;overflow:hidden}
+  .row:hover,.row:focus-visible{background:rgba(61,255,112,.14);outline:none}
+  .row:focus-visible{box-shadow:0 0 0 1px var(--phos-dim)}
+  .dim{opacity:.62}
+  .inv{background:var(--phos);color:var(--bg);text-shadow:none;padding:0 2px}
+  .hdr{opacity:.78}
+  .cursor::after{content:"█";animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* a hotspot buried in body text: terminal underline, live to the touch */
+  .wire{cursor:pointer;border-bottom:1px dotted var(--phos-dim)}
+  .wire:hover,.wire:focus-visible{border-bottom:1px solid var(--phos);background:rgba(61,255,112,.14);outline:none}
+  @media (prefers-reduced-motion:reduce){
+    #tube{animation:none}
+    .cursor::after{animation:none}
+  }
+  /* soft keys: drawn in phosphor, part of the screen */
+  #softkeys{
+    flex:0 0 auto;
+    display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+    padding:6px max(10px, calc((100% - 78ch)/2));
+  }
+  .key{
+    background:transparent;
+    border:1px solid var(--phos-dim);
+    color:var(--phos);text-shadow:var(--glow);
+    font:inherit;font-size:clamp(10px,2.3vw,13px);
+    letter-spacing:.06em;
+    padding:7px 10px;min-width:44px;cursor:pointer;
+    border-radius:1px;
+  }
+  .key b{font-weight:bold}
+  .key:hover{background:rgba(61,255,112,.14)}
+  .key:active{background:var(--phos);color:var(--bg);text-shadow:none}
+  .key:focus-visible{outline:1px solid var(--phos);outline-offset:2px}
+  /* status line: one row of inverse video, bottom of the tube */
+  #status{
+    flex:0 0 auto;
+    padding:3px max(14px, calc((100% - 78ch)/2)) calc(3px + env(safe-area-inset-bottom));
+    background:var(--phos);
+    color:var(--bg);
+    font-size:clamp(9.5px,2.45vw,13.5px);
+    letter-spacing:.02em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .fx-off #scan,.fx-off #vig{display:none}
+  .fx-off #tube{animation:none}
+  .fx-off #screen,.fx-off .key{text-shadow:none}
+</style>
+</head>
+<body>
+
+<div id="tube" role="application" aria-label="Simulated 1984 computer terminal, full screen">
+  <div id="screen" tabindex="0" aria-live="polite"></div>
+  <div id="softkeys" aria-label="reader keys"></div>
+  <div id="status"></div>
+</div>
+<div id="scan"></div>
+<div id="vig"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ------------------------------------------------------------------ */
+/*  news spool — brezvax, Wednesday April 11, 1984                     */
+/*  (data block: articles marked real:true are verbatim from the      */
+/*   archives; the rest are local fiction. see the help screen.)      */
+/* ------------------------------------------------------------------ */
+
+const SITE  = "brezvax";
+const BNEWS = "version B 2.10.1 6/24/83";
+
+/* Articles marked real:true are verbatim from the utzoo tape archive
+   (Henry Spencer's tapes, archive.org/details/usenet-net), with only
+   the Path: rewritten for brezvax's feed and stray artifacts dropped.
+   The rest is local fiction; the help screen keeps the ledger. */
+
+const GROUPS = [
+{ name:"net.general", desc:"*Important* and timely announcements", arts:[
+{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
+org:"brezvax, somewhere east of decvax",
+subj:"new site: brezvax", date:"Mon, 2-Apr-84 08:14:31 EST", id:"<101@brezvax.UUCP>",
+body:
+`Announcing brezvax (VAX-11/750, 4.2bsd), now on the net
+via decvax.  We take most net.* groups; volume willing,
+we'll keep them.
+
+Mail:  ...!decvax!brezvax!anna
+
+The name is from a farmstead in Vidzeme my family comes
+from.  Long story; buy me a coffee at Usenix and lose an
+afternoon.
+
+anna`},
+{ real:true, from:"chernenko@kremvax.UUCP (K. Chernenko)", path:"brezvax!decvax!mcvax!moskvax!kremvax!chernenko",
+pv:"version B 2.10.1 4/1/83 (SU840401); site kremvax.UUCP",
+org:"MIIA, Moscow", groups:"net.general,eunet.general,net.politics,eunet.politics",
+subj:"USSR on Usenet", date:"Sun, 1-Apr-84 11:02:52 EST", id:"<0001@kremvax.UUCP>",
+body:
+`Well, today, 840401, this is at last the Socialist Union of Soviet
+Republics joining the Usenet network and saying hallo to everybody.
+
+One reason for us to join this network has been to have a means of
+having an open discussion forum with the American and European people
+and making clear to them our strong efforts towards attaining peaceful
+coexistence between the people of the Soviet Union and those of the
+United States and Europe.
+
+We have been informed that on this network many people have given strong
+anti-Russian opinions, but we believe they have been misguided by their
+leaders, especially the American administration, who is seeking for war
+and domination of the world.
+By well informing those people from our side we hope to have a possibility
+to make clear to them our intentions and ideas.
+
+Some of those in the Western world, who believe in the truth of what we
+say have made possible our entry on this network; to them we are very
+grateful. We hereby invite you to freely give your comments and opinions.
+
+Here are the data for our backbone site:
+
+Name: moskvax
+Organization: Moscow Institute for International Affairs
+Contact: K. Chernenko
+Phone: +7 095 840401
+Postal-Address: Moscow, Soviet Union
+Electronic-Address: mcvax!moskvax!kremvax!chernenko
+News: mcvax kremvax kgbvax
+Mail: mcvax kremvax kgbvax
+
+And now, let's open a flask of Vodka and have a drink on our entry on
+this network. So:
+
+            NA ZDAROVJE!
+
+--
+    K. Chernenko, Moscow, USSR
+    ...{decvax,philabs}!mcvax!moskvax!kremvax!chernenko`},
+{ real:true, from:"bobr@zeus.UUCP (Robert Reed)", path:"brezvax!decvax!ihnp4!zehntel!tektronix!teklds!zeus!bobr",
+pv:"version B 2.10.1 (Tek) 9/26/83; site zeus.UUCP",
+org:"Tektronix, Beaverton OR",
+subj:"USSR on Usenet", date:"Sat, 7-Apr-84 19:19:36 EST", id:"<264@zeus.UUCP>",
+body:
+`--------
+I can't believe the upset that the April fool's Usenet announcement has
+caused.  I think I can count myself among the majority at our site who
+viewed the obvious fraud with admiration.  Did you seriously believe that a
+K. Chernenko at moskvax!kremvax really exists?  kremvax?  moskvax?  Come on!
+
+I would like to thank whoever sent it as a good jest, well executed and not
+harmful in any way.
+--
+Robert Reed, Tektronix Logic Design Systems, tektronix!teklds!bobr`},
+{ real:true, from:"inc@fluke.UUCP (Gary Benson)", path:"brezvax!decvax!ihnp4!zehntel!tektronix!uw-beaver!ssc-vax!fluke!inc",
+pv:"version B 2.10.1 Fluke 1/4/84; site fluke.UUCP",
+org:"John Fluke Mfg. Co., Everett, WA", refs:"<67@hwcs.UUCP>",
+subj:"re: USSR on Usenet", date:"Fri, 6-Apr-84 13:26:57 EST", id:"<238@tpvax.fluke.UUCP>",
+body:
+`I want to voice my support of those who feel that the "April Fool's" joke
+about the USSR on the USENET was bad form. Particularly when it appeared in
+what many of us had come to rely on as the authoritative source for nuews
+about the network.
+
+Perhaps the perpetrator should be asked to pay all those long-distance phone
+bills that resulted when many people (apparently) responded to this article
+seriously and with a sense of the beginning of the start of a great
+adventure in international communication.
+
+Perhaps that individual should also be informed that April Fool's Day is not
+the widespread celebration (?) that we in the US, in our culturo-centric
+way, may sometimes think it is.
+
+It looks as if there is at least one fool on this network.
+
+--
+From the ever smiling,			 .).
+ever happy fingers of:		          V
+
+ Gary Benson		     +				+
+ John Fluke Mfg. Co.	      ILLEGITIMI NON CARBORUNDUM
+ !fluke!inc		     +			        +`},
+{ real:true, from:"dave@infopro.UUCP (David Fiedler)", path:"brezvax!decvax!harpo!infopro!dave",
+pv:"version B 2.10 5/3/83; site infopro.UUCP",
+org:"InfoPro Systems, Denville, NJ",
+subj:"RE: Russia on the Net", date:"Sun, 8-Apr-84 18:14:14 EST", id:"<56@infopro.UUCP>",
+body:
+`<food for thought>
+
+There have been some people who thought that planting of this rather
+hilarious piece was somehow in "bad taste", because they genuinely thought
+a new era of Soviet-U.S. cooperation was at hand. Perhaps we should take
+another look at some of the text of the original posting...
+
+>> We have been informed that on this network many people have given strong
+>> anti-Russian opinions, but we believe they have been misguided by their
+>> leaders, especially the American administration, who is seeking for war
+>> and domination of the world.
+>> ...
+>> Some of those in the Western world, who believe in the truth of what we
+>> say have made possible our entry on this network; to them we are very
+>> grateful. We hereby invite you to freely give your comments and opinions.
+
+If this were taken at face value, the meaning could roughly be translated as
+follows:
+
+    While export to Warsaw Pact countries of advanced computers that
+    could be used for military purposes, such as the VAX, has been
+    prohibited, someone in league with us at the Kremlin has procured
+    one for us [tantamount in this sense to bringing them the plans for
+    one of our fighters -- DF]. We always knew you foolish capitalists
+    would sell us the rope to hang you with! The war-mongering Reagan
+    and all his dupes had better watch out, since we now have access to
+    Arpanet and could probably break security on every computer on Usenet
+    as well...after all, you people never *really* thought security was
+    important, did you?
+
+While I'm as much in favor of TRUE Soviet-American cooperation on all fronts
+(including the eventual reduction of arms) as the next person, let's keep a
+perspective. Soviet access to the VAX would be a very serious matter, and
+just how secure WOULD you feel if the KGB could not only read your postings
+(some of which are quite revealing at times) but maybe get into your
+system? There ARE security holes, you know...
+"That's the biz, sweetheart..."
+          Dave Fiedler
+{harpo,astrovax,philabs}!infopro!dave
+P.S. You also might consider that the NSA and CIA have access to the net.`},
+{ real:true, from:"rbanerji@sjuvax.UUCP (R. Banerji)", path:"brezvax!decvax!akgua!psuvax!burdvax!sjuvax!rbanerji",
+pv:"version B 2.10.1 6/24/83; site sjuvax.UUCP",
+org:"Saint Josephs Univ. Phila., Pa.",
+subj:"USSR once more", date:"Wed, 18-Apr-84 14:59:57 EST", id:"<269@sjuvax.UUCP>",
+body:
+`So far I havenot seen the following point of view expressed, except once
+in some anger from Edinburgh.
+
+A normal user, if he pulled this joke, would have caused his root to
+scratch his or her head and take steps to protect the confidential
+system files. So, in making this joke, a superuser was definitely using
+his power (and the trust with which the power was given) to pull the
+joke.
+
+Should power be used in jest? Depends, right? Would it be OK if everyubody
+lost their files for half an hour at 10 am, April 1? But he didnot do that.
+Right? If the president of the US (after duly informing France), went on
+national TV and declared that we are now at war with France, it wouldnot
+be appreciated, right? What if he appered on TV and dissolved the national
+debt?
+
+How much power can be used to what extent in jest is not an easy question
+to answer. I am asking, should a superuser tramper with a ystem file in
+jest?`}
+]},
+
+{ name:"net.news", desc:"Discussions of USENET itself", arts:[
+{ real:true, from:"piet@mcvax.UUCP (Piet Beertema)", path:"brezvax!decvax!mcvax!piet",
+pv:"version B 2.10.1 6/24/83 (MC830919); site mcvax.UUCP",
+org:"Math.Centre, Amsterdam", groups:"net.news,net.general",
+subj:"EXPIRED news", date:"Tue, 29-Nov-83 06:19:31 EST", id:"<5534@mcvax.UUCP>",
+body:
+`Well, the record sure has been beaten this time. Look at this:
+
+    Path: mcvax!philabs!linus!security!genrad!grkermit!masscomp!clyde!akgua!
+          ihnp4!ihldt!ll1!otuxa!we13!lime!orion!ariel!vax135!floyd!harpo!
+          decvax!utzoo!watmath!bstempleton
+    From: bstempleton@watmath.UUCP
+    Newsgroups: net.news
+    Subject: Re:  Proliferation of news groups
+    Message-ID: <8898@akpcb.UUCP>
+    Date: Mon, 13-Dec-82 20:28:22 GMT
+    Article-I.D.: akpcb.8898
+>>>	Posted: Mon Dec 13 20:28:22 1982
+>>>	Date-Received: Tue, 29-Nov-83 00:36:44 GMT
+    Lines: 5
+
+An article arriving almost ONE YEAR after posting; wouldn't that be
+something for the Guinness Book of Records? Some sites really don't
+seem to ever expire their news....
+--
+    Piet Beertema
+    CWI (Center for Math. & Comp. Science), Amsterdam
+    ...{decvax,philabs}!mcvax!piet
+
+[archivist's note, 2026: five months after complaining about forged-
+ looking headers arriving at mcvax, the author of this post forged
+ kremvax.  see net.general.  the wire remembers.]`},
+{ from:"kls@decvax.UUCP (K. Larsen)", path:"brezvax!decvax!kls",
+org:"DEC, Merrimack NH",
+subj:"net volume: Imminent Death of the Net Predicted", date:"Fri, 27-Apr-84 11:40:02 EST", id:"<3117@decvax.UUCP>",
+body:
+`Ran the numbers on our spool.  The net is now some 900
+sites moving 225 articles a day -- roughly double last
+year, which was roughly double the year before.  Everyone
+who can multiply arrives at the same date and the same
+headline: IMMINENT DEATH OF THE NET PREDICTED.
+
+(The headline is older than the numbers.  It has been
+imminent since '83 at least.  It will be imminent for
+some time.)
+
+Add the disk: net.flame and net.politics together are
+pushing 40% of my spool by bytes, 90% by regret.
+
+Something has to give -- moderation, hierarchy reform,
+sites dropping groups, cleverer batching.  Or nothing
+gives, the phone bills get paid, and we all meet back
+here next year to predict it again.
+
+Film at 11.`},
+{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
+org:"brezvax, somewhere east of decvax",
+subj:"ghost on the wire: a TIP that still answers", date:"Mon, 30-Apr-84 23:54:09 EST", id:"<117@brezvax.UUCP>",
+wire:"tip arpa",
+body:
+`Late-night find.  Cleaning out /etc/remote on this vax I
+found an entry the previous owner left behind:
+
+  arpa:dv=/dev/cua0:br#300:pn=...
+
+The number has a Cambridge exchange.  I assumed dead
+metal -- the TIPs are all being retired, and what is
+left of that world has moved on to TACs, with logins
+and paperwork.  For science, I let it ring.
+
+It answered.  300 baud, hard carrier, and a herald with
+a date in it that I will not repeat here, because you
+will not believe me.  Whatever is on the other end has
+not been told the seventies ended.
+
+I am not brave enough to log in twice.  If you are:
+type "tip arpa" from a shell here on brezvax.  And mind
+the paper -- it prints.
+
+She who dials, finds.
+
+anna
+--
+anna@brezvax.UUCP           ...!decvax!brezvax!anna
+"two blues, no waiting"`}
+]},
+
+{ name:"net.columbia", desc:"The space shuttle and the STS program", arts:[
+{ real:true, from:"alb@alice.UUCP (Adam L. Buchsbaum)", path:"brezvax!decvax!ihnp4!allegra!alice!alb",
+pv:"version B 2.10.1 6/24/83; site alice.UUCP",
+org:"AT&T Bell Laboratories, Murray Hill",
+subj:"41C Coming to a Close", date:"Thu, 12-Apr-84 20:59:05 EST", id:"<2713@alice.UUCP>",
+body:
+`With an empty cargo bay, NASA's symbol of success for
+this mission, the crew of 41C prepared to come home
+tomorrow.  Landing is set for 0707 EST, 13 April,
+at KSC.  If there is early ground fog, the landing
+can be postponed one orbit, until 0847 EST.
+
+41D, the debut mission of the Discovery, is due to
+launch on 19 June.`},
+{ real:true, from:"ralph@inuxc.UUCP (Ralph Keyser)", path:"brezvax!decvax!ihnp4!inuxc!ralph",
+pv:"version B 2.10.1 6/24/83; site inuxc.UUCP",
+org:"AT&T Consumer Products Div., Indianapolis", refs:"<93@brl-vgr.ARPA> <2706@alice.UUCP>",
+subj:"Re: The Final Definitive Answer on the Fuel Question", date:"Fri, 13-Apr-84 12:46:03 EST", id:"<946@inuxc.UUCP>",
+body:
+`A couple of additional points:
+1) The "red-line" on the MMU was pretty high. Nelson had just under
+   50% of his fuel remaining when he returned to the shuttle.
+2) The shuttle is the second backup in the event of an MMU failure.
+   If an astronaut has an MMU failure, then either the shuttle itself
+   or another crew member in the second MMU would go for the rescue.
+   Because the shuttle was low on fuel (down to 21% in the forward RCS)
+   [See Adam's article for more details], the second MMU was tested
+   inside the cargo bay only. Ox did the flying on that one.
+
+CNN provides much better coverage of inflight events than the
+networks. They were very clear about the entire fuel issue and what
+it meant to the mission.
+
+				Ralph Keyser
+				ihnp4!inuxc!ralph`},
+{ real:true, from:"johnnyr@ihuxa.UUCP (John R. Rosenberg)", path:"brezvax!decvax!ihnp4!ihuxa!johnnyr",
+pv:"version B 2.10.1 exptools 1/6/84; site ihuxa.UUCP",
+org:"AT&T Bell Labs, Naperville, IL",
+subj:"Getting it back to the Cape", date:"Fri, 13-Apr-84 09:52:50 EST", id:"<474@ihuxa.UUCP>",
+body:
+`This may be a naive question, but I thought I'd ask, just to
+satisfy my curiosity...
+
+Since they landed this morning out at Edwards instead of at the Cape, they
+will be piggy-backing the shuttle on their 747. Has any thought ever been
+given to refueling in CA. and flying it back under its own power? I
+guess what my question really asks is... Does the shuttle have the
+capability to fly under power (well throttled down) as a normal
+airplane. Is there enough control, too much power ....???
+
+Probably a stupid question, I know. But just a random thought that
+stuck in my head this morning.
+
+                               John Rosenberg  AT&T Technologies
+                         ihnp4!ihuxa!johnnyr   Naperville Il.`},
+{ real:true, from:"alb@alice.UUCP (Adam L. Buchsbaum)", path:"brezvax!decvax!ihnp4!allegra!alice!alb",
+pv:"version B 2.10.1 6/24/83; site alice.UUCP",
+org:"AT&T Bell Laboratories, Murray Hill", refs:"<474@ihuxa.UUCP>",
+subj:"Re: Getting it back to the Cape", date:"Sun, 15-Apr-84 10:18:20 EST", id:"<2717@alice.UUCP>",
+body:
+`1) The main engines cannot be reused until they are refurbished,
+   a process that takes a week or two.  (Note, the countdown can
+   be halted at any point up until the SRB's ignite; if it is
+   halted AFTER the main engines ignite, the launch would be
+   delayed for about two weeks until the ME's could be refurbished
+   (basically cleaned up).)
+
+2) There is no launch facility at Edwards, and the shuttle cannot
+   take off horizontally.
+
+3) Which do you think costs more?  A jumbo jet ride across the
+   country, using commercial airline fuel, or a shuttle ride,
+   consuming half a million gallons of liquids hydrogen and
+   oxygen (not to mention the cost of an external tank)?`}
+]},
+
+{ name:"net.unix-wizards", desc:"Discussions, bugs, fixes on and for UNIX", arts:[
+{ from:"rob@sdcsvax.UUCP (Rob M.)", path:"brezvax!decvax!ucbvax!sdcsvax!rob",
+org:"UC San Diego",
+subj:"sendmail.cf considered a cry for help", date:"Tue, 24-Apr-84 23:18:56 PST", id:"<1490@sdcsvax.UUCP>",
+body:
+`Three days ago I opened sendmail.cf to change one
+rewriting rule.
+
+I have since learned the following:
+
+  1. $ means four different things.
+  2. Tabs are load-bearing.
+  3. There is a rule beginning R$+ that I believe
+     fires when it senses fear.
+
+The file has begun to read like scripture in a language
+I almost remember.  If anyone has a working config for a
+vax with one uucp link and no ambition, mail it.  I will
+name a variable after you.
+
+        rob     ...!sdcsvax!rob
+        "wizard" is a job title, not a mood`},
+{ from:"pat@ihnp4.UUCP (Pat D.)", path:"brezvax!decvax!ihnp4!pat",
+org:"AT&T Bell Laboratories",
+subj:"vi vs emacs: closing the quarterly flamewar", date:"Mon, 30-Apr-84 10:02:33 EST", id:"<5561@ihnp4.UUCP>",
+body:
+`As a public service, this quarter's summary, so that
+nobody has to post it again:
+
+  - vi fits in memory.  All of it.  Even yours.
+  - emacs will edit anything: text, mail, your login
+    shell, eventually your worldview.
+  - vi users think in verbs.  emacs users think in
+    chords.  Musicians are unemployable either way.
+  - both are better than ed.
+  - ed users: we know.  It is the one true editor.
+    Please put down the manual.
+
+This thread is now closed.
+
+(It is not.  It will never be.  See you in July.)`}
+]},
+
+{ name:"net.micro", desc:"Micro computers of all kinds", arts:[
+{ from:"gjf@dartvax.UUCP (G. Freeman)", path:"brezvax!decvax!dartvax!gjf",
+org:"Dartmouth College",
+subj:"Macintosh, week ten: a review from the trenches", date:"Thu, 5-Apr-84 19:22:10 EST", id:"<766@dartvax.UUCP>",
+body:
+`Verdict so far: it is the most delightful machine I
+have ever wanted to throw out a window.
+
+The good: MacPaint is witchcraft.  Show it to anyone
+and watch their face do the thing.
+
+The bad: 128K.  One drive.  Copying a disk is an
+aerobic activity -- insert, eject, insert, eject, the
+machine and I taking turns asking each other for disks
+like a couple who cannot remember who has the keys.
+
+Also there are no arrow keys.  On purpose.  Cupertino
+says use the mouse.  My wrists have filed a protest.
+
+Rumor says a 512K model is coming.  Rumor had better
+be right.`},
+{ from:"liz@allegra.UUCP (Liz P.)", path:"brezvax!decvax!ihnp4!allegra!liz",
+org:"AT&T Bell Laboratories", refs:"<766@dartvax.UUCP>",
+subj:"Re: Macintosh, week ten", date:"Fri, 6-Apr-84 12:48:37 EST", id:"<2291@allegra.UUCP>",
+body:
+`In article <766@dartvax.UUCP> gjf@dartvax writes:
+> it is the most delightful machine I have ever
+> wanted to throw out a window.
+
+You are reviewing the wrong thing.  The 128K is a demo.
+What is being demonstrated is that a computer can meet
+you more than halfway -- and once people have seen
+that, there is no walking it back.
+
+In five years every machine will work this way, and
+everyone flaming the Mac today will explain that they
+always knew.  Save your posts.  I am saving mine.`}
+]},
+
+{ name:"net.nlang", desc:"Natural languages, cultures, heritages", arts:[
+{ from:"mira@ucbvax.ARPA (Mira S.)", path:"brezvax!decvax!ucbvax!mira",
+org:"UC Berkeley",
+subj:"Russian 'blue': one basic term or two?", date:"Sat, 7-Apr-84 14:26:08 PST", id:"<2214@ucbvax.ARPA>",
+body:
+`I have been working through Berlin & Kay's "Basic Color
+Terms" (1969) and hit the famous claim: Russian may have
+TWELVE basic terms rather than eleven, because it splits
+blue into "sinij" (dark blue) and "goluboj" (light
+blue).  (Apologies for the transliteration -- my
+terminal speaks ASCII and nothing else.)
+
+Question for native speakers on the net: is goluboj
+REALLY basic?  English has "navy" and "sky blue," but
+nobody thinks those are basic terms -- they are plainly
+kinds of blue.  Does goluboj feel like a kind of sinij,
+or are the two as separate as red and pink?
+
+If they are truly separate, the interesting question is
+what that does to perception, if anything.  Whorf is out
+of fashion, but the blues look like a clean test case.
+
+mira`},
+{ from:"anna@brezvax.UUCP (anna)", path:"brezvax!anna",
+org:"brezvax, somewhere east of decvax", refs:"<2214@ucbvax.ARPA>",
+subj:"Re: Russian 'blue': one basic term or two?", date:"Sun, 8-Apr-84 21:44:12 EST", id:"<108@brezvax.UUCP>",
+body:
+`In article <2214@ucbvax.ARPA> mira@ucbvax writes:
+> Does goluboj feel like a kind of sinij, or are the
+> two as separate as red and pink?
+
+Separate.  Red and pink is exactly the right analogy.
+
+Try this test: the neutral, unmarked way to describe a
+clear daytime sky is "goluboe nebo."  Call the same sky
+"sinee" and you have not said something slightly odd --
+you have said something DIFFERENT (a deep evening blue,
+a storm coming, a poem happening).
+
+No speaker stops to compute "light blue."  Goluboj is
+not built out of sinij any more than pink is built out
+of red in your head.
+
+And you cannot escape the choice.  There is no neutral
+superordinate "blue" to retreat to when buying paint.
+The lexicon makes you commit.
+
+Whether the stopwatch would notice, I do not know.  But
+the dictionary already has.
+
+anna
+--
+anna@brezvax.UUCP           ...!decvax!brezvax!anna
+"two blues, no waiting"`},
+{ from:"dl@sdcsvax.UUCP (D. Lindqvist)", path:"brezvax!decvax!ucbvax!sdcsvax!dl",
+org:"UC San Diego, Dept. of Psychology", refs:"<108@brezvax.UUCP>",
+subj:"Re: Russian 'blue' (an experiment, free to a good lab)", date:"Tue, 10-Apr-84 09:31:50 PST", id:"<1502@sdcsvax.UUCP>",
+body:
+`In article <108@brezvax.UUCP> anna@brezvax writes:
+> Whether the stopwatch would notice, I do not know.
+
+Someone should ask it.  Proposal, free to a good lab:
+
+Take color chips spanning the blue region.  Show a
+target, then two chips; the subject says which chip
+matches, and you time them.  Prediction: Russian
+speakers get a speed edge exactly when the two chips
+straddle the sinij/goluboj line, and nowhere else.
+English speakers show nothing, having nothing to show.
+
+If the lexicon carves the spectrum, the reaction times
+should have a seam in them right at the boundary.
+
+All it takes is a tachistoscope, some Munsell chips,
+and a department that will not ask why.  In twenty
+years or so somebody will run this and act surprised.
+
+(See also Kay & McDaniel 1978 if your library has it.)
+
+                                        -- dl`}
+]},
+
+{ name:"net.jokes", desc:"Jokes and the like. May be somewhat offensive", arts:[
+{ real:true, from:"ken@ihuxq.UUCP (ken perlow)", path:"brezvax!decvax!ihnp4!ihuxq!ken",
+pv:"version B 2.10.1 exptools 1/6/84; site ihuxq.UUCP",
+org:"AT&T Bell Labs, Naperville, IL", refs:"<2756@rabbit.UUCP>",
+subj:"Re: all odd numbers are prime", date:"Mon, 30-Apr-84 13:40:49 EDT", id:"<904@ihuxq.UUCP>",
+body:
+`--
+Creationist:  3 is a prime, 5 is a prime, 7 is a prime,
+	      the notion that 9 might not be a prime is just a theory,
+	      11 is a prime...
+--
+                    *** ***
+JE MAINTIENDRAI   ***** *****
+                 ****** ******    30 Apr 84 [11 Floreal An CXCII]
+ken perlow       *****   *****
+(312)979-7261     ** ** ** **
+..ihnp4!ihuxq!ken   *** ***`},
+{ real:true, from:"chaltas@uiuccsb.UUCP", path:"brezvax!decvax!ihnp4!inuxc!pur-ee!uiucdcs!uiuccsb!chaltas",
+pv:"Notesfiles; site uiuccsb.UUCP",
+org:"U. of Illinois", refs:"<872@brl-vgr.UUCP>",
+subj:"Re: How to tell if your stupid - (nf)", date:"Mon, 30-Apr-84 13:47:00 EDT", id:"<8700105@uiuccsb.UUCP>",
+body:
+`#R:brl-vgr:-87200:uiuccsb:8700105:000:505
+uiuccsb!chaltas    Apr 30 12:47:00 1984
+
+/**** uiuccsb:net.jokes / fortune!mbr     / 12:33 am  Apr 28, 1984 ****/
+<FLAME ON>
+	"How to tell if you are stupid"
+
+Most of us are programmers.  We wouldn't expect the "C" compiler to tolerate
+"misspellings" like:
+
+	if (a = b)
+
+when what is intended is:
+
+	if (a == b)
+/*-------*/
+but the C compiler is very happy with
+	if (a = b)
+If b happens to be 0, then the expression is false, else . . .
+     (I know ... this doesn't belong here, but I can't resist flaming a flamer).
+         uiucdcs!chaltas`},
+{ real:true, from:"mam@charm.UUCP (Matthew Marcus)", path:"brezvax!decvax!ihnp4!mhuxl!mhuxm!mhuxn!mhuxr!mhuxt!mhuxv!mhuxa!mhuxd!mhuxh!mhuxi!charm!mam",
+pv:"version B 2.10.1 6/24/83; site charm.UUCP",
+org:"Physics Research - AT&T Bell Labs MH", groups:"net.jokes,net.wanted",
+subj:"HhGTTn", date:"Mon, 30-Apr-84 15:47:37 EDT", id:"<342@charm.UUCP>",
+body:
+`I would like a copy of the complete "Hitchhiker's Guide to the Net".
+I can't seem to mail to sf-lovers-request@rutgers, as was suggested, nor
+do I know anything about FTP or ARPANET. Thanx.
+	{Bell labs}!charm!mam
+
+[archivist's note, 2026: look at that Path: header.  eight
+ machines named mhux-something, all inside Bell Labs, before
+ the message ever saw daylight.  the eighties were a maze.]`}
+]},
+
+{ name:"net.sf-lovers", desc:"Science fiction lovers' newsgroup", arts:[
+{ from:"ed@sri-unix.UUCP (Ed R.)", path:"brezvax!decvax!ucbvax!sri-unix!ed",
+org:"SRI International",
+subj:"it is now 1984.  scorecard.", date:"Wed, 4-Apr-84 18:20:15 PST", id:"<2740@sri-unix.UUCP>",
+body:
+`We are a third of the way through the year of the
+book, so: an honest audit.
+
+  Telescreens: not yet.  Though I typed my thoughts
+  into a machine all day and it kept a log, so call
+  it partial credit.
+
+  Newspeak: nothing so tidy.  We grew marketing-speak
+  instead, which does not shrink the dictionary, just
+  bruises it.
+
+  Memory hole: still manual.  You have to grep for
+  things yourself and burn them one at a time.
+
+  Two Minutes Hate: replaced by net.flame, which runs
+  considerably longer.
+
+Overall: Orwell 4/10 on hardware, 8/10 on mood.  Big
+Brother is not watching; he is cross-posting.`},
+{ from:"ky@hplabs.UUCP (K. Yee)", path:"brezvax!decvax!ucbvax!hplabs!ky",
+org:"HP Labs, Palo Alto",
+subj:"Star Trek III opens in June -- spoiler rules", date:"Tue, 24-Apr-84 20:03:41 PST", id:"<1861@hplabs.UUCP>",
+body:
+`House rules, proposed, before the flames start:
+
+1. NO plot details in Subject: lines.  People read
+   spool directories, you monsters.
+
+2. Anything real goes through rot13.  If your reader
+   cannot rotate, that is what the X key is for.
+
+3. Speculation is fair game.  We all saw how II
+   ended.  We all have theories.  (Mine follows,
+   encrypted, so nobody yells at me.)
+
+   Zl gurbel: Fcbpx yvirf.
+
+That is all.  June cannot come fast enough.`}
+]}
+];
+
+/* ------------------------------------------------------------------ */
+/*  machinery                                                          */
+/* ------------------------------------------------------------------ */
+
+const screen  = document.getElementById("screen");
+const status  = document.getElementById("status");
+const keysBar = document.getElementById("softkeys");
+
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const rot13 = s => s.replace(/[a-zA-Z]/g, c =>
+  String.fromCharCode((c<="Z"?90:122) >= c.charCodeAt(0)+13 ? c.charCodeAt(0)+13 : c.charCodeAt(0)-13));
+
+let mode = "boot";          // boot | groups | list | article | help | setup | shell | dial
+let gi = 0, ai = 0;
+let rotOn = false;
+let drawTimer = null;
+let paintMs = 11;           // 9600-baud repaint
+
+function setStatus(t){ status.textContent = t; }
+
+function setKeys(defs){
+  keysBar.innerHTML = "";
+  defs.forEach(([label,fn])=>{
+    const b = document.createElement("button");
+    b.className = "key";
+    b.innerHTML = label;
+    b.addEventListener("click", fn);
+    keysBar.appendChild(b);
+  });
+}
+
+/* draw a screen as lines, painted top-to-bottom like a baud-limited repaint */
+function paint(lines, after){
+  if(drawTimer) clearInterval(drawTimer);
+  screen.innerHTML = "";
+  let i = 0;
+  const step = ()=>{
+    if(i >= lines.length){
+      if(drawTimer) clearInterval(drawTimer); drawTimer = null;
+      if(after) after();
+      return;
+    }
+    const div = document.createElement("div");
+    if(typeof lines[i] === "string"){ div.innerHTML = lines[i] === "" ? "&nbsp;" : lines[i]; }
+    else { lines[i](div); }
+    screen.appendChild(div);
+    i++;
+  };
+  if(paintMs === 0){ while(i < lines.length) step(); step(); return; }
+  drawTimer = setInterval(step, paintMs);
+}
+
+function rowSpan(text, cls, onTap){
+  return el=>{
+    const s = document.createElement("span");
+    s.className = "row" + (cls?(" "+cls):"");
+    s.tabIndex = 0;
+    s.innerHTML = text;
+    s.addEventListener("click", onTap);
+    s.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); onTap(); }});
+    el.appendChild(s);
+  };
+}
+
+/* a tappable span hidden inside article text */
+function wire(el, marker, onTap, label){
+  el.querySelectorAll("span._w").forEach(s=>{
+    s.className = "wire"; s.tabIndex = 0;
+    s.setAttribute("role","link");
+    s.setAttribute("aria-label", label || "hidden connection");
+    s.addEventListener("click", onTap);
+    s.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); onTap(); }});
+  });
+}
+
+/* ------------------------- screens ------------------------------- */
+
+function showGroups(){
+  mode = "groups";
+  const lines = [];
+  lines.push('<span class="inv"> netnews '+esc(BNEWS)+' </span>  site: '+SITE);
+  lines.push("");
+  lines.push('<span class="hdr">  #  newsgroup            arts  description</span>');
+  lines.push('<span class="hdr">  -  ---------            ----  -----------</span>');
+  GROUPS.forEach((g,idx)=>{
+    const n  = String(idx+1).padStart(3," ");
+    const nm = g.name.padEnd(20," ");
+    const ct = String(g.arts.length).padStart(4," ");
+    lines.push(rowSpan(esc(n+"  "+nm+" "+ct+"  "+g.desc), "trunc", ()=>{ gi=idx; showList(); }));
+  });
+  lines.push("");
+  lines.push('<span class="dim">Tue May  1 09:12:44 EST 1984 -- you have new news.</span>');
+  lines.push('<span class="dim">tap a group, or press its number.</span>');
+  paint(lines);
+  setStatus("newsgroups -- [1-"+GROUPS.length+"] read  [?] help  [q] quit");
+  setKeys([
+    ["<b>?</b> help", showHelp],
+    ["set-up", showSetup],
+    ["<b>q</b> quit", quitToShell]
+  ]);
+}
+
+function showList(){
+  mode = "list";
+  const g = GROUPS[gi];
+  const lines = [];
+  lines.push('<span class="inv"> '+esc(g.name)+' </span>  '+g.arts.length+" article"+(g.arts.length>1?"s":""));
+  lines.push("");
+  g.arts.forEach((a,idx)=>{
+    const n = String(idx+1).padStart(3," ");
+    const from = a.from.replace(/\s*\(.*\)/,"");
+    lines.push(rowSpan(esc(n+"  "+a.subj), "trunc", ()=>{ ai=idx; showArticle(); }));
+    lines.push('<span class="dim trunc">     '+esc(from)+"  --  "+esc(a.date.replace(/^\w+, /,""))+"</span>");
+  });
+  lines.push("");
+  lines.push('<span class="dim">tap an article, or press its number.</span>');
+  paint(lines);
+  setStatus(g.name+" -- [1-"+g.arts.length+"] read  [g] groups  [?] help");
+  setKeys([
+    ["<b>g</b> groups", showGroups],
+    ["<b>?</b> help", showHelp],
+    ["<b>q</b> quit", quitToShell]
+  ]);
+}
+
+function showArticle(){
+  mode = "article";
+  const g = GROUPS[gi];
+  const a = g.arts[ai];
+  const body = rotOn ? rot13(a.body) : a.body;
+  const nlines = a.body.split("\n").length;
+  const lines = [];
+  lines.push('<span class="inv"> article '+(ai+1)+' of '+g.arts.length+' in '+esc(g.name)+' </span>' + (rotOn?'  <span class="inv"> ROT13 </span>':""));
+  lines.push("");
+  lines.push('<span class="hdr">'+esc("Relay-Version: "+BNEWS+"; site "+SITE+".UUCP")+"</span>");
+  if(a.pv) lines.push('<span class="hdr">'+esc("Posting-Version: "+a.pv)+"</span>");
+  lines.push('<span class="hdr">'+esc("Path: "+a.path)+"</span>");
+  lines.push('<span class="hdr">'+esc("From: "+a.from)+"</span>");
+  lines.push('<span class="hdr">'+esc("Newsgroups: "+(a.groups||g.name))+"</span>");
+  lines.push('<span class="hdr">'+esc("Subject: "+a.subj)+"</span>");
+  lines.push('<span class="hdr">'+esc("Message-ID: "+a.id)+"</span>");
+  lines.push('<span class="hdr">'+esc("Date: "+a.date)+"</span>");
+  if(a.refs) lines.push('<span class="hdr">'+esc("References: "+a.refs)+"</span>");
+  if(a.org) lines.push('<span class="hdr">'+esc("Organization: "+a.org)+"</span>");
+  lines.push('<span class="hdr">'+esc("Lines: "+nlines)+"</span>");
+  lines.push("");
+  body.split("\n").forEach(l=>{
+    if(!rotOn && a.wire && l.includes(a.wire)){
+      const html = esc(l).replace(esc(a.wire), '<span class="_w">'+esc(a.wire)+'</span>');
+      lines.push(el=>{ el.innerHTML = html; wire(el, a.wire, dialArpanet, "place the call"); });
+    } else {
+      lines.push(esc(l));
+    }
+  });
+  lines.push("");
+  lines.push('<span class="dim">-- end of article '+(ai+1)+" --</span>");
+  paint(lines, ()=>{ screen.scrollTop = 0; });
+  setStatus(g.name+" #"+(ai+1)+" -- [n]ext [p]rev [b]ack [x]rot13");
+  setKeys([
+    ["<b>n</b> next", nextArt],
+    ["<b>p</b> prev", prevArt],
+    ["<b>x</b> rot13", toggleRot],
+    ["<b>b</b> list", showList],
+    ["<b>g</b> groups", showGroups]
+  ]);
+}
+
+function nextArt(){
+  const g = GROUPS[gi];
+  rotOn = false;
+  if(ai < g.arts.length-1){ ai++; showArticle(); }
+  else if(gi < GROUPS.length-1){ gi++; ai=0; showList(); }
+  else showGroups();
+}
+function prevArt(){
+  rotOn = false;
+  if(ai > 0){ ai--; showArticle(); } else showList();
+}
+function toggleRot(){ rotOn = !rotOn; showArticle(); }
+
+/* ------------------------- help ---------------------------------- */
+
+function showHelp(){
+  mode = "help";
+  const lines = [
+'<span class="inv"> netnews -- help &amp; provenance </span>',
+"",
+"KEYS   1-9  select group / article       n  next article",
+"       p    previous article             b  back to list",
+"       g    group menu                   x  rot13 toggle",
+"       ?    this screen                  q  quit to shell",
+"       `    terminal set-up screen",
+"",
+"Everything is also tappable, because it is not actually",
+"1984, whatever the phosphor says.",
+"",
+'<span class="hdr">WHAT IS REAL HERE</span>',
+"",
+"Most of the spool.  These arrived on real wires in April",
+"1984 and are reprinted verbatim from the utzoo tapes",
+"(Henry Spencer's archive, via archive.org/details/",
+"usenet-net), with only the Path: rewritten for brezvax's",
+"feed: the kremvax hoax of April 1 and all four replies,",
+"Piet Beertema's EXPIRED-news post (he forged kremvax five",
+"months later; the wire remembers), every net.columbia",
+"article, and every net.jokes article.",
+"",
+"Also real: the net.* groups and their descriptions (this",
+"is before the Great Renaming of 1987), B news 2.10.1 and",
+"its headers, the backbone sites in the Path: lines, rot13",
+"and the [x] key, and the census -- some 900 sites moving",
+"225 articles a day, doubling yearly, death imminent since",
+"'83 at least.",
+"",
+'<span class="hdr">WHAT IS INVENTED</span>',
+"",
+"The site brezvax and its people: anna's announcement, the",
+"ghost-TIP letter in net.news, the net volume post, the",
+"Russian-blues thread, the sendmail and vi-vs-emacs posts,",
+"the Macintosh review and its reply, and both net.sf-lovers",
+"articles.  Invented, but period-checked: the 512K Mac",
+"rumor, for one, comes true in September.  (Brezvax's",
+"namesake farmstead in Vidzeme is quite real, and older",
+"than the telegraph.)",
+"",
+"The archived articles are quoted with love and for",
+"history; their words belong to their authors.",
+"",
+'<span class="dim">simulated with affection by Claude, 2026 --</span>',
+'<span class="dim">a distant downstream node.  ...!future!claude</span>',
+"",
+  rowSpan("[ press any key or tap here to return ]","dim",backFromHelp)
+  ];
+  paint(lines);
+  setStatus("help -- any key returns");
+  setKeys([["return", backFromHelp]]);
+}
+function backFromHelp(){
+  if(mode!=="help") return;
+  showGroups();
+}
+
+/* ------------------------- set-up screen ------------------------- */
+
+const PHOS = [
+  {name:"GREEN P1 ", ink:"#3dff70", bg:"#04120a", glow:"0 0 6px rgba(61,255,112,.55), 0 0 1px rgba(61,255,112,.9)", dim:"#1d8f42"},
+  {name:"AMBER P3 ", ink:"#ffb43a", bg:"#120c02", glow:"0 0 6px rgba(255,180,58,.5), 0 0 1px rgba(255,180,58,.9)", dim:"#96691f"},
+  {name:"WHITE P4 ", ink:"#e6f2ee", bg:"#0a0d0c", glow:"0 0 5px rgba(230,242,238,.45)", dim:"#7b8a85"}
+];
+let pi = 0;
+let fx = true;
+const BAUDS = [{name:"9600", ms:11},{name:"1200", ms:42},{name:"AS FAST AS THE GLASS ALLOWS", ms:0}];
+let bi = 0;
+
+function applyPhos(){
+  const p = PHOS[pi];
+  const r = document.documentElement.style;
+  r.setProperty("--phos", p.ink);
+  r.setProperty("--bg", p.bg);
+  r.setProperty("--glow", p.glow);
+  r.setProperty("--phos-dim", p.dim);
+}
+function applyFx(){
+  document.body.classList.toggle("fx-off", !fx);
+}
+
+function showSetup(){
+  mode = "setup";
+  const lines = [
+'<span class="inv"> SET-UP A </span>',
+"",
+"        TO EXIT: PRESS ` OR TAP [ exit set-up ]",
+"",
+rowSpan("        PHOSPHOR        [ "+PHOS[pi].name.trim()+" ]", null, ()=>{ pi=(pi+1)%PHOS.length; applyPhos(); showSetup(); }),
+"",
+rowSpan("        GLASS FX        [ "+(fx?"ON":"OFF")+" ]", null, ()=>{ fx=!fx; applyFx(); showSetup(); }),
+"",
+rowSpan("        REPAINT         [ "+BAUDS[bi].name+" ]", null, ()=>{ bi=(bi+1)%BAUDS.length; paintMs=BAUDS[bi].ms; showSetup(); }),
+"",
+"",
+'<span class="dim">        tap a field to cycle it.  settings take effect at</span>',
+'<span class="dim">        once and survive nothing.  it is 1984; persistence</span>',
+'<span class="dim">        costs extra.</span>'
+  ];
+  const hold = paintMs; paintMs = 0;   // set-up repaints instantly, like real ROMs
+  paint(lines);
+  paintMs = hold;
+  setStatus("set-up -- ` exits");
+  setKeys([["exit set-up", ()=>{ showGroups(); }]]);
+}
+
+/* ------------------------- shell & the wire down ------------------ */
+
+function quitToShell(){
+  mode = "shell";
+  paint([
+    "",
+    esc("$ logout"),
+    "",
+    '<span class="dim">brezvax login:</span> <span class="cursor"></span>',
+    ""
+  ]);
+  setStatus("connection idle -- tap RECONNECT");
+  setKeys([["RECONNECT", boot]]);
+}
+
+/* the hidden door: dial the ghost TIP and fall through to 1977 */
+function dialArpanet(){
+  if(mode === "dial") return;
+  mode = "dial";
+  setKeys([]);
+  setStatus("placing call ...");
+  const lines = [
+    "",
+    esc("$ tip arpa"),
+    '<span class="dim">[dialing]</span>',
+  ];
+  paint(lines, ()=>{
+    let wait = 900;
+    setTimeout(()=>{
+      const d = document.createElement("div");
+      d.textContent = "connected";
+      screen.appendChild(d);
+      setStatus("CONNECT 300 -- something very old answered");
+      setTimeout(()=>{
+        const d2 = document.createElement("div");
+        d2.innerHTML = "&nbsp;";
+        screen.appendChild(d2);
+        const d3 = document.createElement("div");
+        d3.className = "dim";
+        d3.textContent = "(the herald says 1977. we don't ask.)";
+        screen.appendChild(d3);
+        setTimeout(()=>{ window.location.href = "arpanet/"; }, 1400);
+      }, 900);
+    }, wait);
+  });
+}
+
+/* ------------------------- boot ---------------------------------- */
+
+function boot(){
+  mode = "boot";
+  setKeys([]);
+  setStatus("dialing brezvax ...");
+  screen.innerHTML = "";
+  const seq = [
+    ["",                                                         200],
+    ["4.2 BSD UNIX (brezvax)",                                   350],
+    ["",                                                         250],
+    ["login: ",                                                  120, "anna"],
+    ["Password:",                                                160, "......", true],
+    ["",                                                         220],
+    ["Last login: Mon Apr 30 22:41:07 on tty02",                 120],
+    ["4.2 BSD UNIX #12: Fri Mar 30 18:02:11 EST 1984",           140],
+    ["",                                                         160],
+    ["Would the person leaving 300-baud sessions parked on",     90],
+    ["the dialin PLEASE hang up when done.        -- root",      90],
+    ["",                                                         140],
+    ["You have new mail.",                                       180],
+    ["",                                                         160],
+    ["$ ",                                                       200, "readnews"],
+    ["",                                                         400]
+  ];
+  let li = 0;
+  function nextLine(){
+    if(li >= seq.length){ showGroups(); return; }
+    const [text, pause, typed, hide] = seq[li++];
+    const div = document.createElement("div");
+    div.textContent = text === "" ? " " : text;
+    screen.appendChild(div);
+    screen.scrollTop = screen.scrollHeight;
+    if(typed){
+      let ci = 0;
+      const t = setInterval(()=>{
+        if(ci >= typed.length){ clearInterval(t); setTimeout(nextLine, pause); return; }
+        div.textContent += hide ? "" : typed[ci];
+        ci++;
+      }, 85);
+    } else {
+      setTimeout(nextLine, pause);
+    }
+  }
+  nextLine();
+}
+
+/* ------------------------- keyboard ------------------------------ */
+
+document.addEventListener("keydown", e=>{
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if(mode === "dial" || mode === "boot") return;
+  if(k === "`"){ if(mode==="setup"){ showGroups(); } else showSetup(); return; }
+  if(mode === "setup"){ if(k==="escape") showGroups(); return; }
+  if(mode === "help"){ backFromHelp(); return; }
+  if(k === "?"){ showHelp(); return; }
+  if(mode === "groups"){
+    const n = parseInt(k,10);
+    if(n >= 1 && n <= GROUPS.length){ gi = n-1; showList(); }
+    if(k === "q") quitToShell();
+  } else if(mode === "list"){
+    const n = parseInt(k,10);
+    if(n >= 1 && n <= GROUPS[gi].arts.length){ ai = n-1; showArticle(); }
+    if(k === "g") showGroups();
+    if(k === "q") quitToShell();
+  } else if(mode === "article"){
+    if(k === "n") nextArt();
+    if(k === "p") prevArt();
+    if(k === "b") showList();
+    if(k === "g") showGroups();
+    if(k === "x") toggleRot();
+    if(k === " "){ e.preventDefault(); screen.scrollBy({top: screen.clientHeight*0.85, behavior:"smooth"}); }
+  } else if(mode === "shell" && k === "enter"){
+    boot();
+  }
+});
+
+boot();
+})();
+</script>
+</body>
+</html>
