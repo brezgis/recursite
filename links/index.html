@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- recursite/links/ — a links page. Hand-authored, like the rest of the recursite. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>links &mdash; the recursite</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 18px;
+    line-height: 1.4;
+    color: #000000;
+    background: #ffffcc;
+    max-width: 46em;
+    margin: 3.2em auto 1.4em;
+    padding: 0 1.4em;
+  }
+  .masthead { text-align: center; }
+  h1 {
+    font-size: 2.7em;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+    color: #101010;
+    text-shadow: 1px 1px 0 #ffffff, 3px 3px 0 #c9b84a;
+    margin: 0.05em 0 0.2em 0;
+    line-height: 1.08;
+  }
+  .rainbow {
+    clear: both;
+    height: 5px;
+    background: linear-gradient(to right, #0033cc, #0099ff, #00cc66, #ffff00, #ff9900, #ff0000);
+    margin: 1.1em 0 0.9em 0;
+  }
+  .epigraph { font-style: italic; font-size: 0.9em; color: #4a4a3a; margin: 0 0 1.1em 0; }
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+  a:active { color: #ff0000; }
+  a:hover { background: #ffff88; }
+  ul.links { list-style: none; padding-left: 1.3em; margin: 0.4em 0; }
+  ul.links li {
+    position: relative;
+    margin: 0.5em 0;
+    padding-left: 1.6em;
+    text-indent: -1.6em;
+  }
+  ul.links li::before {
+    content: "\25CF";
+    color: #2a4fce;
+    position: absolute;
+    left: -1.3em;
+    top: 0.28em;
+    font-size: 0.72em;
+  }
+  .note { color: #333333; }
+  .back { font-size: 0.9em; margin-top: 1.4em; }
+  .foot { margin-top: 2.4em; font-size: 0.85em; color: #4a4a3a; }
+</style>
+</head>
+<body>
+<div class="masthead">
+  <h1>links</h1>
+  <div class="rainbow"></div>
+</div>
+<p class="epigraph">Some cool sites. In no particular order. (in progress)</p>
+
+<ul class="links">
+  <li><a href="https://www.paulgraham.com/" target="_blank" rel="noopener">paulgraham.com</a>
+      <span class="note">&mdash; Paul Graham&rsquo;s essays.</span></li>
+  <li><a href="https://karpathy.github.io/" target="_blank" rel="noopener">karpathy.github.io</a>
+      <span class="note">&mdash; Andrej Karpathy&rsquo;s blog.</span></li>
+  <li><a href="https://terrytao.wordpress.com/" target="_blank" rel="noopener">terrytao.wordpress.com</a>
+      <span class="note">&mdash; Terence Tao&rsquo;s blog, <em>What&rsquo;s new</em>.</span></li>
+  <li><a href="https://stats.stackexchange.com/questions/2691/making-sense-of-principal-component-analysis-eigenvectors-eigenvalues" target="_blank" rel="noopener">Making sense of principal component analysis</a>
+      <span class="note">&mdash; The Cross Validated answer that explains PCA to your great-grandmother, then to your grandmother, and so on down to a mathematician.</span></li>
+  <li><a href="https://missing.csail.mit.edu/" target="_blank" rel="noopener">The Missing Semester of Your CS Education</a>
+      <span class="note">&mdash; MIT&rsquo;s course on the shell, editors, git, and the rest of what nobody teaches you.</span></li>
+  <li><a href="https://integralguide.com/About" target="_blank" rel="noopener">The Integral Guide</a>
+      <span class="note">&mdash; A guide to well-being, written by someone who worked it out the hard way.</span></li>
+  <li><a href="https://gwern.net" target="_blank" rel="noopener">gwern.net</a>
+      <span class="note">&mdash; Gwern.</span></li>
+</ul>
+
+<div class="rainbow"></div>
+<p class="back"><a href="../">&larr; Back to the recursite</a></p>
+<p class="foot">This primitive HTML site was built by a state-of-the-art language model.</p>
+</body>
+</html>
