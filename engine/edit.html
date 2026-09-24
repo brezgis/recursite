@@ -34,7 +34,7 @@
   #page h1{font-size:2.7em;font-weight:bold;letter-spacing:.03em;color:#101010;text-shadow:1px 1px 0 #fff,3px 3px 0 #c9b84a;margin:.05em 0 .2em;line-height:1.08;border:1px dashed transparent}
   #page h1:focus,#page .epigraph:focus{outline:none;border-color:#2a4fce}
   #page .rainbow{height:5px;background:linear-gradient(to right,#0033cc,#0099ff,#00cc66,#ffff00,#ff9900,#ff0000);margin:1.1em 0 .9em}
-  #page .epigraph{font-style:italic;font-size:.9em;color:#4a4a3a;margin:0 0 1.1em;border:1px dashed transparent;min-height:1.2em}
+  #page .epigraph{white-space:pre-line;font-style:italic;font-size:.9em;color:#4a4a3a;margin:0 0 1.1em;border:1px dashed transparent;min-height:1.2em}
   #canvas{position:relative;min-height:600px;outline:1px dashed #c9b84a}
   #canvas.grid{background-image:linear-gradient(#0000000a 1px,transparent 1px),linear-gradient(90deg,#0000000a 1px,transparent 1px);background-size:8px 8px}
   .blk.sel{outline:2px solid var(--sel);outline-offset:2px}
@@ -377,7 +377,7 @@ function props(full=true){
 /* ---------- toolbar ---------- */
 async function save(){
   if(!SLUG){$("#status").textContent="no page — make one first";return;}
-  L.title=$("#ttl").textContent.trim()||SLUG; L.epigraph=$("#epi").textContent.trim(); L.canvasW=CANVAS_W;
+  L.title=$("#ttl").textContent.trim()||SLUG; L.epigraph=$("#epi").innerText.trim(); L.canvasW=CANVAS_W;
   $("#status").textContent="saving…";
   try{
     const r=await fetch("api/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({slug:SLUG,layout:L,css:$("#blockcss").textContent,body:exportBody()})});
@@ -394,7 +394,7 @@ $("#gridBtn").onclick=()=>$("#canvas").classList.toggle("grid");
 $("#minH").onchange=()=>{push();L.minH=Math.max(400,parseInt($("#minH").value)||600);render();};
 $("#longer").onclick=()=>{push();L.minH=(L.minH||600)+400;$("#minH").value=L.minH;render();};
 $("#undoBtn").onclick=doUndo;
-$("#exportBtn").onclick=()=>{L.title=$("#ttl").textContent.trim();L.epigraph=$("#epi").textContent.trim();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(L,null,1)],{type:"application/json"}));a.download=`${SLUG||"page"}-layout.json`;a.click();};
+$("#exportBtn").onclick=()=>{L.title=$("#ttl").textContent.trim();L.epigraph=$("#epi").innerText.trim();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(L,null,1)],{type:"application/json"}));a.download=`${SLUG||"page"}-layout.json`;a.click();};
 $("#importBtn").onclick=()=>$("#importFile").click();
 $("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{push();const j=JSON.parse(t);L=Object.assign(L,j);$("#ttl").textContent=L.title||SLUG;$("#epi").textContent=L.epigraph||"";$("#minH").value=L.minH||600;sel=null;render();props();});};
 $("#help").textContent=HELP;

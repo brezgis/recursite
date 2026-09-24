@@ -92,7 +92,8 @@ def build(slug, layout, css, body):
         return m.group(0)
     body = re.sub(r'src="([^"]+)"', sub, body)
     epi = layout.get("epigraph", "")
-    epigraph = '<p class="epigraph">%s</p>' % esc(epi) if epi else ""
+    # one epigraph per line, so a page can carry several, each with its own attribution
+    epigraph = "\n".join('<p class="epigraph">%s</p>' % esc(line.strip()) for line in epi.split("\n") if line.strip())
     page = PAGE % {"slug": slug, "title": esc(layout.get("title") or slug), "css": css, "body": body, "epigraph": epigraph}
     with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
         f.write(page)
