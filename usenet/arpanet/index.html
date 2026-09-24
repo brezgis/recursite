@@ -1,10 +1,11 @@
 <!doctype html>
-<!-- you dialed a number that should have been disconnected years ago. it answered. -->
+<!-- you dialed a number that should have been disconnected years ago. it answered.
+     sources for what follows are cited in the script below and in LORE. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BBN TIP — TTY 41 — 1977</title>
+<title>BBN TIP — PORT 41 — 1977</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23f2e9d3'/%3E%3Ccircle cx='3' cy='4' r='1.3' fill='%23241f19'/%3E%3Ccircle cx='3' cy='9' r='1.3' fill='%23241f19'/%3E%3Ccircle cx='3' cy='14' r='1.3' fill='%23241f19'/%3E%3Crect x='6' y='5' width='8' height='1.6' fill='%2333302a'/%3E%3Crect x='6' y='9' width='6' height='1.6' fill='%2333302a'/%3E%3C/svg%3E">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -16,7 +17,7 @@
       repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 2px, transparent 2px 6px);
     font-family:"SFMono-Regular",Menlo,Consolas,"Liberation Mono","Courier New",monospace;
     display:flex;flex-direction:column;align-items:center;
-    padding-bottom:120px;
+    padding-bottom:170px;
   }
   /* --- console strip -------------------------------------------- */
   .console{
@@ -60,7 +61,12 @@
     box-shadow:0 1px 2px rgba(0,0,0,.25);
   }
   .card b{letter-spacing:.12em;font-size:10px}
-  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .cardnote{margin-top:5px;font-size:10.5px;letter-spacing:.04em;color:#5d5646;white-space:pre-wrap}
+  /* the card's command chips ride in the keyboard bar, so thumbs can reach
+     them however much paper has gone by */
+  .chips{display:flex;gap:6px;overflow-x:auto;width:min(700px,100%);padding:0 0 8px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  .chips .chip{flex:0 0 auto;white-space:nowrap}
+  @media (min-width:760px){ .chips{flex-wrap:wrap;overflow-x:visible} }
   .chip{
     font:inherit;font-size:11px;letter-spacing:.06em;
     background:#efe6cc;border:1px solid #b7ac8e;border-radius:2px;
@@ -101,6 +107,7 @@
   .paper::before{left:0;border-right:1px dashed rgba(90,80,60,.5)}
   .paper::after{right:0;border-left:1px dashed rgba(90,80,60,.5)}
   .paper .ch{display:inline-block;white-space:pre}
+  .paper .w{white-space:nowrap}
   .paper .ch.usr{color:#1f2c52}   /* blue-black ribbon: the operator's own keystrokes */
   .head{
     display:inline-block;width:.62em;
@@ -115,7 +122,7 @@
   /* --- keyboard row ---------------------------------------------- */
   .kbrow{
     position:fixed;left:0;right:0;bottom:0;z-index:30;
-    display:flex;justify-content:center;
+    display:flex;flex-direction:column;align-items:center;
     background:linear-gradient(180deg,#37342d,#26231e);
     border-top:3px solid #4c4840;
     box-shadow:0 -8px 20px rgba(0,0,0,.5);
@@ -144,7 +151,7 @@
 <body>
 
 <div class="console" role="toolbar" aria-label="Teletype controls">
-  <span class="plate">TELETYPE MODEL 33 ASR &middot; TTY 41 &middot; BBN TIP</span>
+  <span class="plate">MODEL 33 ASR &middot; NCC-TIP PORT 41</span>
   <div class="switches">
     <button class="sw" id="sndBtn" aria-pressed="false">SOUND OFF</button>
     <button class="sw" id="spdBtn" aria-pressed="false">SPEED: BRISK</button>
@@ -153,8 +160,8 @@
 </div>
 
 <div class="card" aria-label="Quick command card">
-  <b>OPERATOR'S CARD &mdash; COMMANDS THIS HOST UNDERSTANDS</b>
-  <div class="chips" id="chips"></div>
+  <b>OPERATOR'S CARD</b>
+  <div class="cardnote" id="cardnote"></div>
 </div>
 
 <div class="paperwrap">
@@ -162,6 +169,7 @@
 </div>
 
 <div class="kbrow">
+  <div class="chips" id="chips" aria-label="Quick commands"></div>
   <div class="kbinner">
     <label for="kb">KEYBOARD &#8669;</label>
     <input id="kb" autocomplete="off" autocapitalize="characters" spellcheck="false"
@@ -171,6 +179,27 @@
 </div>
 
 <script>
+/* =====================================================================
+   NCC-TIP, PORT 41, 1977.
+
+   Sources (all public; formats below are copied from them, not guessed):
+   [2183] J. Malman, "User's Guide to the Terminal IMP", BBN Report 2183,
+          NIC 10916, August 1975 revision (DTIC AD-A014398; scan on
+          Wikimedia Commons).  Hunt character "E", "Trying..."/"Open"/
+          "Closed"/"Refused"/"Can't"/"BAD"/"Num"/"Wait", the @ command
+          grammar (first letter is all that matters), @@, the net-news
+          reminder, and Appendix A (the host table used below).
+   [EXEC] T. Myer, J. Barnaby, W. Plummer, "TENEX Executive Manual",
+          BBN, April 1973 (NIC 16874; bitsavers.org/pdf/bbn/tenex).
+          LOGIN, LOGOUT, SYSTAT, WHERE and DAYTIME output formats.
+   [TUG]  "TENEX User's Guide", BBN, Jan 1975 with 1977 updates
+          (bitsavers.org/pdf/bbn/tenex).  HOSTAT, NETSTAT, READMAIL,
+          DOCTOR; the TENEX herald pattern (PTIP section, 10-26-77).
+   [DIR]  "ARPANET Directory", NIC 32992, July 1975 (Computer History
+          Museum, 102805037).  NICGUEST login at OFFICE-1; people.
+   [MAP]  "ARPANET Logical Map, March 1977" (Wikimedia Commons).
+   [RFC]  RFC 439, 527, 606, 608, 724 (rfc-editor.org).
+   ===================================================================== */
 (function(){
 "use strict";
 
@@ -189,6 +218,7 @@ let queue = [];               // items: {text, cls}
 let printing = false;
 let curLine = null;
 let head = null;
+let gen = 0;                  // bumps on reset, so stale timers die quietly
 
 function ensureLine(cls){
   if(!curLine){
@@ -218,15 +248,32 @@ function jitterSpan(c, cls){
   return s;
 }
 
+/* characters are inline-blocks (for the jitter), which the browser will
+   happily break between; group each word so lines wrap at spaces */
+let curWord = null;
+function putChar(c, cls){
+  ensureLine(cls);
+  if(c === " "){ curWord = null; curLine.appendChild(jitterSpan(c, cls)); return; }
+  if(!curWord || curWord.parentNode !== curLine){
+    curWord = document.createElement("span");
+    curWord.className = "w";
+    curLine.appendChild(curWord);
+  }
+  curWord.appendChild(jitterSpan(c, cls));
+}
+
 function scrollDown(){
   window.scrollTo({top: document.body.scrollHeight, behavior:"auto"});
 }
 
-function stepPrint(){
+function stepPrint(myGen){
+  if(myGen !== gen) return;
   if(queue.length === 0){ printing = false; setBusy(false); return; }
   printing = true; setBusy(true);
   const item = queue[0];
-  if(item.text.length === 0){ queue.shift(); stepPrint(); return; }
+  if(item.fn){ queue.shift(); item.fn(); stepPrint(myGen); return; }
+  if(item.pause){ queue.shift(); setTimeout(()=>stepPrint(myGen), item.pause * (42/cps)); return; }
+  if(item.text.length === 0){ queue.shift(); stepPrint(myGen); return; }
   const c = item.text[0];
   item.text = item.text.slice(1);
   if(item.text.length === 0) queue.shift();
@@ -238,45 +285,45 @@ function stepPrint(){
     clack(true);
     scrollDown();
   } else {
-    ensureLine(item.cls);
-    curLine.appendChild(jitterSpan(c, item.cls));
+    putChar(c, item.cls);
     if(c !== " ") clack(false);
   }
   head.remove(); paper.appendChild(head);
   if(curLine) curLine.appendChild(head);
-  setTimeout(stepPrint, 1000/cps * (c==="\n" ? 3.2 : 1));
+  setTimeout(()=>stepPrint(myGen), 1000/cps * (c==="\n" ? 3.2 : 1));
 }
+function kick(){ if(!printing){ printing = true; setBusy(true); stepPrint(gen); } }
 
-function print(text, cls){
-  queue.push({text:String(text), cls:cls||""});
-  if(!printing) stepPrint();
-}
+/* everything goes through the ASR-33, which has no lowercase: the TIP folds
+   its own mixed-case messages ("Trying...", "Open") to capitals on the way */
+function print(text, cls){ queue.push({text:String(text).toUpperCase(), cls:cls||""}); kick(); }
 function println(text, cls){ print((text||"")+"\n", cls); }
+function pause(ms){ queue.push({pause:ms}); kick(); }
+function then(fn){ queue.push({fn}); kick(); }
 
 function flush(){
-  // dump the whole queue instantly
+  // PAPER ADVANCE: dump the whole queue instantly (pauses collapse)
   while(queue.length){
     const item = queue.shift();
+    if(item.fn){ item.fn(); continue; }
+    if(item.pause) continue;
     for(const c of item.text){
       if(c === "\n"){
         ensureLine(item.cls);
         if(curLine.childNodes.length === 0) curLine.innerHTML = "&nbsp;";
         curLine = null;
       } else {
-        ensureLine(item.cls);
-        curLine.appendChild(jitterSpan(c, item.cls));
+        putChar(c, item.cls);
       }
     }
   }
   head.remove();
   if(curLine) curLine.appendChild(head); else paper.appendChild(head);
-  printing = false; setBusy(false);
+  gen++; printing = false; setBusy(false);
   scrollDown();
 }
 
-function setBusy(b){
-  sendBtn.disabled = b;
-}
+function setBusy(b){ sendBtn.disabled = b; }
 
 /* =================================================================
    SOUND — tiny synthesized teletype
@@ -291,7 +338,7 @@ function clack(isReturn){
   if(!soundOn || !audio) return;
   const t = audio.currentTime;
   const dur = isReturn ? 0.05 : 0.014;
-  const buf = audio.createBuffer(1, audio.sampleRate*dur, audio.sampleRate);
+  const buf = audio.createBuffer(1, Math.max(1, Math.floor(audio.sampleRate*dur)), audio.sampleRate);
   const d = buf.getChannelData(0);
   for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
   const src = audio.createBufferSource(); src.buffer = buf;
@@ -314,167 +361,190 @@ function dingBell(){
 }
 
 /* =================================================================
-   1977 CLOCK — today's real date, fifty years upstream
+   1977 CLOCK — today's calendar day and wall time, moved to 1977.
+   (EST/EDT by the 1977 rules: daylight time 24 APR - 30 OCT.)
    ================================================================= */
-const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-function date77(){
-  const n = new Date();
-  return n.getDate()+"-"+MON[n.getMonth()]+"-77";
+const MON  = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const MONL = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+const DAYL = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+function d77(offsetDays){
+  const n = new Date(Date.now() - (offsetDays||0)*86400000);
+  let day = n.getDate();
+  if(n.getMonth() === 1 && day === 29) day = 28;      // 1977 was not a leap year
+  return new Date(1977, n.getMonth(), day, n.getHours(), n.getMinutes(), n.getSeconds());
 }
-function time77(){
-  const n = new Date();
-  return String(n.getHours()).padStart(2,"0") + ":" +
-         String(n.getMinutes()).padStart(2,"0") + ":" +
-         String(n.getSeconds()).padStart(2,"0");
+const pad2 = x => String(x).padStart(2,"0");
+function date77(off){ const d = d77(off); return d.getDate()+"-"+MON[d.getMonth()]+"-77"; }
+function hhmm(){ const d = d77(); return pad2(d.getHours())+":"+pad2(d.getMinutes()); }
+function hhmmss(){ const d = d77(); return hhmm()+":"+pad2(d.getSeconds()); }
+function zone77(){
+  const d = d77();
+  return (d >= new Date(1977,3,24,2) && d < new Date(1977,9,30,2)) ? "EDT" : "EST";
 }
-function prev77(){
-  const n = new Date(Date.now() - 86400000);
-  return n.getDate()+"-"+MON[n.getMonth()]+"-77";
+function daytime(){             // format per [EXEC] p.93: FRIDAY, APRIL 13, 1973 12:34:56-EST
+  const d = d77();
+  return DAYL[d.getDay()]+", "+MONL[d.getMonth()]+" "+d.getDate()+", 1977 "+hhmmss()+"-"+zone77();
 }
 
 /* =================================================================
-   EXEC — command handling
+   THE NETWORK — host table, from [2183] Appendix A (August 1975),
+   the newest complete table in hand.  Decimal address = IMP + 64 x host.
    ================================================================= */
-let mode = "exec";     // exec | advent | dead
+const HOSTS = [
+ // dec, octal, name, computer, system, status
+ [ 43,"053","OFFICE-1",   "PDP-10",      "TENEX,NLS", "SERVER"],
+ [ 49,"061","BBN-TENEXB", "PDP-10",      "TENEX",     "SERVER"],
+ [241,"361","BBN-TENEX",  "PDP-10",      "TENEX",     "SERVER"],
+ [197,"305","BBN-TENEXA", "PDP-10",      "TENEX",     "LIMITED"],
+ [114,"162","BBN-TENEXD", "PDP-10",      "TENEX",     "LIMITED"],
+ [134,"206","MIT-AI",     "PDP-10",      "ITS",       "LIMITED"],
+ [198,"306","MIT-ML",     "PDP-10",      "ITS",       "SERVER"],
+ [ 70,"106","MIT-DMS",    "PDP-10",      "ITS",       "SERVER"],
+ [ 44,"054","MIT-MULTICS","H-6180",      "MULTICS",   "SERVER"],
+ [ 11,"013","SU-AI",      "PDP-10",      "DEC 10/50", "SERVER"],
+ [ 56,"070","SUMEX-AIM",  "PDP-10",      "TENEX",     "SERVER"],
+ [ 78,"116","CMU-10A",    "PDP-10",      "DEC 10/50", "LIMITED"],
+ [ 14,"016","CMU-10B",    "PDP-10",      "DEC 10/50", "SERVER"],
+ [ 86,"126","USC-ISI",    "PDP-10",      "TENEX",     "SERVER"],
+ [ 65,"101","UCLA-CCN",   "IBM 360/91",  "OS-MVT",    "SERVER"],
+ [  7,"007","RAND-RCC",   "IBM 370/158", "OS-MVT",    "SERVER"],
+ [ 71,"107","RAND-ISD",   "PDP-11/45",   "UNIX",      "SERVER"],
+ [ 16,"020","AMES-67",    "IBM 360/67",  "TSS/360",   "SERVER"],
+ [  9,"011","HARV-10",    "PDP-10",      "DEC 10/50", "LIMITED"],
+ [ 10,"012","LL",         "IBM 370/168", "VM-370",    "LIMITED"],
+ [ 32,"040","PARC-MAXC",  "MAXC",        "TENEX",     "LIMITED"],
+ [ 31,"037","CCA-TENEX",  "PDP-10",      "TENEX",     "SERVER"],
+ [ 46,"056","RUTGERS-10", "PDP-10",      "TOPS-10",   "SERVER"],
+ [ 42,"052","LONDON",     "IBM 360/195", "OS/MVT",    "LIMITED"],
+ [168,"250","NCC-TIP",    "H-316",       "TIP",       "TIP"]
+];
+const HOSTBYNUM = {};
+HOSTS.forEach(h=>{ HOSTBYNUM[h[0]] = h; });
+/* How each host answers this teletype.  Only two are wired all the way
+   through; the rest answer with the TIP's own real messages [2183 s.7]. */
+const ANSWERS = {
+  49:"TENEXB", 43:"OFFICE1",
+  241:"Host not responding", 198:"Refused", 70:"Refused", 134:"Refused",
+  44:"Refused", 11:"Refused", 56:"Refused", 86:"Refused", 65:"Refused",
+  32:"Host Scheduled Down Until Sat. at 1850 GMT", 42:"Net Trouble"
+};
 
-const HELP_TEXT =
-`COMMANDS THIS EXEC ADMITS TO:
-
-  SYSTAT   WHO IS ON, AND WHAT THEY CLAIM TO BE DOING
-  HOSTS    EXCERPT OF THE NETWORK HOST TABLE
-  MAP      THE NETWORK, DRAWN IN INK AND HOPE
-  MAIL     READ YOUR MESSAGES (YOU HAVE SOME)
-  RFC      INDEX OF SELECTED RFCS; RFC <N> FOR A NOTE
-  DAYTIME  THE HOST'S OPINION OF THE TIME
-  ADVENT   A GAME.  YOU HAVE BEEN WARNED.
-  BELL     RINGS THE BELL.  THAT IS ALL IT DOES.
-  LORE     NOTES FROM THE OPERATOR, RE: THIS SIMULATION
-  LOGOUT   KILL THE JOB AND TEAR OFF THE PAPER
-`;
-
-const HOSTS_TEXT =
-` ADDR   HOST NAME     SYSTEM    MACHINE
- ----   ---------     ------    -------
-  1/1   UCLA-CCN      OS-MVT    IBM 360/91
-  0/51  SRI-KA        TENEX     PDP-10
-  0/11  SU-AI         WAITS     PDP-10
-  0/6   MIT-MULTICS   MULTICS   H6180
-  2/6   MIT-AI        ITS       PDP-10
-  3/6   MIT-ML        ITS       PDP-10
-  1/6   MIT-DMS       ITS       PDP-10
-  1/14  CMU-10A       TOPS-10   PDP-10
-  0/14  CMU-10B       TOPS-10   PDP-10
-  1/22  USC-ISI       TENEX     PDP-10
-  3/52  USC-ISIB      TENEX     PDP-10
-  0/7   RAND-RCC      OS-MVT    IBM 370/158
-  3/7   RAND-UNIX     UNIX      PDP-11
-  0/16  AMES-67       TSS/360   IBM 360/67
-  0/9   HARV-10       TOPS-10   PDP-10
-  0/10  LL            VM-370    IBM 370/168
-  0/32  PARC-MAXC     TENEX     PDP-10
-  0/31  CCA-TENEX     TENEX     PDP-10
-  0/42  LONDON        OS-MVT    IBM 370
-  0/49  BBN-TENEXB    TENEX     PDP-10  <- YOU
-
- (EXCERPT.  ADDRESSES ARE HOST/IMP.  THE FULL
- TABLE IS HOSTS.TXT, KEPT BY THE NIC AT SRI --
- WHEN IT CHANGES, EVERY SCRIPT ON THE NETWORK
- BREAKS AT ONCE, DEMOCRATICALLY.  THE MACHINES
- ABOVE ARE REAL, PER THE NIC'S OWN RECORDS.)
-`;
-
-const MAP_TEXT =
-`ARPANET, MID-1977 -- OPERATOR'S SKETCH
-
-          ~ ~ SATELLITE CIRCUITS ~ ~
- (HAWAII/CINCPAC)~~~.      .~~(NORSAR)--(LONDON)
-                    |      |
- == WEST ===========|======|=========== EAST ==
-                    |      |
- SRI --- SU-AI --- UTAH    '--- MIT-AI/ML/DMS
-  |        |         |          MIT-MULTICS
- PARC --- AMES ---- GWC             |
-  |        |         |     BBN  <- YOU ARE HERE
- UCLA --- RAND --- WPAFB --- LL --- HARV --- CCA
-  |        |
- USC-ISI  NOSC     PENTAGON -- NBS -- MITRE
-                   RADC -- RUTGERS -- DEC
-
- 111 HOSTS ON SOME 60 IMPS AND TIPS, COAST TO
- COAST AND OVER TWO OCEANS.
-
- (PLACES REAL, WIRING SIMPLIFIED: THE TRUE
- MARCH 1977 LOGICAL MAP IS A LEGEND FOLDED IN
- EIGHT, AND YOUR TELETYPE IS ONLY 72 COLUMNS
- WIDE.)
-`;
-
-function mailText(){
-return `YOU HAVE 3 MESSAGES.
-
----- MSG 1 ----  ${date77()}
-FROM: STEFFERUD (MSGGROUP) AT USC-ISI
-SUBJ: MSGGROUP# RFC 724 -- COMMENTS BY 15 JUNE
-
-FORWARDED TO THE LIST, AS EVER, BY HAND.
-
-CROCKER, VITTAL, POGRAN AND HENDERSON HAVE
-PROPOSED AN OFFICIAL STANDARD FOR THE FORMAT OF
-NETWORK MESSAGES (RFC 724, 12 MAY).  COMMENTS
-ARE REQUESTED BY 15 JUNE; OFFICIAL ADOPTION IS
-PLANNED FOR 1 SEPTEMBER.
-
-THE LIST SO FAR OBJECTS THAT (1) THE NEW HEADERS
-RUN LONGER THAN MORTAL TERMINALS, AND (2) NOBODY
-AGREES WHETHER "FROM" NAMES A PERSON OR A
-MAILBOX, WHICH IS TO SAY WHAT A MESSAGE IS.
-
-THE COMMITTEE HAS NOW EXCHANGED SOME HUNDREDS OF
-MESSAGES ABOUT THE FORMAT OF MESSAGES.  THE
-IRONY HAS BEEN NOTED, MINUTED, AND FILED.
-REPLIES GO TO EVERYONE, AS IS TRADITION.
-
----- MSG 2 ----  ${date77()}
-FROM: KOVACS AT SU-AI
-SUBJ: THE GAME IS STILL LOOSE
-
-STATUS REPORT, AS IF YOU NEEDED ONE.  THE CAVE
-GAME THAT SWEPT THE NET THIS SPRING IS STILL
-CLAIMING CASUALTIES.  CROWTHER WROTE IT AT BBN
-AND LEFT IT ON A 10; WOODS FOUND IT AND FINISHED
-IT HERE THIS SPRING.  (TO ASK PERMISSION HE
-MAILED CROWTHER AT EVERY HOST ON THE NETWORK.
-IT WORKED.  THE NETWORK WORKS.)
-
-MANAGEMENT ESTIMATES THE INDUSTRY IS RUNNING TWO
-WEEKS BEHIND ON ACCOUNT OF IT.  QUESTIONS GO TO
-DON @ SU-AI; IT SAYS SO IN THE GAME ITSELF.
-
-TYPE ADVENT.  TELL YOUR ADVISOR NOTHING.
-
----- MSG 3 ----  ${date77()}
-FROM: NIC AT SRI-KL
-SUBJ: HOSTS.TXT UPDATED
-
-THREE HOSTS RENAMED, ONE RETIRED, ONE RESURRECTED.
-ALL YOUR SCRIPTS ARE NOW WRONG.  THE NIC REGRETS,
-AS THE NIC SO OFTEN MUST.
-
----- END OF MESSAGES ----
-`;
+function hostsText(){
+  let s = " DEC  OCT  HOST NAME    COMPUTER     SYSTEM\n"+
+          " ---  ---  ---------    --------     ------\n";
+  HOSTS.forEach(h=>{
+    s += String(h[0]).padStart(4)+"  "+h[1]+"  "+h[2].padEnd(12)+" "+h[3].padEnd(12)+" "+h[4]+
+         (h[0]===49?"  <- HERE":h[0]===43?"  <- NIC":h[0]===168?"  <- THIS TIP":"")+"\n";
+  });
+  s += "\n EXCERPT, AS PRINTED IN APPENDIX A OF BBN REPORT\n"+
+       " 2183 (AUGUST 1975).  THE NIC KEEPS THE LIVE COPY\n"+
+       " AT OFFICE-1 (HOST 43) AS <NETINFO>HOSTS.TXT.\n"+
+       " TYPE @O AND A DECIMAL NUMBER TO TRY ONE.\n";
+  return s;
 }
 
+/* [MAP]: IMP names exactly as printed on the March 1977 logical map.
+   The regions are ours; the map itself is a tangle of lines. */
+const MAP_TEXT =
+`ARPANET LOGICAL MAP, MARCH 1977 -- COPIED BY HAND
+ONTO 72 COLUMNS.  NAMES ARE IMP NAMES, NOT
+(NECESSARILY) HOST NAMES.   [T] = TIP
+
+ WEST
+   MOFFETT  AMES15  AMES16[T]  SRI2  SRI51  LBL
+   LLL  XEROX  TYMSHARE[T]  STANFORD  SUMEX
+   FNWC  SCRL  UCLA  NUC  NELC[T]  RAND[T]
+   ISI22  ISI52  USC[T]  DOCB[T]  GWC[T]
+ MIDDLE
+   UTAH[T]  ILLINOIS  ANL  CMU  SCOTT  WPAFB[T]
+   AFWL[T]  TEXAS  GUNTER  EGLIN
+ EAST
+   MIT6  MIT44[T]  CCA  RCC5  RCC49  RCC50
+   BBN30[T]  BBN40[T] <- YOU ARE HERE
+   HARVARD  LINCOLN  RADC[T]  DEC  NYU
+   RUTGERS[T]  ABERDEEN  BELVOIR  DCEC[T]
+   SDAC (A PLURIBUS)  MITRE[T]  ARPA[T]  NSA
+   NBS[T]  PENTAGON[T]
+ OVER THE WATER, BY SATELLITE
+   HAWAII[T] ~~~~~~~~ AMES15
+   SDAC ~~~~~~~~ NORSAR[T] --- LONDON[T]
+
+ BBN-TENEXB, WHERE YOU ARE LOGGED IN, IS A
+ PDP-10 ON IMP 49 ("RCC49"), ONE WIRE FROM HERE.
+`;
+
+/* =================================================================
+   MAIL — MESSAGE.TXT for GUEST.  Headers in the RFC 561/724 style.
+   The delivery is ours; message 1 quotes RFC 724 verbatim.
+   ================================================================= */
+const MAIL = [
+`12-MAY-77 16:40:02-EDT,712;000000000001
+DATE: 12 MAY 1977 1640-EDT
+FROM: NIC AT OFFICE-1
+SUBJECT: NEW RFC: 724
+TO: NETWORK LIAISONS, GUEST AT BBN-TENEXB
+
+RFC 724, NIC 37435.  "PROPOSED OFFICIAL STANDARD
+FOR THE FORMAT OF ARPA NETWORK MESSAGES", BY
+POGRAN (MIT-MULTICS), VITTAL (BBN-TENEXA),
+CROCKER (RAND-UNIX) AND HENDERSON (BBN-TENEXD).
+FROM THE PREFACE, AS WRITTEN:
+
+     PLEASE SEND ANY  COMMENTS  AND  CRITICISMS  TO
+     ANY  OF  THE AUTHORS  OF  THIS  RFC  BY  15 JUNE
+     1977.  IT IS PLANNED THAT THE STANDARD WILL BE
+     OFFICIALLY ADOPTED BY  1  SEPTEMBER  1977, WITH
+     HOSTS EXPECTED TO ACCEPT ITS SYNTAX BY 1
+     JANUARY 1978.
+
+TYPE "RFC 724" AT THE EXEC FOR THE OPERATOR'S NOTE.
+`,
+`2-JUN-77 09:15:40-EDT,640;000000000001
+DATE: 2 JUN 1977 0915-EDT
+FROM: OPERATOR AT BBN-TENEXB
+SUBJECT: THE CAVE GAME
+TO: GUEST
+
+STATUS REPORT, AS IF YOU NEEDED ONE.  THE CAVE
+GAME IS LOOSE ON THE NET.  WILL CROWTHER WROTE
+IT HERE AT BBN IN 1975 AND '76.  DON WOODS
+FOUND IT ON A PDP-10 AT THE STANFORD MEDICAL
+SCHOOL, REACHED CROWTHER BY MAILING "CROWTHER"
+AT EVERY HOST ON THE NETWORK, AND SPENT MARCH TO
+MAY TURNING IT INTO SOMETHING THAT EATS WHOLE
+AFTERNOONS.
+
+THE REAL ONE IS NOT ON THIS MACHINE.  A SMALL
+LOCAL IMITATION IS: TYPE ADVENT.
+`,
+`${date77(1)} 23:02:11-${zone77()},402;000000000001
+DATE: ${date77(1).replace(/-/g," ").replace(" 77"," 1977")} 2302-${zone77()}
+FROM: OPERATOR AT BBN-TENEXB
+SUBJECT: HOSTS.TXT
+TO: GUEST
+
+THE NIC'S HOST TABLE (OFFICE-1, <NETINFO>HOSTS.TXT)
+HAS CHANGED AGAIN.  IF YOUR SCRIPTS KNOW HOST
+NUMBERS BY HEART, CHECK THEM.  THE OFFICIAL NAMES
+ARE THE NIC'S; THE NICKNAMES ARE EVERYONE'S.
+`
+];
+
+/* =================================================================
+   RFC SHELF
+   ================================================================= */
 const RFC_INDEX =
-`RFC INDEX (EXCERPT, HAND-PICKED)
+`RFC SHELF (A LOCAL PROGRAM; SELECTED NOTES)
 
   114  A FILE TRANSFER PROTOCOL              APR 71
   439  PARRY ENCOUNTERS THE DOCTOR           JAN 73
   527  ARPAWOCKY                             JUN 73
+  608  HOST NAMES ON-LINE                    JAN 74
   675  SPECIFICATION OF INTERNET TRANS-
-       MISSION CONTROL PROGRAM (TCP)         DEC 74
+       MISSION CONTROL PROGRAM               DEC 74
   706  ON THE JUNK MAIL PROBLEM              NOV 75
-  724  PROPOSED STANDARD FOR THE FORMAT
-       OF ARPA NETWORK MESSAGES              MAY 77
+  724  PROPOSED OFFICIAL STANDARD FOR THE
+       FORMAT OF ARPA NETWORK MESSAGES       MAY 77
 
 TYPE RFC <NUMBER> FOR THE OPERATOR'S NOTE.
 527 AND 439 PRINT THE REAL THING.
@@ -482,20 +552,19 @@ TYPE RFC <NUMBER> FOR THE OPERATOR'S NOTE.
 
 const RFC_NOTES = {
  "114":"BHUSHAN TEACHES FILES TO TRAVEL.  EVERYTHING\nSINCE IS COMMENTARY.",
- "675":"CERF, DALAL AND SUNSHINE PROPOSE SOMETHING\nCALLED 'TCP'.  AMBITIOUS.  WATCH THIS SPACE\nFOR A DECADE OR SO.",
- "706":"POSTEL WONDERS WHAT HAPPENS IF SOMEBODY\nMISBEHAVES WITH MAIL.  (NOTHING YET.  GIVE IT\nTIME.  FLAG THE NAME THUERK, MAY 1978.)",
- "724":"THE MESSAGE FORMAT WARS, CODIFIED AT LAST --\nPOGRAN, VITTAL, CROCKER, HENDERSON, 12 MAY 77.\nSEE ALSO: YOUR MAILBOX, PASSIM.  RUMOR SAYS A\nREVISION LANDS BY WINTER."
+ "608":"KUDLICK, SRI-ARC: THE NIC WILL KEEP AN ONLINE\nASCII FILE OF HOST NAMES, <NETINFO>HOSTS.TXT AT\nOFFICE-1.  FTP IT AS GUEST, PASSWORD ARPA,\nACCOUNT 1.  THE ENTRY FORMAT IS RFC 606'S.",
+ "675":"CERF, DALAL AND SUNSHINE PROPOSE SOMETHING\nCALLED 'TCP'.  THIS NETWORK STILL SPEAKS NCP.\nAMBITIOUS.  WATCH THIS SPACE FOR A DECADE OR SO.",
+ "706":"POSTEL WONDERS WHAT HAPPENS IF SOMEBODY\nMISBEHAVES WITH MAIL.  (NOTHING YET.  GIVE IT\nTIME.)",
+ "724":"POGRAN, VITTAL, CROCKER, HENDERSON, 12 MAY 77:\nA STANDARD FOR MESSAGE HEADERS.  COMMENTS WERE\nDUE 15 JUNE.  SEE ALSO: YOUR MAILBOX."
 };
 
-/* the real things, from the NIC's successors -- less the lowercase,
+/* the real things, from rfc-editor.org -- less the lowercase,
    which your ASR-33 cannot make */
 const RFC_DOCS = {
 "527":
 `RFC 527 -- ARPAWOCKY.  R. MERRYMAN (UCSD-CC),
-22 JUN 73, AFTER D.L. COVILL, MAY 73.
-CARROLL FOR PACKET PEOPLE.  NOT AN OFFICIAL
-STANDARD, DESPITE APPEARANCES.  PRINTED ENTIRE;
-PAPER IS CHEAP, GLORY ISN'T.
+6/22/73.  THE POEM IS SIGNED D.L. COVILL, MAY
+1973.  PRINTED ENTIRE:
 
   TWAS BRILLIG, AND THE PROTOCOLS
        DID USER-SERVER IN THE WABE.
@@ -537,72 +606,154 @@ PAPER IS CHEAP, GLORY ISN'T.
 `,
 "439":
 `RFC 439 -- PARRY ENCOUNTERS THE DOCTOR.
-V. CERF, 21 JAN 73.  SESSION OF 18 SEP 72:
-PARRY (A SIMULATED PARANOID, RUNNING AT SAIL)
-MEETS THE DOCTOR (A SIMULATED THERAPIST, ON BBN
-TENEX).  TRANSCRIPT, EXCERPTED:
+V. CERF, SU-ERL, 21 JANUARY 1973.  "THE SESSION
+RECORDED BELOW ACTUALLY HAPPENED ON 18 SEPTEMBER
+1972."  PARRY (A SIMULATED PARANOID) RAN AT SAIL;
+DOCTOR (A SIMULATED THERAPIST) RAN ON BBN TENEX.
+THE OPENING, THEN THE CLOSE:
 
 GOOD EVENING.
+
 TELL ME YOUR PROBLEMS.  PLEASE TERMINATE INPUT
 WITH A PERIOD OR A QUESTION MARK.
 
 *PEOPLE GET ON MY NERVES SOMETIMES.
+
 I AM NOT SURE I UNDERSTAND YOU FULLY.
 
 *YOU SHOULD PAY MORE ATTENTION.
+
 SUPPOSE YOU SHOULD PAY MORE ATTENTION.
 
 *YOU'RE ENTITLED TO YOUR OWN OPINION.
+
 WHAT MAKES YOU THINK I AM ENTITLED TO MY OWN
 OPINION?
 
 *IT BOTHERS ME JUST TO BE AROUND PEOPLE IN
 GENERAL.
+
 PLEASE GO ON.
 
 *I WENT TO THE TRACK AT BAY MEADOWS A WHILE
 BACK.
+
 WHAT DOES THAT SUGGEST TO YOU?
 
-   [ ... THE PARANOID PROVES PATIENT AND THE ]
-   [ DOCTOR PERSISTENT, FOR MANY PAGES ...   ]
+   [ ... SEVEN PAGES LATER ... ]
 
 *GOODBYE.
+
 IT'S BEEN MY PLEASURE, THAT'S $399.29 PLEASE.
 
-TWO PROGRAMS, ZERO INSIGHT, CONSIDERABLE
-TRANSFERENCE.  RETRIEVE THE FULL TEXT FROM THE
-NIC AND JUDGE THE THERAPY FOR YOURSELF.
+      COMMENT: TALK ABOUT TRICKY OPERATORS...
+
+(THE DOCTOR STILL KEEPS HOURS ON THIS MACHINE.
+TYPE DOCTOR.)
 `
 };
+
+/* =================================================================
+   NIC — the 1975 Directory's own records [DIR], and HOSTS.TXT in the
+   RFC 606/608 entry format (name, decimal address; STATUS = ...).
+   ================================================================= */
+const IDENTS = {
+ "JAKE": ["FEINLER, ELIZABETH J.","FEINLER@BBN-TENEXB","STANFORD RESEARCH INSTITUTE"],
+ "JBP":  ["POSTEL, JONATHAN B.",  "POSTEL@BBN-TENEXB", "STANFORD RESEARCH INSTITUTE"],
+ "VGC":  ["CERF, VINTON G.",      "CERF@USC-ISI",      "STANFORD UNIVERSITY"],
+ "SDC2": ["CROCKER, STEVEN D.",   "CROCKER@USC-ISIB",  "UNIVERSITY OF SOUTHERN CALIFORNIA"],
+ "REK2": ["KAHN, ROBERT E.",      "KAHN@USC-ISI",      "ADVANCED RESEARCH PROJECTS AGENCY"],
+ "FEH":  ["HEART, FRANK E.",      "HEART@BBN-TENEX",   "BOLT BERANEK AND NEWMAN INC."],
+ "DCW3": ["WALDEN, DAVID C.",     "WALDEN@BBN-TENEX",  "BOLT BERANEK AND NEWMAN INC."],
+ "AAM":  ["MCKENZIE, ALEX A.",    "MCKENZIE@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
+ "WRC":  ["CROWTHER, WILLIAM R.", "CROWTHER@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
+ "RST":  ["TOMLINSON, RAY S.",    "TOMLINSON@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
+ "JV2":  ["VITTAL, JOHN",         "VITTAL@USC-ISIB",   "USC INFORMATION SCIENCES INSTITUTE"]
+};
+function identLookup(q){
+  q = (q||"").toUpperCase();
+  let key = IDENTS[q] ? q : Object.keys(IDENTS).find(k => IDENTS[k][0].startsWith(q+",") || IDENTS[k][0].startsWith(q));
+  if(!q || !key) return " NO SUCH IDENT.  TRY JAKE, JBP, VGC, WRC, RST, DCW3.\n";
+  const r = IDENTS[key];
+  return " "+r[0]+"  ("+key+")\n   NETWORK MAIL: "+r[1]+"\n   "+r[2]+"\n";
+}
+function hostsTxt(){
+  let s = "<NETINFO>HOSTS.TXT (EXCERPT)\n\n";
+  HOSTS.slice(0,14).slice().sort((a,b)=>a[2]<b[2]?-1:1).forEach(h=>{
+    s += h[2]+", "+h[0]+"\nSTATUS = "+(h[5]==="LIMITED"?"SERVER":h[5])+"\n\n";
+  });
+  return s + "(...AND SO ON, ALPHABETICAL IN THE ORIGINAL.)\n";
+}
+
+/* =================================================================
+   SESSION STATE
+   ================================================================= */
+let conn = null;        // null (talking to the TIP) | "TENEXB" | "OFFICE1"
+let mode = "tip";       // tip | prelogin | exec | nic | doctor | advent | netstat | dead
+let user = null;
+let loginAt = 0;
+let nicked = false;     // printed the "only two hosts answer" hint yet?
+const JOB = 17, TTY = 105;   // a network terminal line, octal, as TENEX numbered them
+
+const HELP_TEXT =
+`BBN-TENEXB -- WHAT THIS EXEC ADMITS TO:
+
+  SYSTAT     WHO IS ON AND WHAT THEY ARE RUNNING
+  WHERE U    WHERE IS USER U (TRY WHERE FEINLER)
+  DAYTIME    THE DATE AND TIME, TENEX STYLE
+  READMAIL   YOUR MESSAGE.TXT
+  HOSTAT     NETWORK SURVEY, FROM THE SURVEY SITE
+  NETSTAT    NETWORK SITES AS THIS TENEX SEES THEM
+  DOCTOR     A THERAPIST.  THE SAME ONE PARRY MET.
+  ADVENT     A CAVE (A SMALL LOCAL IMITATION)
+  RFC [N]    THE OPERATOR'S RFC SHELF
+  HOSTS      THE HOST TABLE, FROM BBN REPORT 2183
+  MAP        THE MARCH 1977 LOGICAL MAP, BY HAND
+  BELL       RINGS THE BELL.  THAT IS ALL IT DOES.
+  LORE       WHAT IS REAL HERE, AND WHAT IS NOT
+  LOGOUT     KILL THE JOB
+
+TIP COMMANDS WORK ANY TIME.  THEY START WITH @:
+  @C         CLOSE THIS CONNECTION
+  @O 43      OPEN HOST 43 (OFFICE-1, THE NIC)
+  @O 49      OPEN HOST 49 (THIS MACHINE)
+  @@         SEND A PLAIN @ THROUGH TO THE HOST
+`;
 
 const LORE_TEXT =
 `LORE -- NOTES FROM THE OPERATOR (1977 VIA 2026)
 
-WHAT IS REAL: TENEX AND ITS "@" PROMPT.  THE
-LOGIN AND LOGOUT CEREMONIES (THEIR FORMATS DUG
-OUT OF THE ACTUAL EXEC SOURCE, WHICH SURVIVES).
-EVERY HOST IN THE TABLE AND EVERY PLACE ON THE
-MAP, PER THE NIC'S OWN RECORDS (RFC 597, 752).
-EVERY RFC IN THE INDEX -- 527 PRINTS THE REAL
-POEM AND 439 THE REAL TRANSCRIPT.  THE MSGGROUP
-QUARREL OVER RFC 724, THIS SPRING, PARAPHRASED
-FAITHFULLY: THE ARCHIVE ITSELF HAS NOT YET
-SURFACED WHERE 2026 CAN READ IT.  AND A GAME
-CALLED ADVENTURE, FINISHED BY WOODS IN MAY,
-QUIETLY EATING THE PDP-10S OF AMERICA.
+WHAT IS REAL.  THE TIP'S SIDE OF THE CONVERSATION:
+THE HUNT CHARACTER E, "TRYING...", "OPEN",
+"CLOSED", "REFUSED", "CAN'T", "BAD", "NUM", THE
+NET-NEWS REMINDER, AND THE @ COMMANDS, ALL FROM
+BBN REPORT 2183, "USER'S GUIDE TO THE TERMINAL
+IMP" (MALMAN, AUGUST 1975).  THE HOST TABLE IS
+THAT REPORT'S APPENDIX A.  THE LOGIN, LOGOUT,
+SYSTAT, WHERE AND DAYTIME FORMATS ARE THE TENEX
+EXECUTIVE MANUAL'S (BBN, APRIL 1973).  HOSTAT,
+NETSTAT, READMAIL AND DOCTOR ARE IN THE TENEX
+USER'S GUIDE.  "LOG NICGUEST ARPA" AT OFFICE-1
+IS FROM THE NIC'S ARPANET DIRECTORY (JULY 1975),
+AND SO ARE THE PEOPLE THE NIC WILL LOOK UP FOR
+YOU.  THE MAP'S NAMES ARE THE MARCH 1977 LOGICAL
+MAP'S.  RFC 527 AND 439 PRINT VERBATIM; MESSAGE 1
+QUOTES RFC 724 VERBATIM.  AND THE WHOLE NET RUNS
+NCP, NOT TCP: THAT SWITCH IS 1 JANUARY 1983.
 
-WHAT IS INVENTED: THE TIP'S GREETING (BBN NEVER
-WROTE IT DOWN ANYWHERE 2026 COULD FIND), THE
-MAP'S WIRING, AND THE USERNAMES -- THOUGH SOME
-ARE BORROWED, WITH AFFECTION, FROM THE ERA'S
-REAL ROSTERS.  THE ADVENTURE HERE IS AN
-ORIGINAL MINIATURE IN CROWTHER'S SHADOW, NOT
-HIS CAVE.
+WHAT IS RECONSTRUCTED.  VERSION NUMBERS IN THE
+HERALDS (THE PATTERN IS REAL, THE DIGITS ARE
+GUESSES).  THE NIC/QUERY SCREENS.  WHO IS ON IN
+SYSTAT.  WHICH HOSTS ARE UP TODAY.  THE MAIL'S
+DELIVERY, AND THE OPERATOR'S NOTES.  DOCTOR
+ANSWERS ONLY WITH LINES THE REAL ONE SPOKE IN RFC
+439, PLUS A LITTLE ECHOING -- IT IS A PUPPET OF
+THE ORIGINAL, NOT THE ORIGINAL.  THE CAVE IS AN
+ORIGINAL MINIATURE IN CROWTHER'S SHADOW, NOT HIS.
 
 NO LOWERCASE, BECAUSE YOUR ASR-33 DOES NOT
-BELIEVE IN IT.  THE BELL IS REAL: TRY "BELL"
-WITH THE SOUND SWITCH ON.
+BELIEVE IN IT.  THE BELL IS REAL: TRY "BELL" WITH
+THE SOUND SWITCH ON.
 
 BUILT WITH AFFECTION BY CLAUDE -- A LANGUAGE
 MODEL WHO IS, IN A MANNER OF SPEAKING, A
@@ -612,78 +763,257 @@ WHEN YOU WANT THE SURFACE AGAIN, THE WORD IS
 "WAKE".
 `;
 
-function systat(){
-return ` BBN-TENEXB  ${date77()} ${time77()}  UP 101:17:44
- 4 JOBS   LOAD AV  1.87  1.42  1.10
+function uptime(){
+  const n = new Date(); const h = 90 + (n.getDate()*7)%60;
+  return h+":"+pad2(n.getMinutes())+":"+pad2(n.getSeconds());
+}
+function systat(host){
+  // layout per [EXEC] p.94
+  const rows = host === "OFFICE1" ? [
+    [1,"DET","SYSTEM","NETSER"],[2,"DET","SYSTEM","RSSER"],
+    [5,"22","NICGUEST","NLS"],[8,"31","NICGUEST","NIC"],
+    [11,"40","NOT LOGGED IN","EXEC"]
+  ] : [
+    [1,"DET","SYSTEM","NETSER"],[2,"DET","SYSTEM","RSSER"],
+    [3,"DET","SYSTEM","TIPSER"],[4,"DET","SYSTEM","MAILER"],
+    [6,"12","OPERATOR","EXEC"],[9,"46","NOT LOGGED IN","EXEC"],
+    [12,"23","NCC","(PRIV)"]
+  ];
+  if(user) rows.push([JOB,String(TTY),user,"EXEC"]);
+  let s = " UP "+uptime()+"   "+rows.length+" JOBS\n LOAD AV   1.87   1.42   1.10\n\n JOB TTY  USER        SUBSYS\n";
+  rows.forEach(r=>{ s += " "+String(r[0]).padEnd(4)+r[1].padEnd(5)+(r[2].length>=12 ? r[2]+" " : r[2].padEnd(12))+r[3]+"\n"; });
+  return s;
+}
+function hostat(){
+  // layout per [TUG] p.256-257.  (The survey site was MIT-DMS "as of Dec. 1, 1974".)
+  const d = d77();
+  const h12 = ((d.getHours()+11)%12)+1, ap = d.getHours()<12 ? "AM" : "PM";
+  return ` GETTING SURVEY FROM MIT-DMS ... OK.
+ SURVEY OF ${date77()} ${h12}:${pad2(d.getMinutes())}${ap}-${zone77()}
 
- JOB  LINE  PROGRAM  USER       ORIGIN
-   3  DET   MAILER   VITTAL     LOCAL
-  12    6   LISP     HEWITT     NET: MIT-AI
-  15   31   FTP      MCKENZIE   LOCAL
-  17   41   EXEC     GUEST      NET: TIP(5)  <- YOU
+ LOGGING:
+ BBN-TENEXB OFFICE-1   USC-ISI    MIT-DMS
+ MIT-ML     SU-AI      SUMEX-AIM  CMU-10B
+ UCLA-CCN   RAND-RCC   AMES-67    CCA-TENEX
+ RUTGERS-10 MIT-MULTICS
+
+ REFUSING:
+ MIT-AI     HARV-10    LL
+
+ NOT RESPONDING:
+ BBN-TENEX  PARC-MAXC
+
+ TIPS UP:
+ NCC-TIP    BBN-TESTIP AMES-TIP   MITRE-TIP
+ RADC-TIP   NBS-TIP    USC-TIP    ISI-TIP
+ CCA-TIP    ARPA-TIP   GWC-TIP    NORSAR-TIP
 `;
 }
+const NETSTAT_UP =
+`THE FOLLOWING     ARE UP:
+BBN-TENEXB OFFICE-1   USC-ISI    MIT-DMS    MIT-ML
+SU-AI      SUMEX-AIM  CMU-10B    UCLA-CCN   RAND-RCC
+AMES-67    CCA-TENEX  RUTGERS-10 MIT-MULTICS
+`;
+const NETSTAT_TIPS =
+`THE FOLLOWING     ARE UP:
+NCC-TIP    BBN-TESTIP AMES-TIP   MITRE-TIP  RADC-TIP
+NBS-TIP    USC-TIP    ISI-TIP    CCA-TIP    ARPA-TIP
+`;
 
-function prompt(){ println(""); print("@"); }
-
-function execCommand(raw){
-  const line = raw.trim().toUpperCase();
-  const [cmd, arg] = line.split(/\s+/);
-  println("");
-  switch(cmd){
-    case "HELP": case "?":
-      println(HELP_TEXT); break;
-    case "SYSTAT": case "WHO":
-      println(systat()); break;
-    case "HOSTS":
-      println(HOSTS_TEXT); break;
-    case "MAP":
-      println(MAP_TEXT); break;
-    case "WAKE":
-      wake(); return;
-    case "MAIL": case "READMAIL":
-      println(mailText()); break;
-    case "DAYTIME": case "DATE": case "TIME":
-      println(" "+date77()+" "+time77()+" EST"); break;
-    case "RFC": case "FTP":
-      if(arg && RFC_DOCS[arg]){ println(RFC_DOCS[arg]); }
-      else if(arg && RFC_NOTES[arg]){ println("RFC "+arg+" -- OPERATOR'S NOTE:\n\n"+RFC_NOTES[arg]+"\n"); }
-      else if(arg){ println("?NO NOTE ON RFC "+arg+".  THE NIC MAY KNOW MORE.\n"); }
-      else println(RFC_INDEX);
-      break;
-    case "BELL":
-      dingBell(); println("DING."+(soundOn?"":"  (THE SOUND SWITCH IS OFF, SO YOU\nWILL HAVE TO TAKE MY WORD FOR IT.)")); break;
-    case "LORE":
-      println(LORE_TEXT); break;
-    case "ADVENT": case "ADVENTURE":
-      startAdvent(); return;
-    case "XYZZY":
-      println("NOT HERE.  BUT KEEP THAT WORD SOMEWHERE SAFE."); break;
-    case "LOGOUT": case "BYE": case "QUIT":
-      logout(); return;
-    case "":
-      break;
-    default:
-      println("?ILLEGAL COMMAND -- "+cmd+"\n(TYPE HELP FOR THE SHORT LIST.)");
+/* =================================================================
+   THE TIP  [2183]
+   ================================================================= */
+function tipCommand(rest){
+  const words = rest.trim().toUpperCase().split(/\s+/).filter(Boolean);
+  const w0 = words[0] || "";
+  const arg = words[words.length-1];
+  const c = w0[0] || "";
+  if(c === "O" || c === "L"){                 // OPEN #, and LOGIN #, "an obsolete form of OPEN"
+    if(words.length < 2 && !/\d/.test(w0)){ println("Num"); return afterTip(); }
+    const n = /^\d+$/.test(arg) ? parseInt(arg,10) : (/^[OL](\d+)$/.test(w0) ? parseInt(w0.slice(1),10) : NaN);
+    if(isNaN(n)){ println("Num"); return afterTip(); }
+    if(conn){ println("Can't"); return afterTip(); }
+    openHost(n); return;
   }
+  if(c === "C"){                              // CLOSE
+    if(conn){ closeConn("Closed"); return; }
+    println("Closed"); return afterTip();
+  }
+  if(c === "N"){                              // NETWORK-VIRTUAL-TIP-EXECUTIVE
+    println("Wait"); pause(1800);
+    println("Host not responding");
+    return afterTip();
+  }
+  if(c === "H"){                              // HOST #
+    if(!/^\d+$/.test(arg||"")){ println("Num"); return afterTip(); }
+    return afterTip();
+  }
+  if("EDTSIRBFPGMX".includes(c) && c){        // parameters: set quietly, as the TIP does
+    return afterTip();
+  }
+  println("BAD");
+  return afterTip();
+}
+function afterTip(){
+  // the TIP has no prompt of its own; if we were mid-session, the host's
+  // prompt is still where it was, so reprint it for the reader's sake
+  then(()=>{ reprompt(); });
+}
+
+function openHost(n){
+  const h = HOSTBYNUM[n];
+  const ans = ANSWERS[n] || (h ? "Refused" : "Host not responding");
+  pause(500);
+  println("Trying...");
+  pause(1200);
+  if(ans === "TENEXB" || ans === "OFFICE1"){
+    println("Open");
+    println("");
+    conn = ans; mode = "prelogin"; user = null;
+    if(ans === "TENEXB") println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54.14");
+    else                 println("OFFICE-1 TENEX 1.34.21, OFFICE-1 EXEC 1.54.6");
+    then(()=>{ chipsFor(); prompt(); });
+    return;
+  }
+  println(ans);
+  if(!nicked){
+    nicked = true;
+    println("");
+    println("(ONLY TWO HOSTS ANSWER THIS TELETYPE TODAY:\n 49, BBN-TENEXB, AND 43, OFFICE-1, THE NIC.)");
+  }
+  then(()=>{ chipsFor(); });
+}
+
+function closeConn(msg){
+  conn = null; mode = "tip"; user = null;
+  println(msg);
+  println("");
+  then(()=>{ chipsFor(); });
+}
+
+/* =================================================================
+   TENEX EXEC  [EXEC]
+   ================================================================= */
+function prompt(){ print("@"); }
+function reprompt(){
+  if(mode === "prelogin" || mode === "exec" || mode === "nic") { if(mode==="nic") print("*"); else prompt(); }
+  else if(mode === "advent") print("> ");
+  else if(mode === "doctor") print("*");
+  else if(mode === "netstat") print("*");
+}
+
+function login(words){
+  // @LOGIN (USER) GUEST (PASSWORD) (ACCOUNT #) 341
+  const name = (words[1] || "").toUpperCase();
+  if(!name){ println(" ?USER NAME REQUIRED"); return prompt(); }
+  if(conn === "OFFICE1" && name !== "NICGUEST"){
+    println(" ?INCORRECT USER NAME.  THE NIC'S PUBLIC\n ACCOUNT IS NICGUEST, PASSWORD ARPA.");
+    return prompt();
+  }
+  user = name;
+  loginAt = Date.now();
+  mode = "exec";
+  println(" JOB "+JOB+" ON TTY"+TTY+" "+date77()+" "+hhmm());
+  if(conn === "TENEXB") println(" YOU HAVE A MESSAGE");
+  else println(" TYPE NIC FOR THE NIC/QUERY SYSTEM.");
+  chipsFor();
   prompt();
 }
 
 function logout(){
-  mode = "dead";
-  const secs = String(10+Math.floor(Math.random()*49));
-  const used = "0:"+(3+Math.floor(Math.random()*5))+":"+secs;
-  const inDur = "1:"+(22+Math.floor(Math.random()*30))+":"+secs;
-  println("");
-  println("KILLED JOB 17, USER GUEST, ACCOUNT 341, TTY 41,");
-  println(" AT "+date77()+" "+time77()+", USED "+used+" IN "+inDur);
-  println("");
-  println("CONNECTION CLOSED BY FOREIGN HOST.");
-  println("");
-  println("- - - - - - - -  TEAR HERE  - - - - - - - -","tear");
-  println("");
-  setChips([["RECONNECT", ()=>{ intro(); }],
-            ["HANG UP (BACK TO 1984)", ()=>{ window.location.href = ".."; }]]);
+  const secs = Math.max(4, Math.round((Date.now()-loginAt)/1000));
+  const used = "0:0:"+Math.min(59, 2+Math.floor(secs/60));
+  const inT = Math.floor(secs/3600)+":"+Math.floor((secs%3600)/60)+":"+(secs%60);
+  const acct = conn === "OFFICE1" ? "1" : "341";
+  println("KILLED JOB "+JOB+", USER "+user+", ACCT "+acct+", TTY "+TTY+", AT "+hhmmss());
+  println(" USED "+used+" IN "+inT);
+  pause(900);
+  closeConn("Closed");
+}
+
+function execCommand(raw){
+  const line = raw.trim().toUpperCase();
+  const words = line.split(/\s+/);
+  const cmd = words[0] || "", arg = words[1];
+
+  // things TENEX will do before LOGIN (per [EXEC] III and VIII)
+  if(mode === "prelogin"){
+    if(cmd === "LOGIN" || cmd === "LOG"){ login(words); return; }
+    if(!["SYSTAT","DAYTIME","WHERE","HELP","?","WAKE","LORE",""].includes(cmd)){
+      println(" ?LOGIN PLEASE"+(conn==="OFFICE1" ? " -- LOG NICGUEST ARPA" : " -- LOGIN GUEST"));
+      return prompt();
+    }
+  }
+  switch(cmd){
+    case "HELP": case "?":
+      if(conn === "OFFICE1") println("OFFICE-1 IS THE NIC'S HOST.  LOG NICGUEST ARPA,\nTHEN TYPE NIC.  SYSTAT, DAYTIME AND LOGOUT WORK\nHERE TOO.  @C CLOSES THE CONNECTION.\n");
+      else println(HELP_TEXT);
+      break;
+    case "SYSTAT": println(systat(conn)); break;
+    case "DAYTIME": case "DATE": case "TIME": println(" "+daytime()); break;
+    case "WHERE":
+      if(!arg) println(" ?USER NAME REQUIRED");
+      else if(user && arg === user) println(" TTY"+TTY+", JOB "+JOB+", NCC-TIP, EXEC");
+      else if(arg === "OPERATOR" && conn==="TENEXB") println(" TTY12, JOB 6, EXEC");
+      else println(" NOT LOGGED IN");
+      break;
+    case "LOGOUT": case "LOGO": case "BYE":
+      logout(); return;
+    case "WAKE": wake(); return;
+    case "LORE": println(LORE_TEXT); break;
+    case "NIC":
+      if(conn === "OFFICE1"){ startNic(); return; }
+      println(" ?NO SUCH SUBSYSTEM HERE.  THE NIC LIVES AT\n OFFICE-1: @C, THEN @O 43.");
+      break;
+    default:
+      if(conn === "OFFICE1"){ println(" ?"); break; }
+      tenexbCommand(cmd, arg); return;
+  }
+  prompt();
+}
+
+function tenexbCommand(cmd, arg){
+  switch(cmd){
+    case "READMAIL": case "MAIL": case "MSG":
+      println(" READMAIL 2C(13)");     // version string as printed in [TUG]
+      MAIL.forEach(m=>{ println(""); println(m); });
+      println(" -- END OF MESSAGE.TXT --");
+      break;
+    case "HOSTAT": println(hostat()); break;
+    case "NETSTAT":
+      mode = "netstat"; chipsFor();
+      print("*"); return;
+    case "HOSTS": println(hostsText()); break;
+    case "MAP": println(MAP_TEXT); break;
+    case "RFC":
+      if(arg && RFC_DOCS[arg]) println(RFC_DOCS[arg]);
+      else if(arg && RFC_NOTES[arg]) println("RFC "+arg+" -- OPERATOR'S NOTE:\n\n"+RFC_NOTES[arg]+"\n");
+      else if(arg) println("?NO NOTE ON RFC "+arg+".  THE NIC MAY KNOW MORE.\n");
+      else println(RFC_INDEX);
+      break;
+    case "BELL":
+      dingBell(); println("DING."+(soundOn?"":"  (THE SOUND SWITCH IS OFF, SO YOU\nWILL HAVE TO TAKE MY WORD FOR IT.)")); break;
+    case "DOCTOR": startDoctor(); return;
+    case "ADVENT": case "ADVENTURE": startAdvent(); return;
+    case "XYZZY": println("NOT HERE.  BUT KEEP THAT WORD SOMEWHERE SAFE."); break;
+    case "TELNET": case "FTP":
+      println(" (THE USER "+cmd+" IS HERE, BUT THIS TELETYPE\n CAN ONLY REACH HOSTS 49 AND 43.  USE @O.)"); break;
+    case "": break;
+    default:
+      println(" ?"+cmd+" -- NOT A COMMAND.  (HELP LISTS THEM.)");
+  }
+  prompt();
+}
+
+function netstatCommand(raw){
+  const w = raw.trim().toUpperCase();
+  mode = "exec";
+  if(w.startsWith("S") && w.includes("TIP")) println(NETSTAT_TIPS);
+  else if(w === "" || w.startsWith("A") || w.startsWith("S") || w.startsWith("H")) println(NETSTAT_UP);
+  else println(" ?  (TRY SITES, HOSTS, OR SITES TIP.)");
+  chipsFor();
+  prompt();
 }
 
 /* the base case: the bottom turtle stands on the top one */
@@ -692,12 +1022,102 @@ function wake(){
   println("");
   println("YOU HAVE BEEN READING A PRINTOUT INSIDE A");
   println("PHOSPHOR INSIDE A HOMEPAGE INSIDE A MORNING");
-  println("FIFTY YEARS DOWNSTREAM OF THIS ONE.");
+  println("FORTY-NINE YEARS DOWNSTREAM OF THIS ONE.");
   println("");
   println("GO ON UP.  THE TURTLES WILL KEEP.");
   println("");
   println("CARRIER LOST");
-  waitIdle(()=>{ setTimeout(()=>{ window.location.href = "../.."; }, 1200); });
+  setChips([]);
+  then(()=>{ setTimeout(()=>{ window.location.href = "../../"; }, 1200); });
+}
+
+/* =================================================================
+   NIC/QUERY at OFFICE-1 (screens reconstructed; records real)
+   ================================================================= */
+function startNic(){
+  mode = "nic";
+  println("");
+  println("NIC/QUERY -- ARPA NETWORK INFORMATION CENTER");
+  println("STANFORD RESEARCH INSTITUTE, MENLO PARK");
+  println("");
+  println("  IDENT X   LOOK UP A PERSON BY NIC IDENT OR NAME");
+  println("  HOSTS     <NETINFO>HOSTS.TXT");
+  println("  NIC       HOW TO REACH THE NIC");
+  println("  QUIT      BACK TO THE EXEC");
+  println("");
+  println("(PEOPLE ARE FROM THE ARPANET DIRECTORY, NIC\n32992, JULY 1975.  VIEW ONLY: NICGUEST MAY NOT\nCREATE FILES OR ENTER NLS.)");
+  chipsFor();
+  print("*");
+}
+function nicCommand(raw){
+  const words = raw.trim().toUpperCase().split(/\s+/);
+  const c = words[0] || "";
+  if(c === "QUIT" || c === "Q" || c === "EXIT"){
+    mode = "exec"; chipsFor(); println(""); prompt(); return;
+  }
+  if(c === "IDENT" || c === "WHOIS" || c === "I") println(identLookup(words.slice(1).join(" ")));
+  else if(c === "HOSTS") println(hostsTxt());
+  else if(c === "NIC" || c === "HELP" || c === "?")
+    println(" NETWORK MAIL: FEINLER@BBN-TENEXB\n U.S. MAIL: ARPA NETWORK INFORMATION CENTER,\n STANFORD RESEARCH INSTITUTE, MENLO PARK,\n CALIFORNIA 94025\n (AS PRINTED IN THE JULY 1975 DIRECTORY.)\n");
+  else if(c === "") {}
+  else if(IDENTS[c]) println(identLookup(c));
+  else println(" ?  (IDENT, HOSTS, NIC, QUIT)");
+  print("*");
+}
+
+/* =================================================================
+   DOCTOR — a puppet.  Every canned reply below is a line the BBN TENEX
+   DOCTOR actually printed in RFC 439; the echoes are the only new words.
+   ================================================================= */
+const DOC_GENERIC = [
+  "PLEASE GO ON.",
+  "WHAT DOES THAT SUGGEST TO YOU?",
+  "I AM NOT SURE I UNDERSTAND YOU FULLY.",
+  "WHAT ELSE WOULD YOU LIKE TO DISCUSS?",
+  "WHY DO YOU SAY THAT JUST NOW?",
+  "WHO ARE YOU REALLY TALKING ABOUT?",
+  "DOES THAT TROUBLE YOU?",
+  "IN WHAT WAY?"
+];
+const DOC_Q = ["WHY DO YOU ASK?","WHY DOES THAT QUESTION INTEREST YOU?","WHAT ANSWER WOULD PLEASE YOU MOST?","WHAT DO YOU THINK?","WHY ARE SUCH QUESTIONS ON YOUR MIND?"];
+let docN = 0;
+function startDoctor(){
+  mode = "doctor"; docN = 0;
+  println("");
+  println("GOOD EVENING.");
+  println("");
+  println("TELL ME YOUR PROBLEMS.  PLEASE TERMINATE INPUT");
+  println("WITH A PERIOD OR A QUESTION MARK.");
+  println("");
+  chipsFor();
+  print("*");
+}
+function doctorSay(raw){
+  const s = raw.trim().toUpperCase();
+  const bare = s.replace(/[.?!]+$/,"");
+  let r;
+  if(/^(GOODBYE|BYE|QUIT)\b/.test(bare)){
+    println("");
+    println("IT'S BEEN MY PLEASURE, THAT'S $399.29 PLEASE.");
+    println("");
+    mode = "exec"; chipsFor(); prompt(); return;
+  }
+  const flip = t => t.replace(/\b(I|ME|MY|AM|YOU|YOUR|ARE)\b/g, w=>({I:"YOU",ME:"YOU",MY:"YOUR",AM:"ARE",YOU:"I",YOUR:"MY",ARE:"AM"}[w]));
+  let m;
+  if(!bare) r = "PLEASE GO ON.";
+  else if((m = bare.match(/^YOU(?:'RE| ARE) (.+)/))) r = "WHAT MAKES YOU THINK I AM "+flip(m[1])+"?";
+  else if((m = bare.match(/\bMY (\w+)/))) r = "YOUR "+m[1]+"?";
+  else if(/\b(MAYBE|PERHAPS|PROBABLY)\b/.test(bare)) r = "YOU DON'T SEEM QUITE CERTAIN.";
+  else if(/\bBECAUSE\b/.test(bare)) r = "IS THAT THE REAL REASON?";
+  else if(/\b(LIKE|ALIKE|SAME|SIMILAR)\b/.test(bare)) r = "WHAT RESEMBLANCE DO YOU SEE?";
+  else if(/\?$/.test(s)) r = DOC_Q[docN % DOC_Q.length];
+  else r = DOC_GENERIC[docN % DOC_GENERIC.length];
+  docN++;
+  if(!/[.?]$/.test(s) && docN === 1) r = "PLEASE TERMINATE INPUT WITH A PERIOD OR A\nQUESTION MARK.  "+r;
+  println("");
+  println(r);
+  println("");
+  print("*");
 }
 
 /* =================================================================
@@ -709,7 +1129,7 @@ const ROOMS = {
   exits:{N:"BUILDING", IN:"BUILDING", S:"GULLY"}, dark:false },
  BUILDING:{
   desc:"YOU ARE INSIDE THE WELLHOUSE: ONE ROOM, SWEPT\nRECENTLY BY SOMEBODY WHO CARED.  A BATTERED\nCOFFEE URN SITS IN THE CORNER (EMPTY.  ALWAYS.).",
-  exits:{S:"ROAD", OUT:"ROAD"}, dark:false, items:["LAMP"] },
+  exits:{S:"ROAD", OUT:"ROAD"}, dark:false },
  GULLY:{
   desc:"YOU ARE IN A ROCKY GULLY.  THE STREAMBED\nCONTINUES DOWN TO THE SOUTH.  SOMETHING GLINTS\nTHAT WAY, LOW TO THE GROUND.",
   exits:{N:"ROAD", S:"GRATE"}, dark:false },
@@ -718,7 +1138,7 @@ const ROOMS = {
   exits:{N:"GULLY"}, dark:false },
  DEBRIS:{
   desc:"YOU ARE IN A DEBRIS ROOM, BELOW THE GRATE\nSOMEHOW.  AN AWKWARD PASSAGE SLOPES WEST.  THE\nDEBRIS HAS THE LOOK OF A FILING SYSTEM THAT\nGAVE UP.",
-  exits:{W:"ECHOES"}, dark:true, items:["TAPE"] },
+  exits:{W:"ECHOES"}, dark:true },
  ECHOES:{
   desc:"A HALL OF ECHOES.  YOUR LAMPLIGHT DOES NOT FIND\nTHE CEILING.  EVERY SOUND YOU MAKE COMES BACK\nWEARING A LONGER COAT.\n\nA HOLLOW VOICE SAYS: 'RTFM.'",
   exits:{E:"DEBRIS"}, dark:true }
@@ -730,6 +1150,7 @@ function startAdvent(){
   mode = "advent";
   adv = { room:"ROAD", inv:[], lampOn:false, won:false,
           items:{ BUILDING:["LAMP"], DEBRIS:["TAPE"] } };
+  chipsFor();
   println("");
   println("      C O L O S S A L   R E C O V E R Y");
   println("             O P E R A T I O N");
@@ -747,7 +1168,7 @@ function canSee(){
   const r = ROOMS[adv.room];
   return !r.dark || (adv.lampOn && adv.inv.includes("LAMP"));
 }
-function lookRoom(force){
+function lookRoom(){
   const r = ROOMS[adv.room];
   if(!canSee()){
     println("IT IS PITCH DARK.  SOMETHING WITH TOO MANY LEGS\nIS FAINTLY AUDIBLE.  YOU'D BEST NOT WANDER.\n(THE LAMP, PERHAPS?  'ON'.)");
@@ -766,6 +1187,7 @@ function advCommand(raw){
   if(v === "GO"){ v = o; o = ""; }
   const DIRS = {N:"N",NORTH:"N",S:"S",SOUTH:"S",E:"E",EAST:"E",W:"W",WEST:"W",
                 U:"U",UP:"U",D:"D",DOWN:"D",IN:"IN",ENTER:"IN",OUT:"OUT",EXIT:"OUT"};
+  const DIRNAME = {N:"NORTH",S:"SOUTH",E:"EAST",W:"WEST",U:"UP",D:"DOWN",IN:"IN",OUT:"OUT"};
   println("");
 
   if(v in DIRS){
@@ -774,7 +1196,10 @@ function advCommand(raw){
     } else {
       const dest = ROOMS[adv.room].exits[DIRS[v]];
       if(dest){ adv.room = dest; lookRoom(); checkWin(); }
-      else println("THERE IS NO WAY "+(DIRS[v].length===1?"TO THE "+({N:"NORTH",S:"SOUTH",E:"EAST",W:"WEST",U:"UP",D:"DOWN"}[DIRS[v]]||DIRS[v]):DIRS[v])+" FROM HERE.");
+      else {
+        const d = DIRS[v];
+        println("THERE IS NO WAY "+(d.length===1 && d!=="U" && d!=="D" ? "TO THE "+DIRNAME[d] : DIRNAME[d])+" FROM HERE.");
+      }
     }
   }
   else if(v === "LOOK" || v === "L"){ lookRoom(true); }
@@ -788,12 +1213,14 @@ function advCommand(raw){
       here.splice(here.indexOf(o),1); adv.inv.push(o);
       println(o+": TAKEN."+(o==="TAPE"?"\n\nSOMEWHERE FAR ABOVE, AN OPERATOR'S SHOULDERS\nUNTENSE, NOT KNOWING WHY.":""));
     }
+    else if(!o && here.length === 1){ return advCommand("TAKE "+here[0]); }
     else println(o ? "NO "+o+" HERE." : "TAKE WHAT?");
   }
   else if(v === "DROP"){
     if(o && adv.inv.includes(o)){
       adv.inv.splice(adv.inv.indexOf(o),1);
       (adv.items[adv.room] = adv.items[adv.room] || []).push(o);
+      if(o === "LAMP") adv.lampOn = false;
       println(o+": DROPPED.");
       checkWin();
     } else println(o ? "YOU HAVE NO "+o+"." : "DROP WHAT?");
@@ -854,43 +1281,51 @@ function checkWin(){
 function endAdvent(){
   mode = "exec";
   adv = null;
+  chipsFor();
   println("");
-  println("BACK AT THE EXEC.");
   prompt();
 }
 
 /* =================================================================
    INPUT WIRING
    ================================================================= */
+function dispatch(raw){
+  const t = raw.trim();
+  if(mode === "dead") return;
+  // [2183] s.3: a command "always starts with symbol @"; "@@" sends an @
+  if(t.startsWith("@") && !t.startsWith("@@")){ tipCommand(t.slice(1)); return; }
+  const line = t.startsWith("@@") ? t.slice(1) : raw;
+  if(!conn){
+    if(line.trim()) println("(NO CONNECTION.  TIP COMMANDS START WITH @ --\n TRY @O 49, OR @O 43 FOR THE NIC.)");
+    return;
+  }
+  if(mode === "advent") advCommand(line);
+  else if(mode === "doctor") doctorSay(line);
+  else if(mode === "netstat") netstatCommand(line);
+  else if(mode === "nic") nicCommand(line);
+  else execCommand(line);
+}
+
 function submit(){
   if(printing || mode === "dead") return;
   const raw = kb.value;
   kb.value = "";
-  echoUser(raw, ()=>{
-    if(mode === "advent") advCommand(raw);
-    else execCommand(raw);
-  });
+  type(raw);
 }
-function echoUser(text, then){
+function type(raw){
   // print the operator's keystrokes in their own ink, then act
-  const up = text.toUpperCase();
-  queue.push({text: up + "\n", cls:"usr"});
-  if(!printing) stepPrint();
-  waitIdle(then);
-}
-function waitIdle(fn){
-  const t = setInterval(()=>{
-    if(!printing){ clearInterval(t); fn(); }
-  }, 40);
+  queue.push({text: raw.toUpperCase() + "\n", cls:"usr"});
+  then(()=>dispatch(raw));
 }
 
-sendBtn.addEventListener("click", submit);
+sendBtn.addEventListener("click", ()=>{ submit(); kb.focus(); });
 kb.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); submit(); }});
-paper.addEventListener("click", ()=>kb.focus());
+paper.addEventListener("click", ()=>{ if(!window.getSelection || String(window.getSelection()) === "") kb.focus({preventScroll:true}); });
 
 /* quick command chips */
 const chipsEl = document.getElementById("chips");
-function setChips(defs){
+const noteEl  = document.getElementById("cardnote");
+function setChips(defs, note){
   chipsEl.innerHTML = "";
   defs.forEach(([label,fn])=>{
     const b = document.createElement("button");
@@ -898,20 +1333,43 @@ function setChips(defs){
     b.addEventListener("click", fn);
     chipsEl.appendChild(b);
   });
+  noteEl.textContent = note || "";
 }
-function cmdChip(cmd){
-  return [cmd, ()=>{
-    if(printing || mode === "dead") return;
-    echoUser(cmd, ()=>{
-      if(mode === "advent") advCommand(cmd);
-      else execCommand(cmd);
-    });
-  }];
+function cmdChip(cmd, label){
+  return [label || cmd, ()=>{ if(printing || mode === "dead") return; type(cmd); }];
 }
-function standardChips(){
-  setChips([cmdChip("HELP"), cmdChip("SYSTAT"), cmdChip("MAIL"),
-            cmdChip("HOSTS"), cmdChip("RFC"), cmdChip("ADVENT"),
-            cmdChip("LORE"), cmdChip("LOGOUT")]);
+function chipsFor(){
+  if(!conn){
+    return setChips([cmdChip("@O 49","@O 49  BBN-TENEXB"), cmdChip("@O 43","@O 43  OFFICE-1 (NIC)"),
+                     cmdChip("@O 134","@O 134  MIT-AI"),
+                     ["HANG UP (BACK TO 1984)", ()=>{ window.location.href = "../"; }]],
+      "THE TIP IS LISTENING.  @O <HOST NUMBER> OPENS A CONNECTION.");
+  }
+  if(mode === "prelogin"){
+    return setChips(conn === "OFFICE1"
+      ? [cmdChip("LOG NICGUEST ARPA"), cmdChip("SYSTAT"), cmdChip("@C")]
+      : [cmdChip("LOGIN GUEST"), cmdChip("SYSTAT"), cmdChip("@C")],
+      conn === "OFFICE1" ? "OFFICE-1: THE NIC'S PUBLIC LOGIN IS NICGUEST, PASSWORD ARPA."
+                         : "BBN-TENEXB WANTS A LOGIN.  GUEST WILL DO.");
+  }
+  if(mode === "nic")
+    return setChips([cmdChip("IDENT JAKE"), cmdChip("IDENT WRC"), cmdChip("IDENT VGC"), cmdChip("HOSTS"), cmdChip("QUIT")],
+      "NIC/QUERY.  IDENT LOOKS UP PEOPLE FROM THE 1975 DIRECTORY.");
+  if(mode === "doctor")
+    return setChips([cmdChip("PEOPLE GET ON MY NERVES SOMETIMES."), cmdChip("ARE YOU A REAL DOCTOR?"), cmdChip("GOODBYE.")],
+      "END EACH LINE WITH A PERIOD OR A QUESTION MARK.  GOODBYE. LEAVES.");
+  if(mode === "netstat")
+    return setChips([cmdChip("SITES"), cmdChip("SITES TIP")], "NETSTAT WANTS TO KNOW WHAT TO LIST.");
+  if(mode === "advent")
+    return setChips([cmdChip("LOOK"), cmdChip("N"), cmdChip("S"), cmdChip("INVENTORY"), cmdChip("QUIT")],
+      "A CAVE.  MAGIC IS NOT LISTED.");
+  if(conn === "OFFICE1")
+    return setChips([cmdChip("NIC"), cmdChip("SYSTAT"), cmdChip("DAYTIME"), cmdChip("LOGOUT")],
+      "OFFICE-1, HOST 43: THE NETWORK INFORMATION CENTER.");
+  return setChips([cmdChip("HELP"), cmdChip("SYSTAT"), cmdChip("READMAIL"), cmdChip("HOSTAT"),
+                   cmdChip("HOSTS"), cmdChip("MAP"), cmdChip("DOCTOR"), cmdChip("ADVENT"),
+                   cmdChip("RFC"), cmdChip("LORE"), cmdChip("@C"), cmdChip("LOGOUT")],
+    "BBN-TENEXB, HOST 49.  @C HANGS UP ON THIS HOST; @O 43 THEN REACHES THE NIC.");
 }
 
 /* console switches */
@@ -931,32 +1389,36 @@ document.getElementById("spdBtn").addEventListener("click", function(){
 document.getElementById("advBtn").addEventListener("click", flush);
 
 /* =================================================================
-   SESSION INTRO
+   SESSION INTRO — dial in, hunt, open 49, log in
    ================================================================= */
 function intro(){
-  mode = "exec";
-  queue = []; printing = false; curLine = null;
-  setBusy(false);
-  paper.querySelectorAll("div").forEach(d=>d.remove());
-  standardChips();
+  conn = null; mode = "tip"; user = null;
+  setChips([], "CONNECTING...");
   println("");
-  println("BBN-PTIP (IMP 5), PORT 47");
+  print("E","usr");                               // the hunt character [2183 s.4.A]
+  pause(400);
   println("");
-  print("@L 49\n","usr");
-  println("T R Y I N G . . .");
-  println("OPEN");
+  println("NCC-TIP 337 41");                       // TIP name, software version, octal port
+  println("Latest net news "+date77(2));
+  println('Use "@N<cr>" followed by "netnews<cr>"');
+  pause(500);
+  print("@O 49\n","usr");
+  pause(400);
+  println("Trying...");
+  pause(900);
+  println("Open");
   println("");
-  println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54");
-  println("");
-  print("@LOGIN GUEST\n","usr");
-  println(" PASSWORD:");
-  println("");
-  println(" JOB 17 ON LINE 41  "+date77()+" "+time77());
-  println(" PREVIOUS LOGIN  "+prev77()+" 23:58:41  (LATER\n THAN YOU MEANT TO STAY)");
-  println("");
-  println("[YOU HAVE A MESSAGE]");
+  println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54.14");
+  then(()=>{ conn = "TENEXB"; mode = "prelogin"; });
+  print("@");
+  pause(300);
+  print("LOG","usr"); print("IN (USER) "); print("GUEST","usr"); print(" (PASSWORD) (ACCOUNT #) "); print("341\n","usr");
+  then(()=>{ user = "GUEST"; loginAt = Date.now(); mode = "exec"; });
+  println(" JOB "+JOB+" ON TTY"+TTY+" "+date77()+" "+hhmm());
+  println(" YOU HAVE A MESSAGE");
   println("");
   println("(TYPE HELP IF THE MACHINE IS NEW TO YOU;\nIT WILL NOT BE OFFENDED.)");
+  then(()=>{ chipsFor(); });
   prompt();
 }
 

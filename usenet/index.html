@@ -618,7 +618,7 @@ ken perlow       *****   *****
 ..ihnp4!ihuxq!ken   *** ***`},
 { real:true, from:"chaltas@uiuccsb.UUCP", path:"brezvax!decvax!ihnp4!inuxc!pur-ee!uiucdcs!uiuccsb!chaltas",
 pv:"Notesfiles; site uiuccsb.UUCP",
-org:"U. of Illinois", refs:"<872@brl-vgr.UUCP>",
+refs:"<872@brl-vgr.UUCP>",
 subj:"Re: How to tell if your stupid - (nf)", date:"Mon, 30-Apr-84 13:47:00 EDT", id:"<8700105@uiuccsb.UUCP>",
 body:
 `#R:brl-vgr:-87200:uiuccsb:8700105:000:505
@@ -851,8 +851,13 @@ function showGroups(){
     lines.push(rowSpan(esc(n+"  "+nm+" "+ct+"  "+g.desc), "trunc", ()=>{ gi=idx; showList(); }));
   });
   lines.push("");
-  lines.push('<span class="dim">Tue May  1 09:12:44 EST 1984 -- you have new news.</span>');
+  lines.push('<span class="dim">Tue May  1 09:12:44 EDT 1984 -- you have new news.</span>');
   lines.push('<span class="dim">tap a group, or press its number.</span>');
+  lines.push("");
+  /* the motd's warning, kept on screen for anyone who read past it (and a
+     way down for thumbs: tapping it dials, as "tip arpa" does in the shell) */
+  lines.push(rowSpan('root: the old arpanet dialout is STILL in /etc/remote.', "dim", dialArpanet));
+  lines.push(rowSpan('      it should not answer anymore.  it answers.  [tip arpa]', "dim", dialArpanet));
   paint(lines);
   setStatus("newsgroups -- [1-"+GROUPS.length+"] read  [?] help  [q] quit");
   setKeys([
@@ -935,7 +940,9 @@ function toggleRot(){ rotOn = !rotOn; showArticle(); }
 
 /* ------------------------- help ---------------------------------- */
 
+let helpFrom = "groups";
 function showHelp(){
+  if(mode !== "help") helpFrom = mode;
   mode = "help";
   const lines = [
 '<span class="inv"> netnews -- help &amp; provenance </span>',
@@ -954,23 +961,24 @@ function showHelp(){
 '<span class="hdr">WHAT IS REAL HERE</span>',
 "",
 "Every article in the spool.  All of them arrived on real",
-"wires in April 1984 and are reprinted verbatim from the",
-"utzoo tapes (Henry Spencer's archive, via archive.org/",
-"details/usenet-net), with only the Path: rewritten for",
-"brezvax's feed.  Among them: the kremvax hoax of April 1",
-"and four of its replies, Piet Beertema's EXPIRED-news",
-"post (he forged kremvax five months later; the wire",
-"remembers), the Solar Max repair flight, a young Guido",
-"van Rossum complaining about vi, a goat deployed against",
-"a filesystem bug, the Sanskrit reading of DARPA, and",
+"wires between November 1983 and May 1, 1984, and are",
+"reprinted verbatim from the utzoo tapes (Henry Spencer's",
+"archive, via archive.org/details/usenet-net), with only",
+"the Path: rewritten for brezvax's feed.  Among them: the",
+"kremvax hoax of April 1 and four of its replies, Piet",
+"Beertema's EXPIRED-news post (he forged kremvax four",
+"months later; the wire remembers), the Solar Max repair",
+"flight, a young Guido van Rossum complaining about a vi",
+"feature, a goat deployed against a filesystem bug, the",
+"Sanskrit reading of DARPA, and",
 "Arthur C. Clarke news heard live at GWU.",
 "",
 "Also real: the net.* groups and their descriptions (this",
 "is before the Great Renaming of 1987), B news 2.10.1 and",
 "its headers, the backbone sites in the Path: lines, rot13",
-"and the [x] key, and the census -- some 900 sites moving",
-"225 articles a day, doubling yearly, death imminent since",
-"'83 at least.",
+"and the [x] key, and the census -- 829 sites and 223",
+"articles a day in March 1984, doubling yearly, death",
+"imminent since '83 at least.",
 "",
 "The mailbox too: type mail in the shell for the season's",
 "real net.announce postings -- the monthly Usenet census,",
@@ -982,7 +990,8 @@ function showHelp(){
 "",
 "Only the machine you are reading them on: brezvax, its",
 "login, its shell, and the number in its /etc/remote that",
-"should not answer anymore.  (Brezvax's namesake farmstead",
+"should not answer anymore.  (q for the shell, then type",
+"tip arpa.  It answers.)  (Brezvax's namesake farmstead",
 "in Vidzeme is quite real, and older than the telegraph.)",
 "",
 "The archived articles are quoted with love and for",
@@ -999,7 +1008,11 @@ function showHelp(){
 }
 function backFromHelp(){
   if(mode!=="help") return;
-  showGroups();
+  if(helpFrom === "list") showList();
+  else if(helpFrom === "article") showArticle();
+  else if(helpFrom === "mail") showMail();
+  else if(helpFrom === "mailmsg") showMailMsg();
+  else showGroups();
 }
 
 /* ------------------------- set-up screen ------------------------- */
@@ -1136,6 +1149,28 @@ function shellExec(){
   if(cmd === "logout" || cmd === "exit"){ shellLogout(); return; }
   if(cmd === "tip" || cmd.startsWith("tip ")){
     shellSay("usage: tip system-name   (only one system in /etc/remote)");
+  } else if(cmd === "help" || cmd === "?"){
+    shellSay("readnews   mail   tip arpa   cat /etc/motd   cat /etc/remote   logout");
+  } else if(cmd === "ls"){
+    shellSay("mbox   .newsrc   .signature");
+  } else if(cmd === "cat .signature"){
+    shellSay("guest @ brezvax -- ...!decvax!brezvax!guest");
+  } else if(cmd === "cat /etc/motd"){
+    ["Would the person leaving 300-baud sessions parked on",
+     "the dialin PLEASE hang up when done.  Also: the old",
+     "arpanet dialout is STILL in /etc/remote (\"tip arpa\").",
+     "It should not answer anymore.  It answers.  Leave it",
+     "alone.                                       -- root"].forEach(shellSay);
+  } else if(cmd === "cat /etc/remote"){
+    ["# /etc/remote -- brezvax",
+     "arpa|ARPANET TIP dialin (disconnect order filed; see root):\\",
+     "\t:dv=/dev/cua0:br#300:pn=@:"].forEach(shellSay);
+  } else if(cmd === "cat /etc/phones"){
+    shellSay("cat: /etc/phones: Permission denied");
+  } else if(cmd === "who"){
+    shellSay("guest    tty02   May  1 09:12");
+  } else if(cmd === "date"){
+    shellSay("Tue May  1 09:14:03 EDT 1984");
   } else if(cmd !== ""){
     shellSay(cmd.split(/\s+/)[0] + ": not found");
   }
