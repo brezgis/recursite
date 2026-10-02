@@ -20,16 +20,16 @@ The 1990s are only the top layer.
   Every article is verbatim from Henry Spencer's utzoo tape archive — kremvax and
   all — with only the machine itself invented.
 - Hidden in brezvax's shell is a number that should have been disconnected years ago
-  (`tip arpa`, or tap root's note on the newsgroup menu). It answers: BBN's NCC-TIP in
-  1977, on a Lear Siegler ADM-3A glass terminal. `@O 49` reaches the BBN-TENEXB PDP-10 (SYSTAT,
-  HOSTAT, READMAIL, the DOCTOR that PARRY once met, an original ADVENT miniature);
-  `@O 43` reaches the NIC at OFFICE-1 (`LOG NICGUEST ARPA`, then `NIC`). The TIP's
-  messages, the TENEX formats, the host table and the NIC login are taken from BBN
-  Report 2183 (1975), the TENEX Executive Manual (1973) and User's Guide, and the
-  NIC's July 1975 ARPANET Directory; `LORE` on the terminal lists what is real and
-  what is reconstructed.
-- Logging out of 1977 climbs back up to the present. (Strictly speaking that makes
-  this a cycle, not a recursion. Shh.)
+  (`tip arpa`, or tap root's note on the newsgroup menu). It answers: a Lear Siegler
+  ADM-3A on BBN's NCC-TIP, Friday 21 January 1977. `@O 56` opens SUMEX-AIM, the TENEX
+  at Stanford. Everything the terminal prints is copied from period documents: the
+  TIP's replies and the host addresses from BBN Report 2183 (1975); LOGIN, LOGOUT,
+  WHERE, DAYTIME and the error replies from the TENEX Executive Manual (1973) and the
+  TENEX source; SUMEX-AIM's herald and its bulletin board, BBD, replayed word for word
+  from two sessions recorded there in January 1977; and RFCs 439 (PARRY meets the
+  DOCTOR), 527 (ARPAWOCKY), 608 and 706, printed whole by `TYPE`. The script's header
+  cites each source. Only the session's own state is not a document: your time of
+  day, the job number, and which other hosts refuse. HANG UP climbs back to 1984.
 
 ## Easter eggs
 

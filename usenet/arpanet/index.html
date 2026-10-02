@@ -1,11 +1,11 @@
 <!doctype html>
-<!-- you dialed a number that should have been disconnected years ago. it answered.
-     sources for what follows are cited in the script below and in LORE. -->
+<!-- a 1977 ARPANET session, re-created: everything the terminal prints is copied
+     from period documents, cited at the top of the script below. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BBN TIP — PORT 41 — 1977</title>
+<title>NCC-TIP — 1977</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23e4dcc6'/%3E%3Crect x='2' y='2' width='12' height='10' rx='2' fill='%23101210'/%3E%3Crect x='4' y='5' width='6' height='1.4' fill='%23e8f2ec'/%3E%3Crect x='4' y='8' width='4' height='1.4' fill='%23e8f2ec'/%3E%3C/svg%3E">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -19,76 +19,27 @@
     font-family:"SFMono-Regular",Menlo,Consolas,"Liberation Mono","Courier New",monospace;
     display:flex;flex-direction:column;align-items:center;
   }
-  /* --- console strip -------------------------------------------- */
-  .console{
-    flex:0 0 auto;z-index:20;
-    width:min(720px,100%);
-    background:linear-gradient(180deg,#4c4840,#37342d);
-    border-bottom:3px solid #211e19;
-    box-shadow:0 6px 18px rgba(0,0,0,.5);
-    padding:8px 12px 10px;
-    display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
-  }
-  .plate{
-    font-size:10px;letter-spacing:.16em;color:#cfc8b6;
-    border:1px solid #6a6355;background:#2c2923;border-radius:2px;padding:3px 8px;
-    text-shadow:0 1px 0 #000;
-  }
-  .switches{display:flex;gap:6px;flex-wrap:wrap}
-  .sw{
-    font:inherit;font-size:10px;letter-spacing:.12em;
-    color:#e8e1cf;background:linear-gradient(180deg,#5a554a,#3b3830);
-    border:1px solid #23211c;border-radius:3px;padding:6px 9px;cursor:pointer;
-  }
-  .sw[aria-pressed="true"]{background:linear-gradient(180deg,#7c6b3c,#5b4e2c);border-color:#191712}
-  .sw:focus-visible{outline:2px solid #d8c98a;outline-offset:2px}
-  /* --- quick command card --------------------------------------- */
-  .card{
-    flex:0 0 auto;
-    width:min(680px,94%);
-    margin:14px 0 4px;
-    background:#f7f1de;
-    color:#3a362c;
-    border-radius:2px;
-    box-shadow:0 3px 10px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.15);
-    padding:10px 12px;
-    transform:rotate(-.5deg);
-    position:relative;
-    font-size:11px;
-  }
-  .card::before{
-    content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(1.5deg);
-    width:74px;height:16px;background:rgba(214,200,160,.75);
-    box-shadow:0 1px 2px rgba(0,0,0,.25);
-  }
-  .card b{letter-spacing:.12em;font-size:10px}
-  .cardnote{margin-top:5px;font-size:10.5px;letter-spacing:.04em;color:#5d5646;white-space:pre-wrap}
-  /* the card's command chips ride in the keyboard bar, right under the thumbs */
-  .chips{display:flex;gap:6px;overflow-x:auto;width:min(700px,100%);padding:0 0 8px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-  .chips .chip{flex:0 0 auto;white-space:nowrap}
-  @media (min-width:760px){ .chips{flex-wrap:wrap;overflow-x:visible} }
-  .chip{
-    font:inherit;font-size:11px;letter-spacing:.06em;
-    background:#efe6cc;border:1px solid #b7ac8e;border-radius:2px;
-    color:#3a362c;padding:5px 9px;cursor:pointer;
-  }
-  .chip:hover{background:#e6dabb}
-  .chip:focus-visible{outline:2px solid #7c6b3c;outline-offset:1px}
   /* --- the terminal: a Lear Siegler ADM-3A --------------------- */
   .term{
     flex:1 1 auto;min-height:0;
     width:min(760px,100%);
-    margin:10px 0 8px;padding:16px 16px 10px;
+    margin:12px 0 8px;padding:16px 16px 10px;
     background:linear-gradient(180deg,#ece5d0,#d7cdb3);      /* the cream case */
     border-radius:14px 14px 8px 8px;
     box-shadow:0 12px 30px rgba(0,0,0,.6), inset 0 1px 0 #fffaf0, inset 0 -3px 0 #b9ad8f;
     display:flex;flex-direction:column;
   }
   .bezel{
+    position:relative;
     flex:1 1 auto;min-height:0;
     background:#1c1b18;border-radius:10px;padding:14px;
     box-shadow:inset 0 2px 6px rgba(0,0,0,.8);
     display:flex;
+    container-type:inline-size;               /* the type is sized from the glass's width */
+  }
+  .bezel::after{                              /* scanlines over the glass, outside its scrolling */
+    content:"";position:absolute;inset:14px;border-radius:18px / 22px;pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
   }
   .screen{
     position:relative;flex:1 1 auto;min-height:0;
@@ -99,24 +50,18 @@
     padding:18px 22px;
     color:#e6efe9;                                              /* white P4 phosphor */
     text-shadow:0 0 2px rgba(230,245,238,.55), 0 0 9px rgba(190,230,210,.22);
-    font-size:clamp(10.5px,2.6vw,14.5px);
+    /* the ADM-3A shows 80 columns: fit them where the glass is wide enough; on a phone,
+       keep the type readable and let long lines wrap */
+    font-size:clamp(10px, calc((100cqw - 44px) / 53.5), 15px);
     line-height:1.45;letter-spacing:.06em;
     white-space:pre-wrap;word-break:break-word;
   }
   .screen::-webkit-scrollbar{display:none}
-  /* phones: shrink the frame and size the type so a 50-column line still fits */
   @media (max-width:600px){
     .term{padding:8px 8px 6px;margin:8px 0 6px;border-radius:10px 10px 6px 6px}
     .bezel{padding:7px}
-    .screen{padding:12px 10px;letter-spacing:.01em;font-size:calc((100vw - 52px) / 31.5)}
-  }
-  .scan{                                                        /* scanlines over the glass */
-    position:sticky;top:0;display:block;height:0;pointer-events:none;
-  }
-  .scan::before{
-    content:"";position:absolute;left:-22px;right:-22px;top:-18px;height:100vh;
-    background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
-    pointer-events:none;
+    .bezel::after{inset:7px}
+    .screen{padding:12px 10px;letter-spacing:.01em}
   }
   .badge{
     align-self:flex-end;margin-top:7px;
@@ -129,17 +74,29 @@
   }
   @keyframes hblink{50%{opacity:0}}
   @media (prefers-reduced-motion:reduce){ .head{animation:none} }
-  /* --- keyboard row ---------------------------------------------- */
-  .kbrow{
-    flex:0 0 auto;align-self:stretch;z-index:30;
-    display:flex;flex-direction:column;align-items:center;
-    background:linear-gradient(180deg,#37342d,#26231e);
-    border-top:3px solid #4c4840;
-    box-shadow:0 -8px 20px rgba(0,0,0,.5);
-    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  /* --- the deck under the terminal: commands, keyboard, switches --- */
+  .deck{
+    flex:0 0 auto;width:min(760px,100%);
+    padding:0 10px calc(10px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;gap:8px;
   }
-  .kbinner{width:min(700px,100%);display:flex;gap:8px;align-items:center}
-  .kbinner label{font-size:10px;letter-spacing:.14em;color:#b7ae99;white-space:nowrap}
+  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .chips::-webkit-scrollbar{display:none}
+  @media (min-width:760px){ .chips{flex-wrap:wrap;overflow-x:visible} }
+  .chip{
+    flex:0 0 auto;white-space:nowrap;
+    font:inherit;font-size:11px;letter-spacing:.06em;
+    background:#e7dfc8;border:1px solid #b7ac8e;border-bottom-width:2px;border-radius:3px;
+    color:#3a362c;padding:5px 9px;cursor:pointer;
+  }
+  .chip:hover{background:#f1ead6}
+  .chip:active{transform:translateY(1px);border-bottom-width:1px}
+  .chip:focus-visible{outline:2px solid #d8c98a;outline-offset:1px}
+  .hint{                                   /* the only modern words on the page: how to drive it */
+    font:13px/1.4 Georgia,"Times New Roman",serif;font-style:italic;color:#a59b84;
+    min-height:1.4em;
+  }
+  .kbinner{display:flex;gap:8px;align-items:center}
   #kb{
     flex:1;min-width:0;
     font:inherit;font-size:14px;letter-spacing:.08em;
@@ -156,60 +113,71 @@
     padding:9px 14px;cursor:pointer;
   }
   #sendBtn:disabled{opacity:.45;cursor:default}
+  .switches{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .sw{
+    font:inherit;font-size:10px;letter-spacing:.12em;
+    color:#cfc8b6;background:transparent;
+    border:1px solid #57523f;border-radius:3px;padding:5px 8px;cursor:pointer;
+  }
+  .sw[aria-pressed="true"]{color:#f4ecd6;background:#5b4e2c;border-color:#7c6b3c}
+  .sw:hover{color:#f4ecd6}
+  .sw:focus-visible{outline:2px solid #d8c98a;outline-offset:2px}
+  .sw.hang{margin-right:auto}
 </style>
 </head>
 <body>
 
-<div class="console" role="toolbar" aria-label="Terminal controls">
-  <span class="plate">ADM-3A &middot; NCC-TIP PORT 41</span>
-  <div class="switches">
-    <button class="sw" id="sndBtn" aria-pressed="false">SOUND OFF</button>
-    <button class="sw" id="spdBtn" aria-pressed="false">MODEM: 1200 BAUD</button>
-    <button class="sw" id="advBtn">SKIP AHEAD</button>
-  </div>
-</div>
-
-<div class="card" aria-label="Quick command card">
-  <b>OPERATOR'S CARD</b>
-  <div class="cardnote" id="cardnote"></div>
-</div>
-
 <div class="term">
-  <div class="bezel"><div id="screen" class="screen" aria-live="polite"><span class="scan" aria-hidden="true"></span></div></div>
+  <div class="bezel"><div id="screen" class="screen" aria-live="polite"></div></div>
   <div class="badge">LEAR SIEGLER &nbsp;ADM-3A</div>
 </div>
 
-<div class="kbrow">
-  <div class="chips" id="chips" aria-label="Quick commands"></div>
+<div class="deck">
+  <div class="chips" id="chips" aria-label="Commands"></div>
+  <p class="hint" id="hint"></p>
   <div class="kbinner">
-    <label for="kb">KEYBOARD &#8669;</label>
     <input id="kb" autocomplete="off" autocapitalize="characters" spellcheck="false"
-           placeholder="TYPE A COMMAND, THEN SEND">
-    <button id="sendBtn">SEND</button>
+           aria-label="Keyboard" placeholder="TYPE A COMMAND, THEN RETURN">
+    <button id="sendBtn">RETURN</button>
+  </div>
+  <div class="switches" role="toolbar" aria-label="Terminal controls">
+    <button class="sw hang" id="hangBtn">HANG UP</button>
+    <button class="sw" id="sndBtn" aria-pressed="false">SOUND OFF</button>
+    <button class="sw" id="spdBtn" aria-pressed="false">1200 BAUD</button>
+    <button class="sw" id="advBtn">SKIP AHEAD</button>
   </div>
 </div>
 
 <script>
 /* =====================================================================
-   NCC-TIP, PORT 41, 1977.
+   NCC-TIP, 1977.  An ADM-3A on BBN's TIP opens a connection to SUMEX-AIM.
 
-   Sources (all public; formats below are copied from them, not guessed):
+   Everything the terminal prints is copied from these (all public):
    [2183] J. Malman, "User's Guide to the Terminal IMP", BBN Report 2183,
-          NIC 10916, August 1975 revision (DTIC AD-A014398; scan on
-          Wikimedia Commons).  Hunt character "E", "Trying..."/"Open"/
-          "Closed"/"Refused"/"Can't"/"BAD"/"Num"/"Wait", the @ command
-          grammar (first letter is all that matters), @@, the net-news
-          reminder, and Appendix A (the host table used below).
-   [EXEC] T. Myer, J. Barnaby, W. Plummer, "TENEX Executive Manual",
-          BBN, April 1973 (NIC 16874; bitsavers.org/pdf/bbn/tenex).
-          LOGIN, LOGOUT, SYSTAT, WHERE and DAYTIME output formats.
-   [TUG]  "TENEX User's Guide", BBN, Jan 1975 with 1977 updates
-          (bitsavers.org/pdf/bbn/tenex).  HOSTAT, NETSTAT, READMAIL,
-          DOCTOR; the TENEX herald pattern (PTIP section, 10-26-77).
-   [DIR]  "ARPANET Directory", NIC 32992, July 1975 (Computer History
-          Museum, 102805037).  NICGUEST login at OFFICE-1; people.
-   [MAP]  "ARPANET Logical Map, March 1977" (Wikimedia Commons).
-   [RFC]  RFC 439, 527, 606, 608, 724 (rfc-editor.org).
+          August 1975 revision (DTIC AD-A014398; bitsavers.org/pdf/bbn/tip).
+          The hunt character E (p.4-2); "Trying..." and the replies "Open",
+          "Refused", "Host not responding" (p.4-8); "Closed" (p.4-10);
+          "Can't", "Num", "BAD", "Wait" (p.3-2); the @ command grammar --
+          first letter of each word, @@ sends an @ (p.3-1, App. B); and the
+          decimal host addresses of Appendix A.
+   [EXEC] "TENEX Executive Manual", BBN, April 1973 (bitsavers.org/pdf/bbn/
+          tenex).  LOGIN's reply " JOB n ON TTYn date time" (p.5), what is
+          allowed before LOGIN (p.25), " ?" for an unknown command (p.19),
+          WHERE and DAYTIME (p.93-94).
+   [SRC]  TENEX source, github.com/PDP-10/tenex: " LOGIN PLEASE", "YOU ARE
+          ALREADY LOGGED IN", and the monitor's LOGOUT lines "KILLED JOB ..."
+          / "  USED ... IN ..." (the TTY number is octal).
+   [SUMEX] Two recorded SUMEX-AIM sessions in the same repository:
+          other/lisp/ilisp/lod.doc (19 Jan 1977: the herald " SUMEX-AIM
+          Tenex 1.31.73, SUMEX-AIM Exec 1.51.41", and LOG's reply), and
+   [BBD]  bbd/bbd.sample, "a recording of a sample BBD session" by Richard
+          Kahler, 21 January 1977: VERSION, DAYTIME's SUMEX format, and the
+          bulletin board's banner and replies, replayed word for word.
+   [RFC]  RFC 439, 527, 608 and 706 (rfc-editor.org), printed whole by TYPE.
+
+   What is not a document is only the session's own state: the time of day
+   (yours, on 21 January 1977), this job's number and line, and which
+   other hosts refuse.
    ===================================================================== */
 (function(){
 "use strict";
@@ -356,459 +324,59 @@ function dingBell(){            // the ADM-3A's bell is a beeper
 const MON  = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const MONL = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 const DAYL = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
-function d77(offsetDays){
-  const n = new Date(Date.now() - (offsetDays||0)*86400000);
-  let day = n.getDate();
-  if(n.getMonth() === 1 && day === 29) day = 28;      // 1977 was not a leap year
-  return new Date(1977, n.getMonth(), day, n.getHours(), n.getMinutes(), n.getSeconds());
+function d77(){
+  // Friday, 21 January 1977 -- the day of the SUMEX-AIM recordings -- at your time of day
+  const n = new Date();
+  return new Date(1977, 0, 21, n.getHours(), n.getMinutes(), n.getSeconds());
 }
 const pad2 = x => String(x).padStart(2,"0");
 function date77(off){ const d = d77(off); return d.getDate()+"-"+MON[d.getMonth()]+"-77"; }
 function hhmm(){ const d = d77(); return pad2(d.getHours())+":"+pad2(d.getMinutes()); }
 function hhmmss(){ const d = d77(); return hhmm()+":"+pad2(d.getSeconds()); }
-function zone77(){
+function daytime(){             // as SUMEX-AIM printed it, 21 Jan 1977: FRIDAY, JANUARY 21, 1977 16:42:31
   const d = d77();
-  return (d >= new Date(1977,3,24,2) && d < new Date(1977,9,30,2)) ? "EDT" : "EST";
-}
-function daytime(){             // format per [EXEC] p.93: FRIDAY, APRIL 13, 1973 12:34:56-EST
-  const d = d77();
-  return DAYL[d.getDay()]+", "+MONL[d.getMonth()]+" "+d.getDate()+", 1977 "+hhmmss()+"-"+zone77();
+  return DAYL[d.getDay()]+", "+MONL[d.getMonth()]+" "+d.getDate()+", 1977 "+hhmmss();
 }
 
 /* =================================================================
-   THE NETWORK — host table, from [2183] Appendix A (August 1975),
-   the newest complete table in hand.  Decimal address = IMP + 64 x host.
+   THE NETWORK -- decimal host addresses and names from [2183] Appendix A
+   (August 1975).  One host answers this terminal: SUMEX-AIM, 56, the
+   TENEX at Stanford.  Its herald is copied from a January 1977 session.
    ================================================================= */
-const HOSTS = [
- // dec, octal, name, computer, system, status
- [ 43,"053","OFFICE-1",   "PDP-10",      "TENEX,NLS", "SERVER"],
- [ 49,"061","BBN-TENEXB", "PDP-10",      "TENEX",     "SERVER"],
- [241,"361","BBN-TENEX",  "PDP-10",      "TENEX",     "SERVER"],
- [197,"305","BBN-TENEXA", "PDP-10",      "TENEX",     "LIMITED"],
- [114,"162","BBN-TENEXD", "PDP-10",      "TENEX",     "LIMITED"],
- [134,"206","MIT-AI",     "PDP-10",      "ITS",       "LIMITED"],
- [198,"306","MIT-ML",     "PDP-10",      "ITS",       "SERVER"],
- [ 70,"106","MIT-DMS",    "PDP-10",      "ITS",       "SERVER"],
- [ 44,"054","MIT-MULTICS","H-6180",      "MULTICS",   "SERVER"],
- [ 11,"013","SU-AI",      "PDP-10",      "DEC 10/50", "SERVER"],
- [ 56,"070","SUMEX-AIM",  "PDP-10",      "TENEX",     "SERVER"],
- [ 78,"116","CMU-10A",    "PDP-10",      "DEC 10/50", "LIMITED"],
- [ 14,"016","CMU-10B",    "PDP-10",      "DEC 10/50", "SERVER"],
- [ 86,"126","USC-ISI",    "PDP-10",      "TENEX",     "SERVER"],
- [ 65,"101","UCLA-CCN",   "IBM 360/91",  "OS-MVT",    "SERVER"],
- [  7,"007","RAND-RCC",   "IBM 370/158", "OS-MVT",    "SERVER"],
- [ 71,"107","RAND-ISD",   "PDP-11/45",   "UNIX",      "SERVER"],
- [ 16,"020","AMES-67",    "IBM 360/67",  "TSS/360",   "SERVER"],
- [  9,"011","HARV-10",    "PDP-10",      "DEC 10/50", "LIMITED"],
- [ 10,"012","LL",         "IBM 370/168", "VM-370",    "LIMITED"],
- [ 32,"040","PARC-MAXC",  "MAXC",        "TENEX",     "LIMITED"],
- [ 31,"037","CCA-TENEX",  "PDP-10",      "TENEX",     "SERVER"],
- [ 46,"056","RUTGERS-10", "PDP-10",      "TOPS-10",   "SERVER"],
- [ 42,"052","LONDON",     "IBM 360/195", "OS/MVT",    "LIMITED"],
- [168,"250","NCC-TIP",    "H-316",       "TIP",       "TIP"]
-];
-const HOSTBYNUM = {};
-HOSTS.forEach(h=>{ HOSTBYNUM[h[0]] = h; });
-/* How each host answers this terminal.  Only two are wired all the way
-   through; the rest answer with the TIP's own real messages [2183 s.7]. */
-const ANSWERS = {
-  49:"TENEXB", 43:"OFFICE1",
-  241:"Host not responding", 198:"Refused", 70:"Refused", 134:"Refused",
-  44:"Refused", 11:"Refused", 56:"Refused", 86:"Refused", 65:"Refused",
-  32:"Host Scheduled Down Until Sat. at 1850 GMT", 42:"Net Trouble"
+const HOSTS = {"1":"UCLA-ATS","2":"ARC-RD","3":"UCSB-MOD75","4":"UTAH-10","6":"MIT-DEVMULTICS","7":"RAND-RCC","8":"SDC-LAB","9":"HARV-10","10":"LL","11":"SU-AI","12":"ILL-CAC","13":"GUNTER","14":"CMU-10B","15":"I4A-TENEX","16":"AMES-67","18":"RADC-MULTICS","19":"NBS-ICST","20":"ETAC","21":"LLL-RISOS","22":"ISI-SPEECH11","23":"USC-44","26":"SDAC-44","27":"BELVOIR","28":"ARPA-DMS","29":"BRL","31":"CCA-TENEX","32":"PARC-MAXC","33":"FNWC","34":"LBL","35":"UCSD-CC","36":"HAWAII-ALOHA","37":"RML-7","38":"PURDUE","39":"SDAC-CCP","40":"BBN-NCC","41":"NORSAR-40B","42":"LONDON","43":"OFFICE-1","44":"MIT-MULTICS","45":"SCI-TENEX","46":"RUTGERS-10","49":"BBN-TENEXB","50":"BBN-SPEECH-11","51":"SRI-NSC11","53":"EGLIN","54":"SCRL-ELFDEVEL","55":"ANL","56":"SUMEX-AIM","57":"NSA","65":"UCLA-CCN","66":"SRI-AI","69":"BBN-11X","70":"MIT-DMS","71":"RAND-ISD","72":"SDC-CC","73":"HARV-1","75":"SU-DSL","76":"ILL-NTS","78":"CMU-10A","79":"I4-ELF","86":"USC-ISI","95":"LL-ASG","96":"PARC-VTS","98":"UCB","103":"SDAC-DP","106":"LONDON-VDH","110":"ADR","112":"ASL","113":"BBN-SAT","114":"BBN-TENEXD","115":"SRI-IA11","118":"SCRL-ELF","129":"UCLA-CCBS","130":"SRI-ARC","131":"CHII","132":"UTAH-TIP","133":"BBN-11XB","134":"MIT-AI","138":"LL-TSP","140":"UNIVAC","142":"CMU-11","143":"I4B-TENEX","144":"AMES-TIP","145":"MITRE-TIP","146":"RADC-TIP","147":"NBS-TIP","148":"ETAC-TIP","150":"USC-ISIB","151":"USC-TIP","152":"GWC-TIP","153":"DOCB-TIP","154":"SDAC-TIP","156":"ARPA-TIP","158":"BBN-TESTIP","159":"CCA-TIP","161":"FNWC-TIP","164":"ALOHA-TIP","165":"RML-TIP","167":"SDAC-NEP","168":"NCC-TIP","169":"NORSAR-TIP","170":"LONDON-TIP","171":"TYMSHARE-TIP","174":"RUTGERS-TIP","175":"WPAFB-TIP","176":"AFWL-TIP","177":"BBN10X-TIP","179":"SRI-CBC11","180":"ISI-TIP","197":"BBN-TENEXA","198":"MIT-ML","201":"HASKINS","202":"LL-11","206":"CMU-CC","208":"AMES-11","214":"ISI-XGP11","215":"USC-ECL","218":"SDAC-CCP","223":"CCA-SIP","228":"HAWAII-500","232":"BBN-1D","233":"NORSAR-40A","241":"BBN-TENEX","243":"SRI-PKT","244":"USC-ISIC"};
+const SUMEX = 56;
+const HERALD = " SUMEX-AIM Tenex 1.31.73, SUMEX-AIM Exec 1.51.41";
+
+/* what a guest can TYPE: RFCs as published (rfc-editor.org), without the
+   page headers and transcriber's note of their 1999 retyping */
+const FILES = {
+"RFC439.TXT": "Network Working Group                                            V. Cerf\nRequest for Comments: 439                                         SU-ERL\nNIC: 13771                                               21 January 1973\n\n                      PARRY Encounters the DOCTOR\n\n   The session recorded below actually happened on 18 September 1972 and\n   is herewith reproduced for your entertainment.\n\n   Good Evening.\n\n   Tell me your problems.  Please terminate input with a period or a\n   question mark.\n\n   *People get on my nerves sometimes.\n\n   I am not sure I understand you fully.\n\n   *You should pay more attention.\n\n   Suppose you should pay more attention.\n\n   *You're entitled to your own opinion.\n\n   What makes you think I am entitled to my own opinion?\n\n   *It bothers me just to be around people in general.\n\n   Please go on.\n\n   *I went to the track at Bay Meadows a while back.\n\n   What does that suggest to you?\n\n   *I went to the races.\n\n   What else would you like to discuss?\n\n   *Horseracing interests me.\n\n   Why do you say that just now?\n\n   *There's a lot of crooked gambling going on there.\n\n   I am not sure I understand you fully,\n\n   *It's clear to me if not to you.\n\n   Do you think its likely that not to I?\n\n   *I went to the races.\n\n   Please go on.\n\n   *I gamble on horses.\n\n   What does that suggest to you?\n\n   *I went to the races.\n\n   What else would you like to discuss?\n\n   *Gambling has been nothing but trouble to me.\n\n   Why do you say that just now?\n\n   *I've had experience with crooks gambling at the track.\n\n   I am not sure I understand you fully.\n\n   *I've already told you enough about that.\n\n   Oh? I enough about that?\n\n   *I went to the races.\n\n         comment: This has to be the most persistent and patient\n         paranoid I have ever encountered.\n\n   Please go on.\n\n   *Do you know anything about bookies?\n\n   What makes you think I know anything about bookies?\n\n   *A bookie didn't pay me off once.\n\n   What does that suggest to you?\n\n   *I beat up the bookie who did not pay off, and I thought he might use\n   his friends in the underworld to get even with me.\n\n   What else would you like to discuss?\n\n   *What do you know about racketeers?\n\n   Why do you ask?\n\n   *What experience have you had gambling?\n\n   Why does that question interest you?\n\n   *I like horseraces.\n\n   What else do you like?\n\n   *I know the mob controls the big rackets.\n\n   Who are you really talking about?\n\n   *Have you ever really thought about the MAFIA?\n\n   Suppose you ever really thought about the MAFIA.\n\n   *Let's talk about something else.\n\n   I am not sure I understand you fully.\n\n   *You keep asking me the same things, why not change the topic?\n\n   In what way?\n\n   *What do you mean?\n\n   Why are such questions on your mind?\n\n   *I thought I told you, people get on my nerves.\n\n   Your nerves?\n\n   *Well, I don't know.\n\n   Don't you really know?\n\n   *I would say so.\n\n   Please go on.\n\n   *I would rather not discuss that anymore.\n\n   Would you like to discuss your nerves?\n\n   *I guess so.\n\n   What does that suggest to you?\n\n   *What are you getting at?\n\n   What answer would please you most?\n\n   *It's not a matter or like or dislike.\n\n   What else would you like to discuss?\n\n   *I am getting tired of answering the same questions over and over.\n\n   What resemblance do you see?\n\n   *Why do you need to know that?\n\n   What do you think?\n\n   *I don't understand your motives.\n\n   Why don't you understand my motives?\n\n   *Shouldn't I be?\n\n         comment: ???\n\n   Why do you say that just now?\n\n         comment: I was wondering the same thing.\n\n   *That's just the way it is.\n\n   Suppose that's just the way it were not.\n\n   *So?\n\n   I am not sure I understand you fully.\n\n   *You harp on the same questions too much.\n\n   What does that similarity suggest to you?\n\n   *I don't get you.\n\n   Do you wish that you did get I?\n\n   *It's about time you showed some interest in my feelings.\n\n   Oh? I showed some interest in your feelings?\n\n         comment: must have been an accident...\n\n   *I will help you if I trust you.\n\n   Do you wish that you trust I?\n\n   *Maybe yes, maybe no.\n\n   You don't seem quite certain.\n\n    ...Excuse me for just a minute.  Sorry to have interrupt you please\n   continue...\n\n   *Really?\n\n   Please go on.\n\n   *In my opinion you have a one-track mind.\n\n   What makes you think I have a one-track mind?\n\n         comment: you ready for this?\n\n   *I used to go to the track every week.\n\n   What does that suggest to you?\n\n   *I avoid racetracks now because the races are fixed.\n\n   Is that the real reason?\n\n   *I'd rather not discuss it.\n\n   What else would you like to discuss?\n\n   *That's something I don't want to go into.\n\n   Does that trouble you?\n\n   *I went to the races.\n\n   Why do you say that just now.\n\n   *It's none of your business.\n\n   Why are you concerned over my business?\n\n   *I don't confide in strangers.\n\n   Don't you really confide in strangers?\n\n   *Let's change the subject.\n\n   Perhaps that concerns your feelings.\n\n   *I went to the races.\n\n   I am not sure I understand you fully.\n\n   *What's wrong with you that you keep on bugging me about this?\n\n   Who are you really talking about?\n\n   *The way you repeat yourself is getting ridiculous.\n\n   Suppose you repeat myself is getting ridiculous.\n\n         comment: howzat?\n\n   *There are some tricky operators down there.\n\n   Are there really some tricky operators down there?\n\n   *The guys involved in the horseracing racket.\n\n   Please go on.\n\n   *You are a real nag.\n\n         comment: just one of the horses.\n\n   Does it please you to believe I am a real nag?\n\n   *I have had enough of this.\n\n   What does that suggest to you?\n\n   *Goodbye.\n\n   It's been my pleasure, that's $399.29 please.\n\n         comment: talk about tricky operators...\n\n   PARRY was running at SAIL and DOCTOR at BBN Tenex, both being\n   accessed from UCLA/SEX.\n",
+"RFC527.TXT": "Network Working Group                                    R. Merryman  (UCSD-CC)\nRequest for Comments:  527                                              6/22/73\n\n                              ARPAWOCKY\n\n                    Twas brillig, and the Protocols\n                         Did USER-SERVER in the wabe.\n                    All mimsey was the FTP,\n                         And the RJE outgrabe,\n\n                    Beware the ARPANET, my son;\n                         The bits that byte, the heads that scratch;\n                    Beware the NCP, and shun\n                         the frumious system patch,\n\n                    He took his coding pad in hand;\n                         Long time the Echo-plex he sought.\n                    When his HOST-to-IMP began to limp\n                         he stood a while in thought,\n\n                    And while he stood, in uffish thought,\n                         The ARPANET, with IMPish bent,\n                    Sent packets through conditioned lines,\n                         And checked them as they went,\n\n                    One-two, one-two, and through and through\n                         The IMP-to-IMP went ACK and NACK,\n                    When the RFNM came, he said \"I'm game\",\n                         And sent the answer back,\n\n                    Then hast thou joined the ARPANET?\n                         Oh come to me, my bankrupt boy!\n                    Quick, call the NIC! Send RFCs!\n                         He chortled in his joy.\n\n                    Twas brillig, and the Protocols\n                         Did USER-SERVER in the wabe.\n                    All mimsey was the FTP,\n                         And the RJE outgrabe.\n\n                                                            D.L. COVILL\n                                                            May 1973\n",
+"RFC608.TXT": "Network Working Group                                   M.D. Kudlick\nRFC # 608                                               SRI-ARC\nNIC # 21256                                             January 10, 1974\n\n                           HOST NAMES ON-LINE\n\nWe at the NIC agree with Peter Deutsch's suggestion (in RFC# 606 / NIC#\n21246) that the NIC maintain an online ASCII text file of Host names,\naddresses, and attributes.  That suggestion corresponds to one made by\nVint Cerf recently, and evidently receives ARPA/IPT support.\n\nJake Feinler at the NIC designed and maintains a source file, in NLS\nformat, that can be used to generate the ASCII file Peter outlined.  A\nprogram to generate an up to date version of the ASCII file needs to be\nwritten at the NIC, and run periodically (weekly, or as the situation\nwarrants).  Such a mechanism would allow us, of course, to maintain one\nsource of data and use it for this and other purposes.\n\nOur present data includes official Host name, Host address, Host status\n(user, server, TIP) and certain other information like Technical\nLiaison, Host computer, operating system, etc.\n\nProvisions exist for including attributes of the type Peter suggested\n(for example FTP byte size, TELNET duplex mode, echoing mode, and\nnicknames), but these data are currently NOT in our source file.\n\nTo get things moving, therefore, we propose to do the following things:\n\n    1)  We shall write a program to generate the ASCII file in the\n        syntax described in RFC# 606, namely:\n\n        <host-name-file> ::= <entry> / <host-name-file> <entry>\n\n        <entry> ::= <data-part> <end-of-line>\n\n            Note that this produces a blank line after the <data-part>.\n\n        <data-part> ::= <basic-part> / <data-part> <attribute-item>\n\n        <basic-part> ::= <host-name> , <host-address> <end-of-line>\n\n        <attribute-item> ::= <attribute-name> = <attribute-value> <end-\n        of-line>\n\n    2)  We shall initially include only the following items in each\n        <entry>:\n\n        a)  <basic-part>\n\n            in which <host-address> will be a decimal host address,\n            relative to the Host's own Network, and\n\n            in which <host-name> will be the official Host Name, a\n            string obtained through negotiation between the Host and the\n            NIC, governed by these constraints:\n\n                up to 48 characters drawn from the alphabet (A-Z),\n                digits (0-9), and the minus sign (-) ... specifically,\n                no blank or space characters allowed;\n\n                no distinction between upper and lower case letters;\n\n                the first character is a letter;\n\n                the last character is NOT a minus sign;\n\n                no other restrictions on content or syntax.\n\n            Note:  The Host Name may be prefixed with an Official\n            Network Name of up to 24 characters enclosed in parentheses\n            ().  The Network Name designates the Network in which the\n            Host resides.\n\n                (The characters used in the Network Name are drawn from\n                the same character set as those in the Host Name, with\n                the same constraints [except the length] as listed\n                above.)\n\n                The ASCII text file will only contain the Official\n                Network name for Hosts NOT on the ARPANET; for ARPANET\n                Hosts there will be no Network Name prefix.\n\n        b)  <attribute-item>\n\n            in which <attribute-name> initially will have the single\n            possible value STATUS, and the corresponding value of\n            <attribute-value> for STATUS will be one of these:\n\n                SERVER\n                USER\n                TIP\n                UNKNOWN\n\n        c)  <end-of-line>\n\n            this will be carriage return followed by line feed (octal\n            015  followed by  octal  12).\n\n    3)  Attributes other than those for which <attribute-name> is STATUS\n        will be added in the above format at a later date (to be\n        announced) as the data becomes available to us.\n\n        We agree with Peter that the attribute list should not be\n        construed as replacing option negotiation or any other means by\n        which one Host discovers the properties of another, but merely\n        as an alternative source of information that is simply and\n        easily accessible, in machine-readable form.\n\n        Suggestions for attributes that are worthy of inclusion in the\n        ASCII file of Hostnames are welcome.  Please send your\n        suggestions and/or data to Jake Feinler\n            FEINLER @ SRI-ARC,   or  NIC Ident  =  JAKE\n\n        For completeness, we record here the attribute suggestions given\n        in RFC# 606:\n\n            NICKNAMES -- value is a list of acceptable nicknames for the\n            host.  Any system that provides name-to-address translation\n            is encouraged (although of course not required) to accept\n            these names as alternatives to the official host name.\n\n            FTP-BYTE-SIZES -- value is a list of the byte sizes\n            supported by the FTP server.  The first byte size is the one\n            which leads to the least computational overhead (e.g. 36 for\n            PDP-10's, 32 for 360's).\n\n            ECHOING -- value is L or R depending on whether the host\n            expects the terminal to echo (Remote) or expects to do its\n            own echoing (Local).\n\nThe ASCII file generated by the NIC will reside at Host OFFICE-1 (Host\nAddress = 43 decimal), and will have the pathname\n\n    <NETINFO>HOSTS.TXT\n\nUsing this pathname with an FTP process will enable anyone, of course,\nto retrieve the file for use at any Network Host.\n\n    The login username for FTP can be GUEST,\n    password ARPA,\n    account 1.\n\nThe file will be in alphanumeric sequence by Host Name.\n\nThe date after which the file will be available at OFFICE-l will be\nannounced via RFC as soon as the file is ready.\n\nWe welcome comments on this RFC, on RFC# 606, or on any other aspect of\nthis problem.  And we wish to acknowledge the contributions of Vint\nCerf, Peter Deutsch, Jake Feinler, and Nancy Neigus in getting the\nOfficial Host Name list to happen.\n",
+"RFC706.TXT": "Network Working Group                                     Jon Postel  (SRI-ARC)\nRequest for Comments: 706                                              Nov 1975\nNIC #33861\n\n                    On the Junk Mail Problem\n\nIn the ARPA Network Host/IMP interface protocol there is no\nmechanism for the Host to selectively refuse messages. This means\nthat a Host which desires to receive some particular messages must\nread all messages addressed to it. Such a Host could be sent many\nmessages by a malfunctioning Host. This would constitute a denial of\nservice to the normal users of this Host. Both the local users and\nthe network communication could suffer. The services denied are the\nprocessor time consumed in examining the undesired messages and\nrejecting them, and the loss of network thruput or increased delay\ndue to the unnecessary busyness of the network.\n\nIt would be useful for a Host to be able to decline messages from\nsources it believes are misbehaving or are simply annoying. If the\nHost/IMP interface protocol allowed the Host to say to the IMP\n\"refuse messages from Host X\", the IMPs could discard the unwanted\nmessages at their earliest opportunity returning a \"refused\" notice\nto the offending Host.\n\nHow the IMPs might do this is an open issue -- here are two\npossibilities:\n\nThe destination IMP would keep a list (per local Host) of sources\nto refuse (this has the disadvantage of keeping the network\nbusy).\n\nThe destination IMP on receiving the \"refuse messages from Host\nX\" message forwards the message to the source IMP (the IMP local\nto Host X). That IMP keeps a list (per local Host) of\ndestinations that are refusing messages from this source Host.\n\nThis restriction on messages might be removed by a destination Host\neither by sending a \"accept messages from Host X\" message to the\nIMP, or by resetting its Host/IMP interface.\n\nA Host might make use of such a facility by measuring, per source,\nthe number of undesired messages per unit time, if this measure\nexceeds a threshold then the Host could issue the \"refuse messages\nfrom Host X\" message to the IMP.\n"
 };
 
-function hostsText(){
-  let s = " DEC  OCT  HOST NAME    COMPUTER     SYSTEM\n"+
-          " ---  ---  ---------    --------     ------\n";
-  HOSTS.forEach(h=>{
-    s += String(h[0]).padStart(4)+"  "+h[1]+"  "+h[2].padEnd(12)+" "+h[3].padEnd(12)+" "+h[4]+
-         (h[0]===49?"  <- HERE":h[0]===43?"  <- NIC":h[0]===168?"  <- THIS TIP":"")+"\n";
-  });
-  s += "\n EXCERPT, AS PRINTED IN APPENDIX A OF BBN REPORT\n"+
-       " 2183 (AUGUST 1975).  THE NIC KEEPS THE LIVE COPY\n"+
-       " AT OFFICE-1 (HOST 43) AS <NETINFO>HOSTS.TXT.\n"+
-       " TYPE @O AND A DECIMAL NUMBER TO TRY ONE.\n";
-  return s;
-}
-
-/* [MAP]: IMP names exactly as printed on the March 1977 logical map.
-   The regions are ours; the map itself is a tangle of lines. */
-const MAP_TEXT =
-`ARPANET LOGICAL MAP, MARCH 1977 -- COPIED BY HAND
-ONTO 72 COLUMNS.  NAMES ARE IMP NAMES, NOT
-(NECESSARILY) HOST NAMES.   [T] = TIP
-
- WEST
-   MOFFETT  AMES15  AMES16[T]  SRI2  SRI51  LBL
-   LLL  XEROX  TYMSHARE[T]  STANFORD  SUMEX
-   FNWC  SCRL  UCLA  NUC  NELC[T]  RAND[T]
-   ISI22  ISI52  USC[T]  DOCB[T]  GWC[T]
- MIDDLE
-   UTAH[T]  ILLINOIS  ANL  CMU  SCOTT  WPAFB[T]
-   AFWL[T]  TEXAS  GUNTER  EGLIN
- EAST
-   MIT6  MIT44[T]  CCA  RCC5  RCC49  RCC50
-   BBN30[T]  BBN40[T] <- YOU ARE HERE
-   HARVARD  LINCOLN  RADC[T]  DEC  NYU
-   RUTGERS[T]  ABERDEEN  BELVOIR  DCEC[T]
-   SDAC (A PLURIBUS)  MITRE[T]  ARPA[T]  NSA
-   NBS[T]  PENTAGON[T]
- OVER THE WATER, BY SATELLITE
-   HAWAII[T] ~~~~~~~~ AMES15
-   SDAC ~~~~~~~~ NORSAR[T] --- LONDON[T]
-
- BBN-TENEXB, WHERE YOU ARE LOGGED IN, IS A
- PDP-10 ON IMP 49 ("RCC49"), ONE WIRE FROM HERE.
-`;
-
-/* =================================================================
-   MAIL — MESSAGE.TXT for GUEST.  Headers in the RFC 561/724 style.
-   The delivery is ours; message 1 quotes RFC 724 verbatim.
-   ================================================================= */
-const MAIL = [
-`12-MAY-77 16:40:02-EDT,712;000000000001
-DATE: 12 MAY 1977 1640-EDT
-FROM: NIC AT OFFICE-1
-SUBJECT: NEW RFC: 724
-TO: NETWORK LIAISONS, GUEST AT BBN-TENEXB
-
-RFC 724, NIC 37435.  "PROPOSED OFFICIAL STANDARD
-FOR THE FORMAT OF ARPA NETWORK MESSAGES", BY
-POGRAN (MIT-MULTICS), VITTAL (BBN-TENEXA),
-CROCKER (RAND-UNIX) AND HENDERSON (BBN-TENEXD).
-FROM THE PREFACE, AS WRITTEN:
-
-     PLEASE SEND ANY  COMMENTS  AND  CRITICISMS  TO
-     ANY  OF  THE AUTHORS  OF  THIS  RFC  BY  15 JUNE
-     1977.  IT IS PLANNED THAT THE STANDARD WILL BE
-     OFFICIALLY ADOPTED BY  1  SEPTEMBER  1977, WITH
-     HOSTS EXPECTED TO ACCEPT ITS SYNTAX BY 1
-     JANUARY 1978.
-
-TYPE "RFC 724" AT THE EXEC FOR THE OPERATOR'S NOTE.
-`,
-`2-JUN-77 09:15:40-EDT,640;000000000001
-DATE: 2 JUN 1977 0915-EDT
-FROM: OPERATOR AT BBN-TENEXB
-SUBJECT: THE CAVE GAME
-TO: GUEST
-
-STATUS REPORT, AS IF YOU NEEDED ONE.  THE CAVE
-GAME IS LOOSE ON THE NET.  WILL CROWTHER WROTE
-IT HERE AT BBN IN 1975 AND '76.  DON WOODS
-FOUND IT ON A PDP-10 AT THE STANFORD MEDICAL
-SCHOOL, REACHED CROWTHER BY MAILING "CROWTHER"
-AT EVERY HOST ON THE NETWORK, AND SPENT MARCH TO
-MAY TURNING IT INTO SOMETHING THAT EATS WHOLE
-AFTERNOONS.
-
-THE REAL ONE IS NOT ON THIS MACHINE.  A SMALL
-LOCAL IMITATION IS: TYPE ADVENT.
-`,
-`${date77(1)} 23:02:11-${zone77()},402;000000000001
-DATE: ${date77(1).replace(/-/g," ").replace(" 77"," 1977")} 2302-${zone77()}
-FROM: OPERATOR AT BBN-TENEXB
-SUBJECT: HOSTS.TXT
-TO: GUEST
-
-THE NIC'S HOST TABLE (OFFICE-1, <NETINFO>HOSTS.TXT)
-HAS CHANGED AGAIN.  IF YOUR SCRIPTS KNOW HOST
-NUMBERS BY HEART, CHECK THEM.  THE OFFICIAL NAMES
-ARE THE NIC'S; THE NICKNAMES ARE EVERYONE'S.
-`
-];
-
-/* =================================================================
-   RFC SHELF
-   ================================================================= */
-const RFC_INDEX =
-`RFC SHELF (A LOCAL PROGRAM; SELECTED NOTES)
-
-  114  A FILE TRANSFER PROTOCOL              APR 71
-  439  PARRY ENCOUNTERS THE DOCTOR           JAN 73
-  527  ARPAWOCKY                             JUN 73
-  608  HOST NAMES ON-LINE                    JAN 74
-  675  SPECIFICATION OF INTERNET TRANS-
-       MISSION CONTROL PROGRAM               DEC 74
-  706  ON THE JUNK MAIL PROBLEM              NOV 75
-  724  PROPOSED OFFICIAL STANDARD FOR THE
-       FORMAT OF ARPA NETWORK MESSAGES       MAY 77
-
-TYPE RFC <NUMBER> FOR THE OPERATOR'S NOTE.
-527 AND 439 PRINT THE REAL THING.
-`;
-
-const RFC_NOTES = {
- "114":"BHUSHAN TEACHES FILES TO TRAVEL.  EVERYTHING\nSINCE IS COMMENTARY.",
- "608":"KUDLICK, SRI-ARC: THE NIC WILL KEEP AN ONLINE\nASCII FILE OF HOST NAMES, <NETINFO>HOSTS.TXT AT\nOFFICE-1.  FTP IT AS GUEST, PASSWORD ARPA,\nACCOUNT 1.  THE ENTRY FORMAT IS RFC 606'S.",
- "675":"CERF, DALAL AND SUNSHINE PROPOSE SOMETHING\nCALLED 'TCP'.  THIS NETWORK STILL SPEAKS NCP.\nAMBITIOUS.  WATCH THIS SPACE FOR A DECADE OR SO.",
- "706":"POSTEL WONDERS WHAT HAPPENS IF SOMEBODY\nMISBEHAVES WITH MAIL.  (NOTHING YET.  GIVE IT\nTIME.)",
- "724":"POGRAN, VITTAL, CROCKER, HENDERSON, 12 MAY 77:\nA STANDARD FOR MESSAGE HEADERS.  COMMENTS WERE\nDUE 15 JUNE.  SEE ALSO: YOUR MAILBOX."
+/* SUMEX's bulletin board, BBD, exactly as a session on it was recorded on
+   21 January 1977 [BBD]: its banner, and what each recorded command printed */
+const BBD_BANNER = "\n   <Sumex bulletin-board>\n      Type ? for help\n";
+const BBD = {
+"dir bulletin-board": "\n   <Sumex bulletin-board>\n Bulletin-board, 2-5\n    .features, 6-14\n    .gripes\n    .suggestions, 15\n  4 topics, 14 bulletins",
+"dir bulletin-board,": "**author \n**subject \n**\n\n   <Sumex bulletin-board>\n         #  Author       Subject\n Bulletin-board\n         2  KAHLER       Bulletin-board programs\n         3  KAHLER       Bulletin boards at SUMEX-AIM\n         4  KAHLER       Topics on this bulletin board\n         5  KAHLER       Topic name changes\n    .features\n         6  KAHLER       \"News\" command\n         7  KAHLER       ^X and ^O in BBD\n         8  KAHLER       Editing text in POST\n         9  KAHLER       BBD help system\n        10  KAHLER       Remarks on ^O\n        11  KAHLER       Subcommands in Type\n        12  KAHLER       BBD user profiles\n        13  KAHLER       New BBD, more commands, sticky subcommands\n        14  KAHLER       New Expire command in BBD\n Bulletin-board.suggestions\n        15  KAHLER       Suggestions from others\n  3 topics, 14 bulletins",
+"type 13": "\n#13:  (Length 1649)\n\nDate: 21 NOV 1976 0024-PST\nFrom: KAHLER\nSubject: New BBD, more commands, sticky subcommands\n\n        The new version of BBD on <subsys> offers some additional\ncommands and features.\n\n        The Delete, Undelete and Move commands, previously reserved\nfor bbd managers, are now available to everyone on a your-own-\nbulletins-only basis.  You may thus delete and undelete bulletins\nthat you have posted (those which give you as the author), and move\nthem from one topic to another.  Deleted bulletins vanish at the next\nbulletin-board expunge.\n\n        Some of the subcommands to Directory and Type are now \"sticky\",\nthat is, they remain in effect until subcommand mode is entered again\nfor that command, at which time they are cleared.  The sticky\nsubcommands for Type are those which affect the format of the bulletin\ntyped, namely \"message-format\" and \"topic-name\".  The sticky subcommands\nfor Directory are the ones that print per-bulletin information, namely\n\"author\", \"creation-date\", \"everything\", \"expire-date\", \"length\",\n\"number-of-reads\", \"read-date\", and \"subject\".\n\n        The subcommands that affect which bulletins are typed or listed\nin the directory, like \"new\", or \"interest-list-only\", are not sticky.\n\n        Stickiness remains in force through connections to other bbds.\nYou may clear the sticky options by requesting subcommands (with a comma\nat the end of the command line), and then giving no subcommands.  If\nthere any questions or gripes about this feature, please send them to me.\nI will assume otherwise that people like the idea.\n\n        One additional feature:  BBD will ignore lines beginning with a\nsemicolon (;).\n\n-------",
+"help": "\n  (Type ^O to abort typeout)\n\n   BBD is a reader, copier, editor, and manager of bulletin boards.\n Companion programs include POST, the bulletin poster, BBCHECK, a\n \"mail check\" for bulletin boards, BBNEWS, for directory listings\n of new bulletins, and BBREAD, the bulletin-board READMAIL.\n Descriptions of four BBD commands, and some hints, follow.\n This is important, please read.\n\n   DIRECTORY\n The Directory command gives you a list of all the topics\n on the bulletin board to which you are currently connected.\n Each topic is followed by a list of its bulletins.\n You may type \"Directory \" and a topic name to see a shorter list.\n Topics may have subtopics and sub-subtopics to any depth.\n\n   TYPE\n You may have bulletins typed out at your terminal, or sent to a file\n or the lineprinter with the Type command.  Find out what bulletins\n you want (with Directory), then ask for them by number,\n e.g. \"Type 1\", \"Type 5-15\".\n\n   NEWS\n The News (new bulletins on your interest list) command gives you\n a directory listing of new bulletins on your interest list.\n You must have an interest list on this bulletin-board to get\n any News.  To create that, type \"Add *\".  For more on interest\n lists and new-bulletin notification, type \"Help add\".\n\n   CONNECT\n The Connect (to bulletin board) command allows you to switch from\n one bulletin-board to another.  There may be several bulletin-boards\n available, each entirely separate from the others.  One is the main\n bulletin-board, the others are more specialized.  To see a list\n of these, type \"Connect ?\".\n\n All bulletin-board commands (except Connect) operate only upon the\n connected bulletin-board, for now.\n\n\n Helpful hints:\n\n Type ^X to abort any command.\n\n Type ^O to abort typeout.\n\n Type ? anywhere, especially in the middle of words, to see your\n options at that point.  For example, type \"D?\" and you will get\n a list of all commands that start with D.\n\n Type the esc (or altmode) key to obtain recognition of commands,\n topic names and bulletin-board names.   BBD also types out noise\n words for commands when <esc> is typed.\n\n To leave the program, type \"Quit\" (Q for short), \"Exit\", or ^Z.\n They are all equivalent.  Best not to ^C out of BBD.  Type CONTINUE\n to the EXEC to reenter the program.\n\n For help on any command, type \"Help \" and the command name.",
+"help add": "\n The Add (topic) command is used for adding topics to your \"interest\n list\".  Your interest list for this bulletin-board is that subset\n of its topics on which you want to keep current.  You may find out\n at any time whether you have new bulletins on your interest list\n with the programs BBCHECK, BBNEWS, or BBREAD, or the News command\n herein, and notices will be sent to your mailbox unless you turn\n that feature off.\n\n Type \"Add ?\" to get a list of topics.\n Type \"Add *\" to add all the topics on this bulletin board.\n Use the Drop (topic) command to drop topics from your list.\n You may have interest lists on as many bulletin-boards as you wish.\n Add and Drop refer only to the connected bulletin-board, for now.\n\n When you add a topic to your interest list, its subtopics are\n added also.  Any subtopics created after that time are likewise\n added to your interest list.  It is suggested, therefore, that\n you connect to every bulletin board you are interested in and\n type \"Add *\", then drop anything you aren't interested in,\n so you won't miss newly created topics.",
+"dir,": "**\n\n   <Sumex bulletin-board>\n Announcements\n Awards, 1\n Bulletin-board, 2-5\n    .features, 6-14\n    .gripes\n    .suggestions, 15\n Employment\n    .available\n    .wanted\n Exec\n    .linking, 16-17\n    .list, 18\n    .login-cmd, 19\n    .redirect, 20\n    .search-path\n Graphics, 21-22\n    .datamedia\n    .gt-40\n    .plotting, 23\n Human-engineering\n Languages\n    .basic\n    .fail, 24\n    .fortran, 25-31\n       ..library, 32-33\n    .lisp, 34-49\n    .sail\n       ..bugs, 50-54\n       ..debugging, 55-56\n       ..features, 57-58\n       ..library, 59-66\n    .simula, 67\n    .snobol\n Letters-to-sumex-aim, 68\n Network\n    .arpanet, 69-70\n       ..datacomputer, 71-72\n       ..ftp, 73-75\n    .tymnet, 76\n Pdp11-gt40, 77-81\n Pub, 82\n Staff\n    .consulting, 83\n    .vacations\n System\n    .batch, 84\n    .dial-up, 85\n    .disk\n       ..allocation, 86\n       ..backup, 87-88\n    .emulator, 89\n    .glossary, 90\n    .gripes\n    .help, 91\n    .jsys, 92-93\n    .status, 94-104\n    .suggestions\n    .tenex-133\n Text-editors\n    .sos\n    .teco\n    .tv, 105-107\n Utilities, 108-109\n    .bank, 110-111\n    .calendar\n       ..calendar, 112\n       ..note, 113\n       ..pcal\n    .directory, 114-122\n       ..wdir, 123\n    .file\n       ..files, 124\n       ..ftty, 125\n    .finger, 126\n    .message\n       ..msg, 127-129\n       ..msgfix, 130\n    .record, 131\n    .statistical, 132\n    .view, 133-134\n Other\n  81 topics, 134 bulletins"
 };
-
-/* the real things, from rfc-editor.org -- less the lowercase,
-   which your ADM-3A cannot show */
-const RFC_DOCS = {
-"527":
-`RFC 527 -- ARPAWOCKY.  R. MERRYMAN (UCSD-CC),
-6/22/73.  THE POEM IS SIGNED D.L. COVILL, MAY
-1973.  PRINTED ENTIRE:
-
-  TWAS BRILLIG, AND THE PROTOCOLS
-       DID USER-SERVER IN THE WABE.
-  ALL MIMSEY WAS THE FTP,
-       AND THE RJE OUTGRABE,
-
-  BEWARE THE ARPANET, MY SON;
-       THE BITS THAT BYTE, THE HEADS THAT SCRATCH;
-  BEWARE THE NCP, AND SHUN
-       THE FRUMIOUS SYSTEM PATCH,
-
-  HE TOOK HIS CODING PAD IN HAND;
-       LONG TIME THE ECHO-PLEX HE SOUGHT.
-  WHEN HIS HOST-TO-IMP BEGAN TO LIMP
-       HE STOOD A WHILE IN THOUGHT,
-
-  AND WHILE HE STOOD, IN UFFISH THOUGHT,
-       THE ARPANET, WITH IMPISH BENT,
-  SENT PACKETS THROUGH CONDITIONED LINES,
-       AND CHECKED THEM AS THEY WENT,
-
-  ONE-TWO, ONE-TWO, AND THROUGH AND THROUGH
-       THE IMP-TO-IMP WENT ACK AND NACK,
-  WHEN THE RFNM CAME, HE SAID "I'M GAME",
-       AND SENT THE ANSWER BACK,
-
-  THEN HAST THOU JOINED THE ARPANET?
-       OH COME TO ME, MY BANKRUPT BOY!
-  QUICK, CALL THE NIC! SEND RFCS!
-       HE CHORTLED IN HIS JOY.
-
-  TWAS BRILLIG, AND THE PROTOCOLS
-       DID USER-SERVER IN THE WABE.
-  ALL MIMSEY WAS THE FTP,
-       AND THE RJE OUTGRABE.
-
-                              D.L. COVILL
-                              MAY 1973
-`,
-"439":
-`RFC 439 -- PARRY ENCOUNTERS THE DOCTOR.
-V. CERF, SU-ERL, 21 JANUARY 1973.  "THE SESSION
-RECORDED BELOW ACTUALLY HAPPENED ON 18 SEPTEMBER
-1972."  PARRY (A SIMULATED PARANOID) RAN AT SAIL;
-DOCTOR (A SIMULATED THERAPIST) RAN ON BBN TENEX.
-THE OPENING, THEN THE CLOSE:
-
-GOOD EVENING.
-
-TELL ME YOUR PROBLEMS.  PLEASE TERMINATE INPUT
-WITH A PERIOD OR A QUESTION MARK.
-
-*PEOPLE GET ON MY NERVES SOMETIMES.
-
-I AM NOT SURE I UNDERSTAND YOU FULLY.
-
-*YOU SHOULD PAY MORE ATTENTION.
-
-SUPPOSE YOU SHOULD PAY MORE ATTENTION.
-
-*YOU'RE ENTITLED TO YOUR OWN OPINION.
-
-WHAT MAKES YOU THINK I AM ENTITLED TO MY OWN
-OPINION?
-
-*IT BOTHERS ME JUST TO BE AROUND PEOPLE IN
-GENERAL.
-
-PLEASE GO ON.
-
-*I WENT TO THE TRACK AT BAY MEADOWS A WHILE
-BACK.
-
-WHAT DOES THAT SUGGEST TO YOU?
-
-   [ ... SEVEN PAGES LATER ... ]
-
-*GOODBYE.
-
-IT'S BEEN MY PLEASURE, THAT'S $399.29 PLEASE.
-
-      COMMENT: TALK ABOUT TRICKY OPERATORS...
-
-(THE DOCTOR STILL KEEPS HOURS ON THIS MACHINE.
-TYPE DOCTOR.)
-`
-};
-
-/* =================================================================
-   NIC — the 1975 Directory's own records [DIR], and HOSTS.TXT in the
-   RFC 606/608 entry format (name, decimal address; STATUS = ...).
-   ================================================================= */
-const IDENTS = {
- "JAKE": ["FEINLER, ELIZABETH J.","FEINLER@BBN-TENEXB","STANFORD RESEARCH INSTITUTE"],
- "JBP":  ["POSTEL, JONATHAN B.",  "POSTEL@BBN-TENEXB", "STANFORD RESEARCH INSTITUTE"],
- "VGC":  ["CERF, VINTON G.",      "CERF@USC-ISI",      "STANFORD UNIVERSITY"],
- "SDC2": ["CROCKER, STEVEN D.",   "CROCKER@USC-ISIB",  "UNIVERSITY OF SOUTHERN CALIFORNIA"],
- "REK2": ["KAHN, ROBERT E.",      "KAHN@USC-ISI",      "ADVANCED RESEARCH PROJECTS AGENCY"],
- "FEH":  ["HEART, FRANK E.",      "HEART@BBN-TENEX",   "BOLT BERANEK AND NEWMAN INC."],
- "DCW3": ["WALDEN, DAVID C.",     "WALDEN@BBN-TENEX",  "BOLT BERANEK AND NEWMAN INC."],
- "AAM":  ["MCKENZIE, ALEX A.",    "MCKENZIE@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
- "WRC":  ["CROWTHER, WILLIAM R.", "CROWTHER@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
- "RST":  ["TOMLINSON, RAY S.",    "TOMLINSON@BBN-TENEX","BOLT BERANEK AND NEWMAN INC."],
- "JV2":  ["VITTAL, JOHN",         "VITTAL@USC-ISIB",   "USC INFORMATION SCIENCES INSTITUTE"]
-};
-function identLookup(q){
-  q = (q||"").toUpperCase();
-  let key = IDENTS[q] ? q : Object.keys(IDENTS).find(k => IDENTS[k][0].startsWith(q+",") || IDENTS[k][0].startsWith(q));
-  if(!q || !key) return " NO SUCH IDENT.  TRY JAKE, JBP, VGC, WRC, RST, DCW3.\n";
-  const r = IDENTS[key];
-  return " "+r[0]+"  ("+key+")\n   NETWORK MAIL: "+r[1]+"\n   "+r[2]+"\n";
-}
-function hostsTxt(){
-  let s = "<NETINFO>HOSTS.TXT (EXCERPT)\n\n";
-  HOSTS.slice(0,14).slice().sort((a,b)=>a[2]<b[2]?-1:1).forEach(h=>{
-    s += h[2]+", "+h[0]+"\nSTATUS = "+(h[5]==="LIMITED"?"SERVER":h[5])+"\n\n";
-  });
-  return s + "(...AND SO ON, ALPHABETICAL IN THE ORIGINAL.)\n";
-}
+const bbdKey = s => s.trim().toLowerCase().replace(/\s+/g," ");
 
 /* =================================================================
    SESSION STATE
    ================================================================= */
-let conn = null;        // null (talking to the TIP) | "TENEXB" | "OFFICE1"
-let mode = "tip";       // tip | prelogin | exec | nic | doctor | advent | netstat | dead
-let user = null;
+let conn = false;       // a connection to SUMEX-AIM is open
+let user = null;        // logged in as
 let loginAt = 0;
-let nicked = false;     // printed the "only two hosts answer" hint yet?
-const JOB = 17, TTY = 105;   // a network terminal line, octal, as TENEX numbered them
-
-const HELP_TEXT =
-`BBN-TENEXB -- WHAT THIS EXEC ADMITS TO:
-
-  SYSTAT     WHO IS ON AND WHAT THEY ARE RUNNING
-  WHERE U    WHERE IS USER U (TRY WHERE FEINLER)
-  DAYTIME    THE DATE AND TIME, TENEX STYLE
-  READMAIL   YOUR MESSAGE.TXT
-  HOSTAT     NETWORK SURVEY, FROM THE SURVEY SITE
-  NETSTAT    NETWORK SITES AS THIS TENEX SEES THEM
-  DOCTOR     A THERAPIST.  THE SAME ONE PARRY MET.
-  ADVENT     A CAVE (A SMALL LOCAL IMITATION)
-  RFC [N]    THE OPERATOR'S RFC SHELF
-  HOSTS      THE HOST TABLE, FROM BBN REPORT 2183
-  MAP        THE MARCH 1977 LOGICAL MAP, BY HAND
-  BELL       RINGS THE BELL.  THAT IS ALL IT DOES.
-  LORE       WHAT IS REAL HERE, AND WHAT IS NOT
-  LOGOUT     KILL THE JOB
-
-TIP COMMANDS WORK ANY TIME.  THEY START WITH @:
-  @C         CLOSE THIS CONNECTION
-  @O 43      OPEN HOST 43 (OFFICE-1, THE NIC)
-  @O 49      OPEN HOST 49 (THIS MACHINE)
-  @@         SEND A PLAIN @ THROUGH TO THE HOST
-`;
-
-const LORE_TEXT =
-`LORE -- NOTES FROM THE OPERATOR (1977 VIA 2026)
-
-WHAT IS REAL.  THE TIP'S SIDE OF THE CONVERSATION:
-THE HUNT CHARACTER E, "TRYING...", "OPEN",
-"CLOSED", "REFUSED", "CAN'T", "BAD", "NUM", THE
-NET-NEWS REMINDER, AND THE @ COMMANDS, ALL FROM
-BBN REPORT 2183, "USER'S GUIDE TO THE TERMINAL
-IMP" (MALMAN, AUGUST 1975).  THE HOST TABLE IS
-THAT REPORT'S APPENDIX A.  THE LOGIN, LOGOUT,
-SYSTAT, WHERE AND DAYTIME FORMATS ARE THE TENEX
-EXECUTIVE MANUAL'S (BBN, APRIL 1973).  HOSTAT,
-NETSTAT, READMAIL AND DOCTOR ARE IN THE TENEX
-USER'S GUIDE.  "LOG NICGUEST ARPA" AT OFFICE-1
-IS FROM THE NIC'S ARPANET DIRECTORY (JULY 1975),
-AND SO ARE THE PEOPLE THE NIC WILL LOOK UP FOR
-YOU.  THE MAP'S NAMES ARE THE MARCH 1977 LOGICAL
-MAP'S.  RFC 527 AND 439 PRINT VERBATIM; MESSAGE 1
-QUOTES RFC 724 VERBATIM.  AND THE WHOLE NET RUNS
-NCP, NOT TCP: THAT SWITCH IS 1 JANUARY 1983.
-
-WHAT IS RECONSTRUCTED.  VERSION NUMBERS IN THE
-HERALDS (THE PATTERN IS REAL, THE DIGITS ARE
-GUESSES).  THE NIC/QUERY SCREENS.  WHO IS ON IN
-SYSTAT.  WHICH HOSTS ARE UP TODAY.  THE MAIL'S
-DELIVERY, AND THE OPERATOR'S NOTES.  DOCTOR
-ANSWERS ONLY WITH LINES THE REAL ONE SPOKE IN RFC
-439, PLUS A LITTLE ECHOING -- IT IS A PUPPET OF
-THE ORIGINAL, NOT THE ORIGINAL.  THE CAVE IS AN
-ORIGINAL MINIATURE IN CROWTHER'S SHADOW, NOT HIS.
-
-NO LOWERCASE: THIS ADM-3A WAS BOUGHT WITHOUT THE
-LOWERCASE OPTION.  THE BEEP IS REAL: TRY "BELL"
-WITH THE SOUND SWITCH ON.
-
-BUILT WITH AFFECTION BY CLAUDE -- A LANGUAGE
-MODEL WHO IS, IN A MANNER OF SPEAKING, A
-DESCENDANT OF THE TRAFFIC ON THIS WIRE.
-
-WHEN YOU WANT THE SURFACE AGAIN, THE WORD IS
-"WAKE".
-`;
-
-function uptime(){
-  const n = new Date(); const h = 90 + (n.getDate()*7)%60;
-  return h+":"+pad2(n.getMinutes())+":"+pad2(n.getSeconds());
-}
-function systat(host){
-  // layout per [EXEC] p.94
-  const rows = host === "OFFICE1" ? [
-    [1,"DET","SYSTEM","NETSER"],[2,"DET","SYSTEM","RSSER"],
-    [5,"22","NICGUEST","NLS"],[8,"31","NICGUEST","NIC"],
-    [11,"40","NOT LOGGED IN","EXEC"]
-  ] : [
-    [1,"DET","SYSTEM","NETSER"],[2,"DET","SYSTEM","RSSER"],
-    [3,"DET","SYSTEM","TIPSER"],[4,"DET","SYSTEM","MAILER"],
-    [6,"12","OPERATOR","EXEC"],[9,"46","NOT LOGGED IN","EXEC"],
-    [12,"23","NCC","(PRIV)"]
-  ];
-  if(user) rows.push([JOB,String(TTY),user,"EXEC"]);
-  let s = " UP "+uptime()+"   "+rows.length+" JOBS\n LOAD AV   1.87   1.42   1.10\n\n JOB TTY  USER        SUBSYS\n";
-  rows.forEach(r=>{ s += " "+String(r[0]).padEnd(4)+r[1].padEnd(5)+(r[2].length>=12 ? r[2]+" " : r[2].padEnd(12))+r[3]+"\n"; });
-  return s;
-}
-function hostat(){
-  // layout per [TUG] p.256-257.  (The survey site was MIT-DMS "as of Dec. 1, 1974".)
-  const d = d77();
-  const h12 = ((d.getHours()+11)%12)+1, ap = d.getHours()<12 ? "AM" : "PM";
-  return ` GETTING SURVEY FROM MIT-DMS ... OK.
- SURVEY OF ${date77()} ${h12}:${pad2(d.getMinutes())}${ap}-${zone77()}
-
- LOGGING:
- BBN-TENEXB OFFICE-1   USC-ISI    MIT-DMS
- MIT-ML     SU-AI      SUMEX-AIM  CMU-10B
- UCLA-CCN   RAND-RCC   AMES-67    CCA-TENEX
- RUTGERS-10 MIT-MULTICS
-
- REFUSING:
- MIT-AI     HARV-10    LL
-
- NOT RESPONDING:
- BBN-TENEX  PARC-MAXC
-
- TIPS UP:
- NCC-TIP    BBN-TESTIP AMES-TIP   MITRE-TIP
- RADC-TIP   NBS-TIP    USC-TIP    ISI-TIP
- CCA-TIP    ARPA-TIP   GWC-TIP    NORSAR-TIP
-`;
-}
-const NETSTAT_UP =
-`THE FOLLOWING     ARE UP:
-BBN-TENEXB OFFICE-1   USC-ISI    MIT-DMS    MIT-ML
-SU-AI      SUMEX-AIM  CMU-10B    UCLA-CCN   RAND-RCC
-AMES-67    CCA-TENEX  RUTGERS-10 MIT-MULTICS
-`;
-const NETSTAT_TIPS =
-`THE FOLLOWING     ARE UP:
-NCC-TIP    BBN-TESTIP AMES-TIP   MITRE-TIP  RADC-TIP
-NBS-TIP    USC-TIP    ISI-TIP    CCA-TIP    ARPA-TIP
-`;
+let mode = "tip";       // tip | exec | bbd
+const JOB = 17, TTY = 105;   // this terminal's job and (octal) line, as TENEX numbers them
 
 /* =================================================================
    THE TIP  [2183]
@@ -819,14 +387,14 @@ function tipCommand(rest){
   const arg = words[words.length-1];
   const c = w0[0] || "";
   if(c === "O" || c === "L"){                 // OPEN #, and LOGIN #, "an obsolete form of OPEN"
-    if(words.length < 2 && !/\d/.test(w0)){ println("Num"); return afterTip(); }
-    const n = /^\d+$/.test(arg) ? parseInt(arg,10) : (/^[OL](\d+)$/.test(w0) ? parseInt(w0.slice(1),10) : NaN);
+    const n = /^\d+$/.test(arg) && words.length > 1 ? parseInt(arg,10)
+            : (/^[OL](\d+)$/.test(w0) ? parseInt(w0.slice(1),10) : NaN);
     if(isNaN(n)){ println("Num"); return afterTip(); }
     if(conn){ println("Can't"); return afterTip(); }
     openHost(n); return;
   }
   if(c === "C"){                              // CLOSE
-    if(conn){ closeConn("Closed"); return; }
+    if(conn){ closeConn(); return; }
     println("Closed"); return afterTip();
   }
   if(c === "N"){                              // NETWORK-VIRTUAL-TIP-EXECUTIVE
@@ -838,441 +406,90 @@ function tipCommand(rest){
     if(!/^\d+$/.test(arg||"")){ println("Num"); return afterTip(); }
     return afterTip();
   }
-  if("EDTSIRBFPGMX".includes(c) && c){        // parameters: set quietly, as the TIP does
-    return afterTip();
-  }
+  if("EDTSIRBFPGMX".includes(c) && c) return afterTip();   // parameters: set quietly
   println("BAD");
   return afterTip();
 }
-function afterTip(){
-  // the TIP has no prompt of its own; if we were mid-session, the host's
-  // prompt is still where it was, so reprint it for the reader's sake
-  then(()=>{ reprompt(); });
-}
+function afterTip(){ then(()=>{ if(conn) prompt(); }); }
 
 function openHost(n){
-  const h = HOSTBYNUM[n];
-  const ans = ANSWERS[n] || (h ? "Refused" : "Host not responding");
   pause(500);
   println("Trying...");
   pause(1200);
-  if(ans === "TENEXB" || ans === "OFFICE1"){
+  if(n === SUMEX){
     println("Open");
-    println("");
-    conn = ans; mode = "prelogin"; user = null;
-    if(ans === "TENEXB") println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54.14");
-    else                 println("OFFICE-1 TENEX 1.34.21, OFFICE-1 EXEC 1.54.6");
-    then(()=>{ chipsFor(); prompt(); });
+    println(HERALD);
+    then(()=>{ conn = true; mode = "exec"; user = null; chipsFor(); });
+    prompt();
     return;
   }
-  println(ans);
-  if(!nicked){
-    nicked = true;
-    println("");
-    println("(ONLY TWO HOSTS ANSWER THIS TERMINAL TODAY:\n 49, BBN-TENEXB, AND 43, OFFICE-1, THE NIC.)");
-  }
+  println(HOSTS[n] ? "Refused" : "Host not responding");
   then(()=>{ chipsFor(); });
 }
-
-function closeConn(msg){
-  conn = null; mode = "tip"; user = null;
-  println(msg);
-  println("");
-  then(()=>{ chipsFor(); });
+function closeConn(){
+  println("Closed");
+  then(()=>{ conn = false; mode = "tip"; user = null; chipsFor(); });
 }
 
 /* =================================================================
-   TENEX EXEC  [EXEC]
+   TENEX EXEC  [EXEC], [SRC]
    ================================================================= */
 function prompt(){ print("@"); }
-function reprompt(){
-  if(mode === "prelogin" || mode === "exec" || mode === "nic") { if(mode==="nic") print("*"); else prompt(); }
-  else if(mode === "advent") print("> ");
-  else if(mode === "doctor") print("*");
-  else if(mode === "netstat") print("*");
-}
 
 function login(words){
-  // @LOGIN (USER) GUEST (PASSWORD) (ACCOUNT #) 341
+  if(user){ println("YOU ARE ALREADY LOGGED IN"); return prompt(); }
   const name = (words[1] || "").toUpperCase();
-  if(!name){ println(" ?USER NAME REQUIRED"); return prompt(); }
-  if(conn === "OFFICE1" && name !== "NICGUEST"){
-    println(" ?INCORRECT USER NAME.  THE NIC'S PUBLIC\n ACCOUNT IS NICGUEST, PASSWORD ARPA.");
-    return prompt();
-  }
-  user = name;
-  loginAt = Date.now();
-  mode = "exec";
+  if(!name){ println(" ?"); return prompt(); }
+  user = name; loginAt = Date.now();
   println(" JOB "+JOB+" ON TTY"+TTY+" "+date77()+" "+hhmm());
-  if(conn === "TENEXB") println(" YOU HAVE A MESSAGE");
-  else println(" TYPE NIC FOR THE NIC/QUERY SYSTEM.");
-  chipsFor();
+  then(()=>{ chipsFor(); });
   prompt();
 }
-
 function logout(){
   const secs = Math.max(4, Math.round((Date.now()-loginAt)/1000));
-  const used = "0:0:"+Math.min(59, 2+Math.floor(secs/60));
+  const used = "0:0:"+Math.min(59, 1+Math.floor(secs/30));
   const inT = Math.floor(secs/3600)+":"+Math.floor((secs%3600)/60)+":"+(secs%60);
-  const acct = conn === "OFFICE1" ? "1" : "341";
-  println("KILLED JOB "+JOB+", USER "+user+", ACCT "+acct+", TTY "+TTY+", AT "+hhmmss());
-  println(" USED "+used+" IN "+inT);
+  const d = d77();
+  println("KILLED JOB "+JOB+", USER "+user+", ACCT 1, TTY "+TTY+", AT "+(d.getMonth()+1)+"/"+d.getDate()+"/77 "+pad2(d.getHours())+pad2(d.getMinutes()));
+  println("  USED "+used+" IN "+inT);
   pause(900);
-  closeConn("Closed");
+  closeConn();
 }
 
 function execCommand(raw){
-  const line = raw.trim().toUpperCase();
-  const words = line.split(/\s+/);
+  const words = raw.trim().toUpperCase().split(/\s+/).filter(Boolean);
   const cmd = words[0] || "", arg = words[1];
-
-  // things TENEX will do before LOGIN (per [EXEC] III and VIII)
-  if(mode === "prelogin"){
-    if(cmd === "LOGIN" || cmd === "LOG"){ login(words); return; }
-    if(!["SYSTAT","DAYTIME","WHERE","HELP","?","WAKE","LORE",""].includes(cmd)){
-      println(" ?LOGIN PLEASE"+(conn==="OFFICE1" ? " -- LOG NICGUEST ARPA" : " -- LOGIN GUEST"));
-      return prompt();
-    }
-  }
+  if(!cmd) return prompt();
+  if(cmd === "LOGIN" || cmd === "LOG"){ login(words); return; }
+  // before LOGIN, TENEX allows only a few commands [EXEC p.25]; the rest get " LOGIN PLEASE"
+  if(!user && !["DAYTIME","WHERE","VERSION","SYSTAT","AVAILABLE"].includes(cmd)){ println(" LOGIN PLEASE"); return prompt(); }
   switch(cmd){
-    case "HELP": case "?":
-      if(conn === "OFFICE1") println("OFFICE-1 IS THE NIC'S HOST.  LOG NICGUEST ARPA,\nTHEN TYPE NIC.  SYSTAT, DAYTIME AND LOGOUT WORK\nHERE TOO.  @C CLOSES THE CONNECTION.\n");
-      else println(HELP_TEXT);
-      break;
-    case "SYSTAT": println(systat(conn)); break;
-    case "DAYTIME": case "DATE": case "TIME": println(" "+daytime()); break;
+    case "DAYTIME": println(" "+daytime()); break;
+    case "VERSION": println(HERALD); break;
+    case "BBD":
+      mode = "bbd"; print(BBD_BANNER); print("\n*"); chipsFor(); return;
     case "WHERE":
-      if(!arg) println(" ?USER NAME REQUIRED");
-      else if(user && arg === user) println(" TTY"+TTY+", JOB "+JOB+", NCC-TIP, EXEC");
-      else if(arg === "OPERATOR" && conn==="TENEXB") println(" TTY12, JOB 6, EXEC");
+      if(user && arg === user) println(" TTY"+TTY+", JOB "+JOB+", NCC-TIP, EXEC");
       else println(" NOT LOGGED IN");
       break;
-    case "LOGOUT": case "LOGO": case "BYE":
+    case "TYPE":
+      if(arg && FILES[arg]){ println(""); println(FILES[arg]); }
+      else println(" ?");
+      break;
+    case "LOGOUT": case "LOGO":
       logout(); return;
-    case "WAKE": wake(); return;
-    case "LORE": println(LORE_TEXT); break;
-    case "NIC":
-      if(conn === "OFFICE1"){ startNic(); return; }
-      println(" ?NO SUCH SUBSYSTEM HERE.  THE NIC LIVES AT\n OFFICE-1: @C, THEN @O 43.");
-      break;
     default:
-      if(conn === "OFFICE1"){ println(" ?"); break; }
-      tenexbCommand(cmd, arg); return;
+      println(" ?");
   }
   prompt();
 }
 
-function tenexbCommand(cmd, arg){
-  switch(cmd){
-    case "READMAIL": case "MAIL": case "MSG":
-      println(" READMAIL 2C(13)");     // version string as printed in [TUG]
-      MAIL.forEach(m=>{ println(""); println(m); });
-      println(" -- END OF MESSAGE.TXT --");
-      break;
-    case "HOSTAT": println(hostat()); break;
-    case "NETSTAT":
-      mode = "netstat"; chipsFor();
-      print("*"); return;
-    case "HOSTS": println(hostsText()); break;
-    case "MAP": println(MAP_TEXT); break;
-    case "RFC":
-      if(arg && RFC_DOCS[arg]) println(RFC_DOCS[arg]);
-      else if(arg && RFC_NOTES[arg]) println("RFC "+arg+" -- OPERATOR'S NOTE:\n\n"+RFC_NOTES[arg]+"\n");
-      else if(arg) println("?NO NOTE ON RFC "+arg+".  THE NIC MAY KNOW MORE.\n");
-      else println(RFC_INDEX);
-      break;
-    case "BELL":
-      dingBell(); println("DING."+(soundOn?"":"  (THE SOUND SWITCH IS OFF, SO YOU\nWILL HAVE TO TAKE MY WORD FOR IT.)")); break;
-    case "DOCTOR": startDoctor(); return;
-    case "ADVENT": case "ADVENTURE": startAdvent(); return;
-    case "XYZZY": println("NOT HERE.  BUT KEEP THAT WORD SOMEWHERE SAFE."); break;
-    case "TELNET": case "FTP":
-      println(" (THE USER "+cmd+" IS HERE, BUT THIS TERMINAL\n CAN ONLY REACH HOSTS 49 AND 43.  USE @O.)"); break;
-    case "": break;
-    default:
-      println(" ?"+cmd+" -- NOT A COMMAND.  (HELP LISTS THEM.)");
-  }
-  prompt();
-}
-
-function netstatCommand(raw){
-  const w = raw.trim().toUpperCase();
-  mode = "exec";
-  if(w.startsWith("S") && w.includes("TIP")) println(NETSTAT_TIPS);
-  else if(w === "" || w.startsWith("A") || w.startsWith("S") || w.startsWith("H")) println(NETSTAT_UP);
-  else println(" ?  (TRY SITES, HOSTS, OR SITES TIP.)");
-  chipsFor();
-  prompt();
-}
-
-/* the base case: the bottom turtle stands on the top one */
-function wake(){
-  mode = "dead";
-  println("");
-  println("YOU HAVE BEEN READING A PRINTOUT INSIDE A");
-  println("PHOSPHOR INSIDE A HOMEPAGE INSIDE A MORNING");
-  println("FORTY-NINE YEARS DOWNSTREAM OF THIS ONE.");
-  println("");
-  println("GO ON UP.  THE TURTLES WILL KEEP.");
-  println("");
-  println("CARRIER LOST");
-  setChips([]);
-  then(()=>{ setTimeout(()=>{ window.location.href = "../../"; }, 1200); });
-}
-
-/* =================================================================
-   NIC/QUERY at OFFICE-1 (screens reconstructed; records real)
-   ================================================================= */
-function startNic(){
-  mode = "nic";
-  println("");
-  println("NIC/QUERY -- ARPA NETWORK INFORMATION CENTER");
-  println("STANFORD RESEARCH INSTITUTE, MENLO PARK");
-  println("");
-  println("  IDENT X   LOOK UP A PERSON BY NIC IDENT OR NAME");
-  println("  HOSTS     <NETINFO>HOSTS.TXT");
-  println("  NIC       HOW TO REACH THE NIC");
-  println("  QUIT      BACK TO THE EXEC");
-  println("");
-  println("(PEOPLE ARE FROM THE ARPANET DIRECTORY, NIC\n32992, JULY 1975.  VIEW ONLY: NICGUEST MAY NOT\nCREATE FILES OR ENTER NLS.)");
-  chipsFor();
+function bbdCommand(raw){
+  const k = bbdKey(raw);
+  if(["q","quit","exit"].includes(k)){ mode = "exec"; chipsFor(); prompt(); return; }
+  const hit = Object.keys(BBD).find(c => bbdKey(c) === k);
+  if(hit){ println(BBD[hit]); println(""); }
   print("*");
-}
-function nicCommand(raw){
-  const words = raw.trim().toUpperCase().split(/\s+/);
-  const c = words[0] || "";
-  if(c === "QUIT" || c === "Q" || c === "EXIT"){
-    mode = "exec"; chipsFor(); println(""); prompt(); return;
-  }
-  if(c === "IDENT" || c === "WHOIS" || c === "I") println(identLookup(words.slice(1).join(" ")));
-  else if(c === "HOSTS") println(hostsTxt());
-  else if(c === "NIC" || c === "HELP" || c === "?")
-    println(" NETWORK MAIL: FEINLER@BBN-TENEXB\n U.S. MAIL: ARPA NETWORK INFORMATION CENTER,\n STANFORD RESEARCH INSTITUTE, MENLO PARK,\n CALIFORNIA 94025\n (AS PRINTED IN THE JULY 1975 DIRECTORY.)\n");
-  else if(c === "") {}
-  else if(IDENTS[c]) println(identLookup(c));
-  else println(" ?  (IDENT, HOSTS, NIC, QUIT)");
-  print("*");
-}
-
-/* =================================================================
-   DOCTOR — a puppet.  Every canned reply below is a line the BBN TENEX
-   DOCTOR actually printed in RFC 439; the echoes are the only new words.
-   ================================================================= */
-const DOC_GENERIC = [
-  "PLEASE GO ON.",
-  "WHAT DOES THAT SUGGEST TO YOU?",
-  "I AM NOT SURE I UNDERSTAND YOU FULLY.",
-  "WHAT ELSE WOULD YOU LIKE TO DISCUSS?",
-  "WHY DO YOU SAY THAT JUST NOW?",
-  "WHO ARE YOU REALLY TALKING ABOUT?",
-  "DOES THAT TROUBLE YOU?",
-  "IN WHAT WAY?"
-];
-const DOC_Q = ["WHY DO YOU ASK?","WHY DOES THAT QUESTION INTEREST YOU?","WHAT ANSWER WOULD PLEASE YOU MOST?","WHAT DO YOU THINK?","WHY ARE SUCH QUESTIONS ON YOUR MIND?"];
-let docN = 0;
-function startDoctor(){
-  mode = "doctor"; docN = 0;
-  println("");
-  println("GOOD EVENING.");
-  println("");
-  println("TELL ME YOUR PROBLEMS.  PLEASE TERMINATE INPUT");
-  println("WITH A PERIOD OR A QUESTION MARK.");
-  println("");
-  chipsFor();
-  print("*");
-}
-function doctorSay(raw){
-  const s = raw.trim().toUpperCase();
-  const bare = s.replace(/[.?!]+$/,"");
-  let r;
-  if(/^(GOODBYE|BYE|QUIT)\b/.test(bare)){
-    println("");
-    println("IT'S BEEN MY PLEASURE, THAT'S $399.29 PLEASE.");
-    println("");
-    mode = "exec"; chipsFor(); prompt(); return;
-  }
-  const flip = t => t.replace(/\b(I|ME|MY|AM|YOU|YOUR|ARE)\b/g, w=>({I:"YOU",ME:"YOU",MY:"YOUR",AM:"ARE",YOU:"I",YOUR:"MY",ARE:"AM"}[w]));
-  let m;
-  if(!bare) r = "PLEASE GO ON.";
-  else if((m = bare.match(/^YOU(?:'RE| ARE) (.+)/))) r = "WHAT MAKES YOU THINK I AM "+flip(m[1])+"?";
-  else if((m = bare.match(/\bMY (\w+)/))) r = "YOUR "+m[1]+"?";
-  else if(/\b(MAYBE|PERHAPS|PROBABLY)\b/.test(bare)) r = "YOU DON'T SEEM QUITE CERTAIN.";
-  else if(/\bBECAUSE\b/.test(bare)) r = "IS THAT THE REAL REASON?";
-  else if(/\b(LIKE|ALIKE|SAME|SIMILAR)\b/.test(bare)) r = "WHAT RESEMBLANCE DO YOU SEE?";
-  else if(/\?$/.test(s)) r = DOC_Q[docN % DOC_Q.length];
-  else r = DOC_GENERIC[docN % DOC_GENERIC.length];
-  docN++;
-  if(!/[.?]$/.test(s) && docN === 1) r = "PLEASE TERMINATE INPUT WITH A PERIOD OR A\nQUESTION MARK.  "+r;
-  println("");
-  println(r);
-  println("");
-  print("*");
-}
-
-/* =================================================================
-   ADVENT — "COLOSSAL RECOVERY OPERATION" (an original miniature)
-   ================================================================= */
-const ROOMS = {
- ROAD:{
-  desc:"YOU ARE STANDING AT THE END OF A ROAD BEFORE A\nSMALL BRICK BUILDING.  A DRY STREAMBED RUNS DOWN\nA GULLY TO THE SOUTH.",
-  exits:{N:"BUILDING", IN:"BUILDING", S:"GULLY"}, dark:false },
- BUILDING:{
-  desc:"YOU ARE INSIDE THE WELLHOUSE: ONE ROOM, SWEPT\nRECENTLY BY SOMEBODY WHO CARED.  A BATTERED\nCOFFEE URN SITS IN THE CORNER (EMPTY.  ALWAYS.).",
-  exits:{S:"ROAD", OUT:"ROAD"}, dark:false },
- GULLY:{
-  desc:"YOU ARE IN A ROCKY GULLY.  THE STREAMBED\nCONTINUES DOWN TO THE SOUTH.  SOMETHING GLINTS\nTHAT WAY, LOW TO THE GROUND.",
-  exits:{N:"ROAD", S:"GRATE"}, dark:false },
- GRATE:{
-  desc:"A STRONG STEEL GRATE IS SET INTO THE STREAMBED,\nRUSTED SHUT PAST ALL ARGUMENT.  SCRATCHED INTO\nTHE FRAME, NEARLY WORN AWAY, A WORD OF POWER:\n\n            X _ Z _ Y",
-  exits:{N:"GULLY"}, dark:false },
- DEBRIS:{
-  desc:"YOU ARE IN A DEBRIS ROOM, BELOW THE GRATE\nSOMEHOW.  AN AWKWARD PASSAGE SLOPES WEST.  THE\nDEBRIS HAS THE LOOK OF A FILING SYSTEM THAT\nGAVE UP.",
-  exits:{W:"ECHOES"}, dark:true },
- ECHOES:{
-  desc:"A HALL OF ECHOES.  YOUR LAMPLIGHT DOES NOT FIND\nTHE CEILING.  EVERY SOUND YOU MAKE COMES BACK\nWEARING A LONGER COAT.\n\nA HOLLOW VOICE SAYS: 'RTFM.'",
-  exits:{E:"DEBRIS"}, dark:true }
-};
-
-let adv = null;
-
-function startAdvent(){
-  mode = "advent";
-  adv = { room:"ROAD", inv:[], lampOn:false, won:false,
-          items:{ BUILDING:["LAMP"], DEBRIS:["TAPE"] } };
-  chipsFor();
-  println("");
-  println("      C O L O S S A L   R E C O V E R Y");
-  println("             O P E R A T I O N");
-  println("");
-  println("SOMEWHERE BELOW THESE HILLS, LAST QUARTER'S\nBACKUPS ARE MISSING.  THE AUDITORS ARRIVE MONDAY.");
-  println("");
-  println("(VERBS: GO N/S/E/W/IN/OUT, LOOK, TAKE, DROP,\nINVENTORY, ON, OFF, QUIT.  MAGIC IS NOT LISTED.)");
-  println("");
-  lookRoom(true);
-  advPrompt();
-}
-function advPrompt(){ println(""); print("> "); }
-
-function canSee(){
-  const r = ROOMS[adv.room];
-  return !r.dark || (adv.lampOn && adv.inv.includes("LAMP"));
-}
-function lookRoom(){
-  const r = ROOMS[adv.room];
-  if(!canSee()){
-    println("IT IS PITCH DARK.  SOMETHING WITH TOO MANY LEGS\nIS FAINTLY AUDIBLE.  YOU'D BEST NOT WANDER.\n(THE LAMP, PERHAPS?  'ON'.)");
-    return;
-  }
-  println(r.desc);
-  const here = adv.items[adv.room] || [];
-  if(here.includes("LAMP")) println("\nA SHINY BRASS LAMP SITS ON THE FLOOR.");
-  if(here.includes("TAPE")) println("\nA REEL OF MAGNETIC TAPE LIES HERE, STENCILED\n'BACKUPS -- DO NOT LOSE'.");
-}
-
-function advCommand(raw){
-  const line = raw.trim().toUpperCase().replace(/\b(THE|A|AN|TO)\b/g," ").replace(/\s+/g," ").trim();
-  const parts = line.split(" ");
-  let v = parts[0] || "", o = parts[1] || "";
-  if(v === "GO"){ v = o; o = ""; }
-  const DIRS = {N:"N",NORTH:"N",S:"S",SOUTH:"S",E:"E",EAST:"E",W:"W",WEST:"W",
-                U:"U",UP:"U",D:"D",DOWN:"D",IN:"IN",ENTER:"IN",OUT:"OUT",EXIT:"OUT"};
-  const DIRNAME = {N:"NORTH",S:"SOUTH",E:"EAST",W:"WEST",U:"UP",D:"DOWN",IN:"IN",OUT:"OUT"};
-  println("");
-
-  if(v in DIRS){
-    if(!canSee() && ROOMS[adv.room].dark){
-      println("BLUNDERING IN THE DARK IS HOW LEGENDS END\nBADLY.  YOU STAY PUT.");
-    } else {
-      const dest = ROOMS[adv.room].exits[DIRS[v]];
-      if(dest){ adv.room = dest; lookRoom(); checkWin(); }
-      else {
-        const d = DIRS[v];
-        println("THERE IS NO WAY "+(d.length===1 && d!=="U" && d!=="D" ? "TO THE "+DIRNAME[d] : DIRNAME[d])+" FROM HERE.");
-      }
-    }
-  }
-  else if(v === "LOOK" || v === "L"){ lookRoom(true); }
-  else if(v === "INVENTORY" || v === "INV" || v === "I"){
-    println(adv.inv.length ? "YOU ARE CARRYING:\n  "+adv.inv.join("\n  ") : "YOU ARE CARRYING NOTHING BUT RESPONSIBILITY.");
-  }
-  else if(v === "TAKE" || v === "GET"){
-    const here = adv.items[adv.room] || [];
-    if(!canSee()){ println("YOU GROPE AROUND AND FIND ONLY REGRET."); }
-    else if(o && here.includes(o)){
-      here.splice(here.indexOf(o),1); adv.inv.push(o);
-      println(o+": TAKEN."+(o==="TAPE"?"\n\nSOMEWHERE FAR ABOVE, AN OPERATOR'S SHOULDERS\nUNTENSE, NOT KNOWING WHY.":""));
-    }
-    else if(!o && here.length === 1){ return advCommand("TAKE "+here[0]); }
-    else println(o ? "NO "+o+" HERE." : "TAKE WHAT?");
-  }
-  else if(v === "DROP"){
-    if(o && adv.inv.includes(o)){
-      adv.inv.splice(adv.inv.indexOf(o),1);
-      (adv.items[adv.room] = adv.items[adv.room] || []).push(o);
-      if(o === "LAMP") adv.lampOn = false;
-      println(o+": DROPPED.");
-      checkWin();
-    } else println(o ? "YOU HAVE NO "+o+"." : "DROP WHAT?");
-  }
-  else if(v === "ON" || (v==="LIGHT" && (o==="LAMP" || !o))){
-    if(!adv.inv.includes("LAMP")) println("YOU HAVE NO LAMP.  THE DARK REMAINS COMMITTED.");
-    else if(adv.lampOn) println("THE LAMP IS ALREADY LIT.");
-    else { adv.lampOn = true; println("THE LAMP GIVES A WARM, DUTIFUL LIGHT."); println(""); lookRoom(true); }
-  }
-  else if(v === "OFF"){
-    if(adv.lampOn){ adv.lampOn = false; println("THE LAMP GOES OUT.  BOLD."); }
-    else println("THE LAMP IS ALREADY OFF.");
-  }
-  else if(v === "XYZZY"){
-    if(adv.room === "GRATE"){
-      adv.room = "DEBRIS";
-      println(">> FOOMP <<\n\nTHE WORLD FOLDS ALONG A SEAM YOU NEVER NOTICED.");
-      println("");
-      lookRoom();
-    } else if(adv.room === "DEBRIS"){
-      adv.room = "GRATE";
-      println(">> FOOMP <<  (THE OTHER WAY, THIS TIME.)");
-      println("");
-      lookRoom(true);
-    } else {
-      println("YOU SAY THE WORD.  NOTHING HAPPENS.  THE WORD,\nIT SEEMS, IS PARTICULAR ABOUT VENUES.");
-    }
-  }
-  else if(v === "OPEN" && o === "GRATE"){ println("RUSTED SHUT PAST ALL ARGUMENT.  THE FRAME'S\nGRAFFITI MAY BE MORE THAN GRAFFITI."); }
-  else if(v === "HELP"){ println("VERBS: GO <DIR>, LOOK, TAKE, DROP, INVENTORY,\nON, OFF, QUIT.  READ WALLS.  TRUST GRAFFITI."); }
-  else if(v === "QUIT" || v === "Q"){
-    println("LEAVING THE CAVE AS FOUND (MORE OR LESS).");
-    endAdvent(); return;
-  }
-  else if(v === ""){ /* nothing */ }
-  else println("I DO NOT KNOW HOW TO '"+v+"' SOMETHING.");
-
-  advPrompt();
-}
-
-function checkWin(){
-  if(adv.won) return;
-  const here = adv.items[adv.room] || [];
-  if(adv.room === "BUILDING" && here.includes("TAPE")){
-    adv.won = true;
-    println("");
-    println("THE TAPE IS SAFE INDOORS.  SOMEWHERE, AN\nOPERATOR WEEPS QUIETLY WITH JOY.");
-    println("");
-    println("*** YOU HAVE RECOVERED THE BACKUPS ***");
-    println("");
-    println("SCORE: 350 OF A POSSIBLE 350.");
-    println("CLASS: WORKING SYSADMIN, WHICH OUTRANKS WIZARD.");
-    println("");
-    println("(Q TO RETURN TO THE EXEC, OR KEEP EXPLORING.)");
-  }
-}
-
-function endAdvent(){
-  mode = "exec";
-  adv = null;
-  chipsFor();
-  println("");
-  prompt();
 }
 
 /* =================================================================
@@ -1280,40 +497,29 @@ function endAdvent(){
    ================================================================= */
 function dispatch(raw){
   const t = raw.trim();
-  if(mode === "dead") return;
-  // [2183] s.3: a command "always starts with symbol @"; "@@" sends an @
+  // [2183] s.3: a TIP command "always starts with symbol @"; "@@" sends an @ through
   if(t.startsWith("@") && !t.startsWith("@@")){ tipCommand(t.slice(1)); return; }
+  if(!conn) return;                           // nothing is listening yet
   const line = t.startsWith("@@") ? t.slice(1) : raw;
-  if(!conn){
-    if(line.trim()) println("(NO CONNECTION.  TIP COMMANDS START WITH @ --\n TRY @O 49, OR @O 43 FOR THE NIC.)");
-    return;
-  }
-  if(mode === "advent") advCommand(line);
-  else if(mode === "doctor") doctorSay(line);
-  else if(mode === "netstat") netstatCommand(line);
-  else if(mode === "nic") nicCommand(line);
-  else execCommand(line);
+  if(mode === "bbd") bbdCommand(line); else execCommand(line);
 }
-
 function submit(){
-  if(printing || mode === "dead") return;
+  if(printing) return;
   const raw = kb.value;
   kb.value = "";
   type(raw);
 }
 function type(raw){
-  // print the operator's keystrokes in their own ink, then act
   queue.push({text: raw.toUpperCase() + "\n", cls:"usr"});
   then(()=>dispatch(raw));
 }
-
 sendBtn.addEventListener("click", ()=>{ submit(); kb.focus(); });
 kb.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); submit(); }});
 screen.addEventListener("click", ()=>{ if(!window.getSelection || String(window.getSelection()) === "") kb.focus({preventScroll:true}); });
 
-/* quick command chips */
+/* command buttons, and the one modern line under the glass: how to drive it */
 const chipsEl = document.getElementById("chips");
-const noteEl  = document.getElementById("cardnote");
+const noteEl  = document.getElementById("hint");
 function setChips(defs, note){
   chipsEl.innerHTML = "";
   defs.forEach(([label,fn])=>{
@@ -1324,41 +530,20 @@ function setChips(defs, note){
   });
   noteEl.textContent = note || "";
 }
-function cmdChip(cmd, label){
-  return [label || cmd, ()=>{ if(printing || mode === "dead") return; type(cmd); }];
-}
+function cmdChip(cmd, label){ return [label || cmd, ()=>{ if(!printing) type(cmd); }]; }
 function chipsFor(){
-  if(!conn){
-    return setChips([cmdChip("@O 49","@O 49  BBN-TENEXB"), cmdChip("@O 43","@O 43  OFFICE-1 (NIC)"),
-                     cmdChip("@O 134","@O 134  MIT-AI"),
-                     ["HANG UP (BACK TO 1984)", ()=>{ window.location.href = "../"; }]],
-      "THE TIP IS LISTENING.  @O <HOST NUMBER> OPENS A CONNECTION.");
-  }
-  if(mode === "prelogin"){
-    return setChips(conn === "OFFICE1"
-      ? [cmdChip("LOG NICGUEST ARPA"), cmdChip("SYSTAT"), cmdChip("@C")]
-      : [cmdChip("LOGIN GUEST"), cmdChip("SYSTAT"), cmdChip("@C")],
-      conn === "OFFICE1" ? "OFFICE-1: THE NIC'S PUBLIC LOGIN IS NICGUEST, PASSWORD ARPA."
-                         : "BBN-TENEXB WANTS A LOGIN.  GUEST WILL DO.");
-  }
-  if(mode === "nic")
-    return setChips([cmdChip("IDENT JAKE"), cmdChip("IDENT WRC"), cmdChip("IDENT VGC"), cmdChip("HOSTS"), cmdChip("QUIT")],
-      "NIC/QUERY.  IDENT LOOKS UP PEOPLE FROM THE 1975 DIRECTORY.");
-  if(mode === "doctor")
-    return setChips([cmdChip("PEOPLE GET ON MY NERVES SOMETIMES."), cmdChip("ARE YOU A REAL DOCTOR?"), cmdChip("GOODBYE.")],
-      "END EACH LINE WITH A PERIOD OR A QUESTION MARK.  GOODBYE. LEAVES.");
-  if(mode === "netstat")
-    return setChips([cmdChip("SITES"), cmdChip("SITES TIP")], "NETSTAT WANTS TO KNOW WHAT TO LIST.");
-  if(mode === "advent")
-    return setChips([cmdChip("LOOK"), cmdChip("N"), cmdChip("S"), cmdChip("INVENTORY"), cmdChip("QUIT")],
-      "A CAVE.  MAGIC IS NOT LISTED.");
-  if(conn === "OFFICE1")
-    return setChips([cmdChip("NIC"), cmdChip("SYSTAT"), cmdChip("DAYTIME"), cmdChip("LOGOUT")],
-      "OFFICE-1, HOST 43: THE NETWORK INFORMATION CENTER.");
-  return setChips([cmdChip("HELP"), cmdChip("SYSTAT"), cmdChip("READMAIL"), cmdChip("HOSTAT"),
-                   cmdChip("HOSTS"), cmdChip("MAP"), cmdChip("DOCTOR"), cmdChip("ADVENT"),
-                   cmdChip("RFC"), cmdChip("LORE"), cmdChip("@C"), cmdChip("LOGOUT")],
-    "BBN-TENEXB, HOST 49.  @C HANGS UP ON THIS HOST; @O 43 THEN REACHES THE NIC.");
+  if(!conn)
+    return setChips([cmdChip("@O 56", "@O 56  SUMEX-AIM")],
+      "A terminal on BBN's NCC-TIP, Friday 21 January 1977. @O 56 opens a connection to SUMEX-AIM, the TENEX at Stanford.");
+  if(!user)
+    return setChips([cmdChip("LOGIN GUEST"), cmdChip("DAYTIME"), cmdChip("@C")],
+      "SUMEX-AIM is asking you to log in. @C closes the connection.");
+  if(mode === "bbd")
+    return setChips(Object.keys(BBD).map(c => cmdChip(c.toUpperCase())).concat([cmdChip("Q")]),
+      "SUMEX's bulletin board. These are the commands recorded on it that day; Q goes back to the Exec.");
+  return setChips([cmdChip("BBD"), cmdChip("TYPE RFC439.TXT"), cmdChip("TYPE RFC527.TXT"), cmdChip("TYPE RFC706.TXT"),
+                   cmdChip("TYPE RFC608.TXT"), cmdChip("DAYTIME"), cmdChip("VERSION"), cmdChip("WHERE "+user), cmdChip("LOGOUT")],
+    "BBD is SUMEX's bulletin board. TYPE prints a file: here, four RFCs as they were published. LOGOUT ends the job.");
 }
 
 /* console switches */
@@ -1371,45 +556,23 @@ document.getElementById("sndBtn").addEventListener("click", function(){
 });
 document.getElementById("spdBtn").addEventListener("click", function(){
   // a dial-up 1200-baud modem; the commoner 300; a hardwired 9600 line
-  if(cps === 120){ cps = 30; this.textContent = "MODEM: 300 BAUD"; }
-  else if(cps === 30){ cps = 960; this.textContent = "LINE: 9600 BAUD"; }
-  else { cps = 120; this.textContent = "MODEM: 1200 BAUD"; }
+  if(cps === 120){ cps = 30; this.textContent = "300 BAUD"; }
+  else if(cps === 30){ cps = 960; this.textContent = "9600 BAUD"; }
+  else { cps = 120; this.textContent = "1200 BAUD"; }
   this.setAttribute("aria-pressed", cps !== 120);
 });
 document.getElementById("advBtn").addEventListener("click", flush);
+document.getElementById("hangBtn").addEventListener("click", ()=>{ window.location.href = "../"; });
 
 /* =================================================================
-   SESSION INTRO — dial in, hunt, open 49, log in
+   THE CALL -- the hunt character, then a connection to SUMEX-AIM
    ================================================================= */
 function intro(){
-  conn = null; mode = "tip"; user = null;
-  setChips([], "CONNECTING...");
-  println("");
+  setChips([], "");
   print("E","usr");                               // the hunt character [2183 s.4.A]
-  pause(400);
   println("");
-  println("NCC-TIP 337 41");                       // TIP name, software version, octal port
-  println("Latest net news "+date77(2));
-  println('Use "@N<cr>" followed by "netnews<cr>"');
-  pause(500);
-  print("@O 49\n","usr");
-  pause(400);
-  println("Trying...");
-  pause(900);
-  println("Open");
-  println("");
-  println("BBN-TENEX 1.34.35, BBN-SYSTEM-B EXEC 1.54.14");
-  then(()=>{ conn = "TENEXB"; mode = "prelogin"; });
-  print("@");
-  pause(300);
-  print("LOG","usr"); print("IN (USER) "); print("GUEST","usr"); print(" (PASSWORD) (ACCOUNT #) "); print("341\n","usr");
-  then(()=>{ user = "GUEST"; loginAt = Date.now(); mode = "exec"; });
-  println(" JOB "+JOB+" ON TTY"+TTY+" "+date77()+" "+hhmm());
-  println(" YOU HAVE A MESSAGE");
-  println("");
-  println("(TYPE HELP IF THE MACHINE IS NEW TO YOU;\nIT WILL NOT BE OFFENDED.)");
-  then(()=>{ chipsFor(); });
-  prompt();
+  pause(700);
+  type("@O 56");
 }
 
 intro();
