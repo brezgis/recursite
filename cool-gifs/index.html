@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>cool-gifs &mdash; the recursite</title>
+<title>Cool Gifs &mdash; the recursite</title>
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <style>
   body {
@@ -13,7 +13,7 @@
     line-height: 1.4;
     color: #000000;
     background: #ffffcc;
-    max-width: 62em;
+    max-width: 46em;
     margin: 3.2em auto 1.4em;
     padding: 0 1.4em;
   }
@@ -26,6 +26,7 @@
     text-shadow: 1px 1px 0 #ffffff, 3px 3px 0 #c9b84a;
     margin: 0.05em 0 0.2em 0;
     line-height: 1.08;
+    overflow-wrap: break-word;
   }
   .rainbow {
     clear: both;
@@ -33,6 +34,8 @@
     background: linear-gradient(to right, #0033cc, #0099ff, #00cc66, #ffff00, #ff9900, #ff0000);
     margin: 1.1em 0 0.9em 0;
   }
+  .epigraph { font-style: italic; font-size: 0.9em; color: #4a4a3a; margin: 0 auto 1.1em; max-width: 46em; text-align: center; text-wrap: pretty; }
+  hr { border: none; border-top: 1px solid #999080; margin: 1.3em 0; }
   a { color: #0000ee; }
   a:visited { color: #551a8b; }
   a:active { color: #ff0000; }
@@ -47,14 +50,22 @@
   }
   .gifs img { max-width: 100%; height: auto; }
   .back { font-size: 0.9em; margin-top: 1.4em; }
-  .foot { margin-top: 2.4em; font-size: 0.85em; color: #4a4a3a; }
+  .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
+  @media (max-width: 600px) {
+    body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
+    h1 { font-size: 1.8em; }
+    .rainbow { margin: 0.9em 0 0.8em 0; }
+  }
 </style>
 </head>
 <body>
 <div class="masthead">
-  <h1>cool-gifs</h1>
+  <h1>Cool Gifs</h1>
   <div class="rainbow"></div>
+  <p class="epigraph">“It is a soft ‘G,’ pronounced ‘jif.’ End of story.” — Steve Wilhite, creator of the GIF</p>
 </div>
+
+<hr>
 
 <div class="gifs">
   <img src="img/AHLUT733NIJ2UJJ7BW3J2SKRDRHI53PL.gif" alt="" loading="lazy">
@@ -110,7 +121,7 @@
   <img src="img/KGIGMMQCV5KHGL7TFRCDWBROU7NW5J67.gif" alt="" loading="lazy">
 </div>
 
-<div class="rainbow"></div>
+<hr>
 <p class="back"><a href="../">&larr; Back to the recursite</a></p>
 <p class="foot">This primitive HTML site was built by a state-of-the-art language model.</p>
 </body>

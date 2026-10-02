@@ -29,15 +29,17 @@
   .cand.text{width:100%;color:#333;white-space:pre-wrap;max-height:5.2em;overflow:hidden}
   .cand.lex{width:100%} .cand.lex b{font-size:.9rem}
   #wrap{grid-area:canvas;overflow:auto;padding:1.5rem}
-  #page{margin:0 auto;background:#ffffcc;padding:2rem 1.4em 3rem;font-family:"Times New Roman",Times,serif;font-size:18px;color:#000;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+  #page{width:46em;margin:0 auto;background:#ffffcc;padding:2rem 1.4em 3rem;font-family:"Times New Roman",Times,serif;font-size:18px;color:#000;box-shadow:0 2px 12px rgba(0,0,0,.15)}
   #page .masthead{text-align:center}
   #page h1{font-size:2.7em;font-weight:bold;letter-spacing:.03em;color:#101010;text-shadow:1px 1px 0 #fff,3px 3px 0 #c9b84a;margin:.05em 0 .2em;line-height:1.08;border:1px dashed transparent}
   #page h1:focus,#page .epigraph:focus{outline:none;border-color:#2a4fce}
   #page .rainbow{height:5px;background:linear-gradient(to right,#0033cc,#0099ff,#00cc66,#ffff00,#ff9900,#ff0000);margin:1.1em 0 .9em}
-  #page .epigraph{white-space:pre-line;font-style:italic;font-size:.9em;color:#4a4a3a;margin:0 0 1.1em;border:1px dashed transparent;min-height:1.2em}
+  #page .epigraph{white-space:pre-line;font-style:italic;font-size:.9em;color:#4a4a3a;margin:0 auto 1.1em;max-width:46em;text-align:center;text-wrap:pretty;border:1px dashed transparent;min-height:1.2em}
+  #page hr.pgrule{border:none;border-top:1px solid #999080;margin:1.3em 0}
   #canvas{position:relative;min-height:600px;outline:1px dashed #c9b84a}
   #canvas.grid{background-image:linear-gradient(#0000000a 1px,transparent 1px),linear-gradient(90deg,#0000000a 1px,transparent 1px);background-size:8px 8px}
   .blk.sel{outline:2px solid var(--sel);outline-offset:2px}
+  #canvas .blk iframe{pointer-events:none}
   .blk .rz{position:absolute;right:-6px;bottom:-6px;width:12px;height:12px;background:#fff;border:2px solid var(--sel);cursor:nwse-resize;display:none;z-index:5}
   .blk.sel .rz{display:block}
   #props{grid-area:props;background:#f3f1e6;border-left:1px solid var(--line);overflow:auto;padding:.6rem}
@@ -73,6 +75,11 @@
 .blk .marq .txt{white-space:nowrap;overflow:hidden}
 .blk .marq span{display:inline-block;white-space:nowrap;padding-left:100%;animation:marq var(--dur,12s) linear infinite}
 @keyframes marq{to{transform:translateX(-100%)}}
+/* window: a Win95 frame around an embedded page (e.g. favorite-words/word-garden/) */
+.blk .win{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:3px 3px 0 rgba(0,0,0,.45);padding:2px}
+.blk .win .tb{background:#000080;color:#fff;font:bold 13px/1.2 Arial,Helvetica,sans-serif;padding:3px 4px 3px 6px;display:flex;justify-content:space-between;align-items:center}
+.blk .win iframe{display:block;width:100%;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;margin-top:2px}
+.blk .win .sb{font:12px/1.3 Arial,Helvetica,sans-serif;color:#000;padding:3px 4px 1px;border-top:1px solid #808080;margin-top:2px}
 /* WordArt (pure CSS/SVG) */
 .blk .wa{font-weight:bold;line-height:1.05;white-space:pre-wrap;overflow-wrap:anywhere;text-align:center}
 .blk .wa.fx-emboss{color:#101010;text-shadow:1px 1px 0 #fff,3px 3px 0 #c9b84a}
@@ -103,6 +110,7 @@
   <button id="addWord">+ WordArt</button>
   <button id="addRule">+ rule</button>
   <button id="addMarq">+ marquee</button>
+  <button id="addWin">+ window</button>
   <label><input type="file" id="upFile" accept="image/*" multiple hidden><button id="upBtn">+ upload image…</button></label>
   <span class="sep"></span>
   <button id="gridBtn">grid</button>
@@ -124,6 +132,7 @@
   <div id="page">
     <div class="masthead"><h1 id="ttl" contenteditable="true" spellcheck="false">page</h1><div class="rainbow"></div></div>
     <p class="epigraph" id="epi" contenteditable="true" spellcheck="false" data-placeholder="epigraph (optional)"></p>
+    <hr class="pgrule">
     <div id="canvas" class="canvas"></div>
   </div>
 </main>
@@ -135,7 +144,7 @@
 
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const SNAP=8, CANVAS_W=960;
+const SNAP=8, CANVAS_W=828;   // 46em at 18px: the recursite's column width
 const HELP="Click a library entry or a + button to add a block. Drag to move (snaps to 8px); corner handle resizes width. Arrows nudge, Shift+arrows nudge 1px. Delete removes. Cmd/Ctrl+C/X/V copy, cut, paste blocks; paste plain text from anywhere to make a text block. Cmd/Ctrl+D duplicates, Cmd/Ctrl+S saves. Double-click a text block to edit its words. Title and epigraph are editable in place.";
 const FONTS=["Times New Roman","Courier New","Arial","Georgia","Verdana","Comic Sans MS","Impact","Piazzolla","Young Serif","Commissioner","Compagnon","JuliaMono"];
 const COLORS=[["#000000","black"],["#0000ee","link blue"],["#551a8b","visited purple"],["#ff0000","red"],["#008000","green"],["#ff9900","orange"],["#ffffff","white"],["#637556","sage"],["#A65E4A","terracotta"],["#8B6B32","ochre"],["#586C83","slate"],["#805C70","plum"],["#80684D","umber"]];
@@ -151,6 +160,7 @@ const newText=(text,src)=>Object.assign(base(),{type:"text",text:{text:text||"Te
 const newImage=(file,cap)=>Object.assign(base(),{type:"image",w:320,image:{src:file,h:0,cropX:50,cropY:50,zoom:1,border:false,caption:cap||"",showCap:true}});
 const newWord=()=>Object.assign(base(),{type:"word",w:520,word:{text:"WordArt",font:"Impact",size:64,fill:"solid",color:"#0033cc",fx:"emboss",shape:"flat",bend:40,italic:false}});
 const newRule=()=>Object.assign(base(),{type:"rule",w:600,rule:{style:"rainbow"}});
+const newWin=()=>Object.assign(base(),{type:"win",w:880,win:{title:"untitled.exe",src:"",h:440,status:""}});
 const newMarq=()=>Object.assign(base(),{type:"marq",w:600,text:{text:"Welcome to my home page!!! Sign my guestbook!!!",font:"Times New Roman",size:18,bold:true,italic:false,align:"left",color:"#ff0000",outline:false,bg:"none",pad:4,source:""},marq:{dur:12}});
 
 /* ---------- rendering (same HTML in editor and on the page) ---------- */
@@ -179,6 +189,11 @@ function wordHTML(b){
   const fx=w.fx==="outline"?`stroke="#000" stroke-width="2" paint-order="stroke"`:w.fx==="glow"?`style="filter:drop-shadow(0 0 6px ${w.color})"`:w.fx==="shadow"?`style="filter:drop-shadow(5px 5px 0 rgba(0,0,0,.35))"`:w.fx==="emboss"?`style="filter:drop-shadow(1px 1px 0 #fff) drop-shadow(2px 2px 0 #c9b84a)"`:w.fx==="extrude"?`style="filter:drop-shadow(2px 2px 0 #555) drop-shadow(2px 2px 0 #555) drop-shadow(2px 2px 3px rgba(0,0,0,.4))"`:"";
   return `<div class="wa"><svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${defs}<path id="${id}" d="${path}" fill="none"/><text font-family="${fam}" font-size="${w.size}" fill="${fill}" ${w.italic?'font-style="italic"':""} ${fx}><textPath href="#${id}" startOffset="50%" text-anchor="middle">${esc(w.text)}</textPath></text></svg></div>`;
 }
+let EXPORTING=false;
+function winHTML(b){
+  const w=b.win, src=!w.src||EXPORTING||/^(https?:|\/|\.\.\/)/.test(w.src)?w.src:`../${SLUG}/${w.src}`;
+  return `<div class="win"><div class="tb"><span>${esc(w.title)}</span></div><iframe src="${esc(src)}" title="${esc(w.title)}" style="height:${w.h}px" loading="lazy"></iframe>${w.status?`<div class="sb">${esc(w.status)}</div>`:""}</div>`;
+}
 function blockHTML(b){
   let inner;
   if(b.type==="text") inner=txtHTML(b.text);
@@ -186,6 +201,7 @@ function blockHTML(b){
   else if(b.type==="mixed") inner=`<div class="mix"><div style="float:${b.mixed.wrap};width:${b.mixed.imgW}%;margin:${b.mixed.wrap==="left"?"0 .8em .4em 0":"0 0 .4em .8em"}">${imgHTML(b.image)}</div>${txtHTML(b.text)}</div>`;
   else if(b.type==="word") inner=wordHTML(b);
   else if(b.type==="rule") inner=`<div class="rule ${b.rule.style}"></div>`;
+  else if(b.type==="win") inner=winHTML(b);
   else if(b.type==="marq") inner=`<div class="marq" style="--dur:${b.marq.dur}s">${txtHTML(b.text,"").replace('class="txt','class="txt marqin').replace("<div","<div",1)}</div>`.replace(/<div class="txt marqin([^"]*)" style="([^"]*)">([\s\S]*)<\/div>$/,(m,c,s,t)=>`<div class="txt${c}" style="${s}"><span>${t}</span></div>`);
   const rot=b.rot?`transform:rotate(${b.rot}deg);`:"";
   return `<div class="blk" data-id="${b.id}" style="left:${b.x}px;top:${b.y}px;width:${b.w}px;z-index:${b.z};${rot}">${inner}</div>`;
@@ -197,7 +213,7 @@ function render(){
   c.style.height=canvasHeight()+"px";
   c.querySelectorAll("img").forEach(i=>i.addEventListener("load",()=>{c.style.height=canvasHeight()+"px";},{once:true}));
 }
-function exportBody(){const blocks=[...L.blocks].sort((a,b)=>(a.y-b.y)||(a.x-b.x));return `<div class="canvas" style="height:${canvasHeight()}px;max-width:${L.canvasW}px;margin:0 auto">\n${blocks.map(blockHTML).join("\n")}\n</div>`;}
+function exportBody(){const blocks=[...L.blocks].sort((a,b)=>(a.y-b.y)||(a.x-b.x));EXPORTING=true;try{return `<div class="canvas" style="height:${canvasHeight()}px;max-width:${L.canvasW}px;margin:0 auto">\n${blocks.map(blockHTML).join("\n")}\n</div>`;}finally{EXPORTING=false;}}
 
 /* ---------- state ---------- */
 function push(){undo.push(JSON.stringify(L)); if(undo.length>80)undo.shift(); try{localStorage.setItem("rs-layout-"+SLUG,JSON.stringify(L))}catch(e){}}
@@ -314,7 +330,7 @@ const selOpts=(opts,cur)=>opts.map(o=>Array.isArray(o)?`<option value="${o[0]}" 
 function props(full=true){
   const P=$("#props"); if(!sel){P.innerHTML=`<h3>Nothing selected</h3><div class="hint">${HELP}</div>`;return;}
   if(!full){const x=P.querySelector("[data-k=x]"),y=P.querySelector("[data-k=y]"),w=P.querySelector("[data-k=w]"); if(x){x.value=sel.x;y.value=sel.y;w.value=sel.w;} return;}
-  const b=sel, names={text:"Text",image:"Image",mixed:"Image + text",word:"WordArt",rule:"Rule",marq:"Marquee"};
+  const b=sel, names={text:"Text",image:"Image",mixed:"Image + text",word:"WordArt",rule:"Rule",marq:"Marquee",win:"Window"};
   let h=`<h3>${names[b.type]} block</h3>`;
   h+=row("position",`<input type="number" data-k="x" value="${b.x}" step="8"><input type="number" data-k="y" value="${b.y}" step="8">`);
   h+=row("width",`<input type="number" data-k="w" value="${b.w}" step="8" min="64">`);
@@ -351,6 +367,11 @@ function props(full=true){
     h+=row("shape",`<select data-k="word.shape">${selOpts([["flat","flat"],["arch","arch"],["wave","wave"],["slant","slant"]],w.shape)}</select>`);
     h+=row("bend",`<input type="range" data-k="word.bend" min="0" max="120" value="${w.bend}">`);
     h+=row("italic",`<input type="checkbox" data-k="word.italic" ${w.italic?"checked":""}>`);}
+  if(b.win){const w=b.win; h+=`<div class="sec"><b>Window</b> <span class="hint">shows another page inside this one</span></div>`;
+    h+=row("title",`<input type="text" data-k="win.title" value="${esc(w.title)}">`);
+    h+=row("page",`<input type="text" data-k="win.src" value="${esc(w.src)}" placeholder="word-garden/">`);
+    h+=row("height",`<input type="number" data-k="win.h" value="${w.h}" step="8" min="120">`);
+    h+=row("status bar",`<input type="text" data-k="win.status" value="${esc(w.status)}">`);}
   if(b.rule) h+=row("style",`<select data-k="rule.style">${selOpts([["rainbow","rainbow"],["plain","plain (inset)"],["dots","dotted"]],b.rule.style)}</select>`);
   h+=`<div class="sec"></div>`+row("",`<button data-act="dup">duplicate</button><button data-act="del">delete</button>`);
   P.innerHTML=h;
@@ -390,6 +411,7 @@ $("#addText").onclick=()=>add(newText("New text"));
 $("#addWord").onclick=()=>add(newWord());
 $("#addRule").onclick=()=>add(newRule());
 $("#addMarq").onclick=()=>add(newMarq());
+$("#addWin").onclick=()=>add(newWin());
 $("#gridBtn").onclick=()=>$("#canvas").classList.toggle("grid");
 $("#minH").onchange=()=>{push();L.minH=Math.max(400,parseInt($("#minH").value)||600);render();};
 $("#longer").onclick=()=>{push();L.minH=(L.minH||600)+400;$("#minH").value=L.minH;render();};

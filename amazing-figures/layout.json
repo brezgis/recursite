@@ -1,0 +1,623 @@
+{
+ "title": "Amazing Figures",
+ "epigraph": "“Colors are the deeds of light, its deeds and sufferings.” — Goethe, preface to the Theory of Colours\n“If you gaze long into an abyss, the abyss also gazes into you.” — Nietzsche, Beyond Good and Evil §146\n“Above all else show the data.” — Edward Tufte, The Visual Display of Quantitative Information",
+ "canvasW": 828,
+ "minH": 0,
+ "blocks": [
+  {
+   "id": "b1",
+   "x": 94,
+   "y": 0,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/hibbett-1995-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b2",
+   "x": 94,
+   "y": 584,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Cretaceous mushrooms in amber](https://donoghuelab.yale.edu/sites/default/files/059_hibbett_nature95.pdf)\nD. S. Hibbett, D. Grimaldi & M. J. Donoghue, *Nature* 377, 487 (1995)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b3",
+   "x": 94,
+   "y": 688,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/cook-2004-fig2.png",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b4",
+   "x": 94,
+   "y": 1062,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[It Takes Two Neurons To Ride a Bicycle](https://paradise.caltech.edu/~cook/papers/TwoNeurons.pdf)\nM. Cook (2004)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b5",
+   "x": 94,
+   "y": 1168,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/mathog-1984-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b6",
+   "x": 94,
+   "y": 2130,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Characteristic folding pattern of polytene chromosomes in Drosophila salivary gland nuclei](https://www.nature.com/articles/308414a0)\nD. Mathog et al., *Nature* 308, 414 (1984)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b7",
+   "x": 94,
+   "y": 2232,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/evans-2013-fig2.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b8",
+   "x": 94,
+   "y": 2770,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Uncovering archaeological landscapes at Angkor using lidar](https://pmc.ncbi.nlm.nih.gov/articles/PMC3732978/)\nD. H. Evans et al., *PNAS* 110, 12595 (2013)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b9",
+   "x": 94,
+   "y": 2872,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/elhage-2022-feature-dimensionality.png",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b10",
+   "x": 94,
+   "y": 3357,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Toy Models of Superposition](https://transformer-circuits.pub/2022/toy_model/index.html)\nN. Elhage et al., *Transformer Circuits Thread* (2022)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b11",
+   "x": 94,
+   "y": 3464,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/km3net-2025-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b12",
+   "x": 94,
+   "y": 4060,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Observation of an ultra-high-energy cosmic neutrino with KM3NeT](https://www.nature.com/articles/s41586-024-08543-1)\nThe KM3NeT Collaboration, *Nature* 638, 376 (2025)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b13",
+   "x": 94,
+   "y": 4168,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/power-2022-fig1.png",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b14",
+   "x": 94,
+   "y": 4541,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets](https://arxiv.org/abs/2201.02177)\nA. Power, Y. Burda, H. Edwards, I. Babuschkin & V. Misra, arXiv:2201.02177 (2022)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b15",
+   "x": 94,
+   "y": 4648,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/sadowski-2023-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b16",
+   "x": 94,
+   "y": 5116,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[The largest amber-preserved flower revisited](https://www.nature.com/articles/s41598-022-24549-z)\nE.-M. Sadowski & C.-C. Hofmann, *Scientific Reports* 13, 17 (2023)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b17",
+   "x": 94,
+   "y": 5224,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/clark-2019-fig5.png",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b18",
+   "x": 94,
+   "y": 6200,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[What Does BERT Look At? An Analysis of BERT’s Attention](https://aclanthology.org/W19-4828.pdf)\nK. Clark, U. Khandelwal, O. Levy & C. D. Manning, *BlackboxNLP* (2019)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b19",
+   "x": 94,
+   "y": 6304,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/schuller-2021-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b20",
+   "x": 94,
+   "y": 6917,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[The cellular environment shapes the nuclear pore complex architecture](https://www.nature.com/articles/s41586-021-03985-3)\nA. P. Schuller et al., *Nature* 598, 667 (2021)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b21",
+   "x": 94,
+   "y": 7024,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/shabaqo-stone.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b22",
+   "x": 94,
+   "y": 7477,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[The Shabaqo Stone](https://artsandculture.google.com/asset/the-shabako-stone/_QGccGHkd8pyng)\nMemphis, c. 710 BC · British Museum EA 498",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b23",
+   "x": 94,
+   "y": 7584,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/cammarata-2020-curve-families.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b24",
+   "x": 94,
+   "y": 7817,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Curve Detectors](https://distill.pub/2020/circuits/curve-detectors/)\nN. Cammarata et al., *Distill* (2020)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b25",
+   "x": 94,
+   "y": 7920,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/singh-2024-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b26",
+   "x": 94,
+   "y": 8733,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[CryoEM structures reveal how the bacterial flagellum rotates and switches direction](https://www.nature.com/articles/s41564-024-01674-1)\nP. K. Singh et al., *Nature Microbiology* 9, 1271 (2024)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b27",
+   "x": 94,
+   "y": 8840,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/vesuvius-2026-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b28",
+   "x": 94,
+   "y": 9431,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[An entire Herculaneum scroll has been read for the first time](https://scrollprize.org/firstscroll)\nVesuvius Challenge (2026)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b29",
+   "x": 224,
+   "y": 9536,
+   "w": 380,
+   "z": 1,
+   "rot": 0,
+   "type": "image",
+   "image": {
+    "src": "img/papyan-2020-fig1.jpg",
+    "h": 0,
+    "cropX": 50,
+    "cropY": 50,
+    "zoom": 1,
+    "border": true,
+    "caption": "",
+    "showCap": false
+   }
+  },
+  {
+   "id": "b30",
+   "x": 94,
+   "y": 10570,
+   "w": 640,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "[Prevalence of neural collapse during the terminal phase of deep learning training](https://www.pnas.org/doi/10.1073/pnas.2015509117)\nV. Papyan, X. Y. Han & D. L. Donoho, *PNAS* 117, 24652 (2020)",
+    "font": "Times New Roman",
+    "size": 16,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  }
+ ]
+}

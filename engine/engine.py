@@ -5,7 +5,8 @@
     -> http://<tailnet-ip>:8092/engine/edit.html
 
 Pages live at <repo>/<slug>/ : layout.json (source of truth), index.html (generated),
-img/ (pictures the page uses). Optional libraries live at engine/pool/<slug>/
+img/ (pictures the page uses), and optionally page.js (hand-written behaviour, linked
+automatically). Optional libraries live at engine/pool/<slug>/
 (manifest.json in the foo-picker format + img/) and are git-ignored.
 
 API (all JSON):
@@ -38,15 +39,21 @@ PAGE = """<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Piazzolla:ital,wght@0,400;0,500;0,600;1,400&family=Young+Serif&display=swap" rel="stylesheet">
 <style>
   body { font-family: "Times New Roman", Times, serif; font-size: 18px; line-height: 1.4; color: #000; background: #ffffcc;
-         margin: 3.2em auto 1.4em; padding: 0 1.4em; max-width: 62em; }
+         margin: 3.2em auto 1.4em; padding: 0 1.4em; max-width: 46em; }
   .masthead { text-align: center; }
   h1.welcome { font-size: 2.7em; font-weight: bold; letter-spacing: .03em; color: #101010;
-               text-shadow: 1px 1px 0 #fff, 3px 3px 0 #c9b84a; margin: .05em 0 .2em; line-height: 1.08; }
+               text-shadow: 1px 1px 0 #fff, 3px 3px 0 #c9b84a; margin: .05em 0 .2em; line-height: 1.08; overflow-wrap: break-word; }
   .rainbow { clear: both; height: 5px; background: linear-gradient(to right,#0033cc,#0099ff,#00cc66,#ffff00,#ff9900,#ff0000); margin: 1.1em 0 .9em; }
   a { color: #0000ee; } a:visited { color: #551a8b; } a:active { color: #ff0000; } a:hover { background: #ffff88; }
-  .epigraph { font-style: italic; font-size: .9em; color: #4a4a3a; margin: 0 0 1.1em; }
+  .epigraph { font-style: italic; font-size: .9em; color: #4a4a3a; margin: 0 auto 1.1em; max-width: 46em; text-align: center; text-wrap: pretty; }
   .back { font-size: .9em; }
-  .foot { margin-top: 2.4em; font-size: .85em; color: #4a4a3a; }
+  .foot { margin-top: 1.6em; font-size: .78em; color: #3a3a30; line-height: 1.5; }
+  hr { border: none; border-top: 1px solid #999080; margin: 1.3em 0; }
+  @media (max-width: 600px) {
+    body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
+    h1.welcome { font-size: 1.8em; }
+    .rainbow { margin: .9em 0 .8em; }
+  }
 %(css)s
 </style>
 </head>
@@ -54,14 +61,17 @@ PAGE = """<!DOCTYPE html>
 <div class="masthead">
   <h1 class="welcome">%(title)s</h1>
   <div class="rainbow"></div>
-</div>
 %(epigraph)s
+</div>
+
+<hr>
+
 %(body)s
 
-<div class="rainbow"></div>
+<hr>
 <p class="back"><a href="../">&larr; Back to the recursite</a></p>
 <p class="foot">This primitive HTML site was built by a state-of-the-art language model.</p>
-</body>
+%(script)s</body>
 </html>
 """
 
@@ -94,7 +104,9 @@ def build(slug, layout, css, body):
     epi = layout.get("epigraph", "")
     # one epigraph per line, so a page can carry several, each with its own attribution
     epigraph = "\n".join('<p class="epigraph">%s</p>' % esc(line.strip()) for line in epi.split("\n") if line.strip())
-    page = PAGE % {"slug": slug, "title": esc(layout.get("title") or slug), "css": css, "body": body, "epigraph": epigraph}
+    page = PAGE % {"slug": slug, "title": esc(layout.get("title") or slug), "css": css, "body": body, "epigraph": epigraph,
+                   # optional hand-written behaviour for this page: <slug>/page.js
+                   "script": '<script src="page.js"></script>\n' if os.path.isfile(os.path.join(d, "page.js")) else ""}
     with open(os.path.join(d, "index.html"), "w", encoding="utf-8") as f:
         f.write(page)
     with open(os.path.join(d, "layout.json"), "w", encoding="utf-8") as f:
@@ -154,7 +166,7 @@ class H(SimpleHTTPRequestHandler):
                 if os.path.exists(os.path.join(d, "layout.json")):
                     return self._json(409, {"error": "page exists"})
                 os.makedirs(d, exist_ok=True)
-                build(slug, {"title": title, "epigraph": "", "blocks": [], "canvasW": 960, "minH": 600}, "", '<div class="canvas" style="height:600px;max-width:960px;margin:0 auto"></div>')
+                build(slug, {"title": title, "epigraph": "", "blocks": [], "canvasW": 828, "minH": 600}, "", '<div class="canvas" style="height:600px;max-width:828px;margin:0 auto"></div>')
                 return self._json(200, {"ok": True, "slug": slug})
             if self.path == "/engine/api/upload":
                 d = page_dir(req["slug"])
