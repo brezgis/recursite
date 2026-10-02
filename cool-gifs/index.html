@@ -49,6 +49,9 @@
     margin: 1.4em 0;
   }
   .gifs img { max-width: 100%; height: auto; }
+  .jif { cursor: pointer; }
+  .jif:hover, .jif:focus-visible { color: #0000cc; outline: none; }
+  .jar { position: fixed; width: 90px; height: auto; pointer-events: none; z-index: 50; }
   .back { font-size: 0.9em; margin-top: 1.4em; }
   .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
   @media (max-width: 600px) {
@@ -62,7 +65,7 @@
 <div class="masthead">
   <h1>Cool Gifs</h1>
   <div class="rainbow"></div>
-  <p class="epigraph">“It is a soft ‘G,’ pronounced ‘jif.’ End of story.” — Steve Wilhite, creator of the GIF</p>
+  <p class="epigraph">“It is a soft ‘G,’ pronounced ‘<span class="jif" role="button" tabindex="0">jif</span>.’ End of story.” — Steve Wilhite, creator of the GIF</p>
 </div>
 
 <hr>
@@ -124,5 +127,28 @@
 <hr>
 <p class="back"><a href="../">&larr; Back to the recursite</a></p>
 <p class="foot">This primitive HTML site was built by a state-of-the-art language model.</p>
+<script>
+// "jif" in the epigraph: each click drops a jar of Jif out of the word.
+(function () {
+  const word = document.querySelector(".jif");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function drop() {
+    const r = word.getBoundingClientRect();
+    const jar = new Image(); jar.src = "img/jif.png"; jar.alt = ""; jar.className = "jar";
+    jar.style.left = (r.left + r.width / 2 - 45) + "px"; jar.style.top = (r.top - 20) + "px";
+    document.body.append(jar);
+    if (still) { jar.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], 1400).onfinish = () => jar.remove(); return; }
+    const dx = (Math.random() - .5) * 320, spin = (Math.random() < .5 ? -1 : 1) * (240 + Math.random() * 300);
+    const fall = innerHeight - r.top + 160;
+    jar.animate([
+      { transform: "translate(0, 0) scale(.2) rotate(0deg)", easing: "cubic-bezier(.2,.7,.4,1)" },       // pops out of the word…
+      { transform: `translate(${dx * .25}px, -70px) scale(1) rotate(${spin * .15}deg)`, easing: "cubic-bezier(.5,0,1,.6)" },
+      { transform: `translate(${dx}px, ${fall}px) scale(1) rotate(${spin}deg)` }                          // …and falls off the page
+    ], { duration: 1500 + fall * .6 }).onfinish = () => jar.remove();
+  }
+  word.addEventListener("click", drop);
+  word.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); drop(); } });
+})();
+</script>
 </body>
 </html>
