@@ -1,3 +1,7 @@
 serve.log
 .DS_Store
 engine/pool/
+
+# local drafts, kept off the site
+favorite-words/word-garden/
+foobar/
