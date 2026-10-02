@@ -1,7 +1,7 @@
 // recursite/favorite-words/page.js — hand-written; linked into index.html by engine/engine.py.
-// "Words" in the title, "language" (Saussure), "Word" (John 1:1) and "tongue" (the Shabaka Stone)
-// are quietly clickable: each click speaks one of the favorite words, which ripples through the
-// rainbow and fades back.
+// "Words" in the title, "Word" (John 1:1) and "tongue" (the Shabaka Stone) are quietly
+// clickable: each click speaks one of the favorite words, which ripples through the rainbow
+// and fades back.
 (function () {
   const css = `
     .speak { cursor: pointer; }
@@ -23,7 +23,7 @@
   document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`);
 
   // wrap the trigger words in the title and epigraphs
-  const TRIGGER = /\b(Words?|language|tongue)\b/g;
+  const TRIGGER = /\b(Words?|tongue)\b/g;
   document.querySelectorAll("h1.welcome, .epigraph").forEach(p => {
     const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
