@@ -1301,6 +1301,72 @@
     "pad": 0,
     "source": ""
    }
+  },
+  {
+   "id": "b60",
+   "x": 134,
+   "y": 5235,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "❦",
+    "font": "Times New Roman",
+    "size": 22,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#8a7f5a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b61",
+   "x": 134,
+   "y": 5299,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "L’attention est la forme la plus rare et la plus pure de la générosité.\n(Attention is the rarest and purest form of generosity.)",
+    "font": "Times New Roman",
+    "size": 20,
+    "bold": false,
+    "italic": false,
+    "align": "left",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b62",
+   "x": 134,
+   "y": 5366,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "— [Simone Weil, letter to Joë Bousquet, 13 April 1942; first printed in *Cahiers du Sud* (1950)](https://kfitz.info/la-plus-rare-et-la-plus-pure/)",
+    "font": "Times New Roman",
+    "size": 15,
+    "bold": false,
+    "italic": false,
+    "align": "right",
+    "color": "#4a4a3a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
   }
  ]
 }
