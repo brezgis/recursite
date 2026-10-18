@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- 2^9: the first factor of the first line, the h in "hi" -->
+  <rect x="1" y="1" width="30" height="30" rx="5" fill="#fff" stroke="#000" stroke-width="2"/>
+  <text x="4" y="27" font-size="25" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-weight="bold">2</text>
+  <text x="19" y="15" font-size="14" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-weight="bold">9</text>
+</svg>
