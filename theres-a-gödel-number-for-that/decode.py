@@ -9,7 +9,7 @@ The k-th character of a quote is the exponent of the k-th prime:
 """
 import sys
 
-ALPHABET = " abcdefghijklmnopqrstuvwxyz.,'-/?!:;áéíóúäöüñō"
+ALPHABET = " abcdefghijklmnopqrstuvwxyz.,'-/?!:;áéíóúäöüñō0123456789"
 
 if hasattr(sys, "set_int_max_str_digits"):
     sys.set_int_max_str_digits(0)
