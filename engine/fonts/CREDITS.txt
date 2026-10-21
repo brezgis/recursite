@@ -17,3 +17,12 @@ https://fonts.google.com/specimen/Commissioner
 Image and text provenance, full source URLs, and supplied image credits are
 preserved in docs/foobar-picks.json. Visible source labels are abbreviated
 in the collage; images remain available at their original resolution.
+
+Typography for Kaomoji Nonsense
+
+Glyph fallbacks, subset to the characters the page uses:
+JuliaMono-kaomoji.woff2 (math letters) is cut from JuliaMono, above.
+NotoSansEgyptianHieroglyphs-kaomoji.woff2 and NotoSansYi-kaomoji.woff2 are
+cut from Noto Sans Egyptian Hieroglyphs and Noto Sans Yi by the Noto Project.
+https://notofonts.github.io/
+See Noto-OFL.txt.

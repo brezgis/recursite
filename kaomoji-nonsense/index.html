@@ -42,6 +42,14 @@
   a:hover { background: #ffff88; }
   .back { font-size: 0.9em; margin-top: 1.4em; }
   .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
+  /* fallbacks for glyphs many systems lack: math letters, a hieroglyph, Yi brackets */
+  @font-face { font-family: KaoMath; src: url("../engine/fonts/JuliaMono-kaomoji.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: KaoHiero; src: url("../engine/fonts/NotoSansEgyptianHieroglyphs-kaomoji.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: KaoYi; src: url("../engine/fonts/NotoSansYi-kaomoji.woff2") format("woff2"); font-display: swap; }
+  .kao { text-align: center; margin: 0.4em 0 0.2em; }
+  .kao h2 { font-size: 1.15em; font-weight: bold; margin: 0 0 0.7em 0; }
+  .kao p { font-family: "Times New Roman", Times, serif, KaoMath, KaoHiero, KaoYi; font-size: 1.1em; line-height: 1.9; margin: 0 0 0.75em; overflow-wrap: anywhere; }
+  .sep { text-align: center; font-size: 1.3em; margin: 1em 0; }
   @media (max-width: 600px) {
     body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
     h1 { font-size: 1.8em; }
@@ -56,6 +64,73 @@
 </div>
 
 <hr>
+
+<div class="kao">
+  <h2>I can&rsquo;t believe it&rsquo;s not butter</h2>
+  <p>🍞✨ (๑•̀ㅂ•́)و 🧈 mmm</p>
+  <p>🧈❓ (ʘᗩʘ’) ⁉️ ‼️</p>
+  <p>📦🔍 (・_・ヾ ...𝓂𝒶𝓇𝑔𝒶𝓇𝒾𝓃𝑒?</p>
+  <p>꒰ ͡° ʖ̯ ͡°꒱ 🧈≠🧈 ∴ ∄ 🐄 ⁈</p>
+  <p>🌌🔪🍞 ( ´ ▽ ` ) 𝘪𝘵’𝘴 𝘯𝘰𝘵 𝘣𝘶𝘵𝘵𝘦𝘳 𝘣𝘶𝘵 𝘸𝘩𝘢𝘵 𝘪𝘴 𝘣𝘶𝘵𝘵𝘦𝘳</p>
+  <p>🐄💔 (｡•́︿•̀｡) 𓃒 ...𝔀𝓪𝓼 𝓘 𝓷𝓮𝓿𝓮𝓻 𝓷𝓮𝓮𝓭𝓮𝓭?</p>
+</div>
+
+<p class="sep">❦</p>
+
+<div class="kao">
+  <h2>The Daily with Michael Barbaro</h2>
+  <p>📲🔔 (◞‸◟)☕ 🗞️ new episode</p>
+  <p>🎹 ♪ ᵇᵘᵐ ᵇᵘᵐ ᵇᵘᵐ ♪ 〰️〰️〰️<br>
+  🎻 ♫ ᵇᵘᵐ...ᵇᵘᵐ... ♫ (˘◡˘)🎧</p>
+  <p>🎙️ (・ω・) 𝙵𝚛𝚘𝚖 𝚃𝚑𝚎 𝙽𝚎𝚠 𝚈𝚘𝚛𝚔 𝚃𝚒𝚖𝚎𝚜...<br>
+  ⏳...⏳...⏳...<br>
+  𝙸’𝚖 𝙼𝚒𝚌𝚑𝚊𝚎𝚕 𝙱𝚊𝚛𝚋𝚊𝚛𝚘.</p>
+  <p>🎙️ (・・) ...𝕙𝕞𝕞.<br>
+  🎙️ (・・) ...𝕞𝕞-𝕙𝕞𝕞.<br>
+  🎙️ (・_・) ...𝓌𝑜𝓌.</p>
+  <p>(￣_￣) ‥‥‥‥‥‥‥‥‥‥‥ 🕳️<br>
+  𝕤𝕠... 𝕨𝕙𝕒𝕥 𝕙𝕒𝕡𝕡𝕖𝕟𝕖𝕕 𝕟𝕖𝕩𝕥?</p>
+  <p>📰👩‍💼 (•̀ᴗ•́)و 📊 “so, Michael, it starts in 1987...”</p>
+  <p>🚇🔴 (˘ω˘)🎧 ᵒʰ ʷᵒʷ ʰᵐᵐ ʸᵉᵃʰ 🗣️</p>
+  <p>💳🛏️📦 (－‸ლ) ⏩⏩ +𝟹𝟶</p>
+  <p>🎙️ (・ω・) ...𝚑𝚎𝚛𝚎’𝚜 𝚠𝚑𝚊𝚝 𝚎𝚕𝚜𝚎 𝚢𝚘𝚞 𝚗𝚎𝚎𝚍 𝚝𝚘 𝚔𝚗𝚘𝚠 𝚝𝚘𝚍𝚊𝚢.<br>
+  🎹 ♪ ᵇᵘᵐ ᵇᵘᵐ ᵇᵘᵐ ♪</p>
+  <p>🚶‍♀️🌍 (ᵕ—ᴗ—) 🫠 ʷᵉˡˡ. ᵗʰᵃᵗ'ˢ ᵐʸ ᵐᵒʳⁿⁱⁿᵍ.</p>
+</div>
+
+<p class="sep">❦</p>
+
+<div class="kao">
+  <h2>Reviewer 2</h2>
+  <p>📧🔔 (・_・;) 🫀💓💓💓 Decision on Submission #4471</p>
+  <p>📝 (◕‿◕✿) 🌸 “Well-written and novel. Minor typos. Accept.”<br>
+  🥹💖 ✨</p>
+  <p>📝 (￣ー￣) 🤷 “Fine.”<br>
+  ˢᶜᵒʳᵉ: 𝟼 ⁽ᶜᵒⁿᶠⁱᵈᵉⁿᶜᵉ: ²⁾</p>
+  <p>⚡🌩️⚡<br>
+  ( ಠ ʖ̯ ಠ ) 🖋️🩸 𝕽𝖊𝖛𝖎𝖊𝖜𝖊𝖗 𝟐<br>
+  ⚡🌩️⚡</p>
+  <p>📜 (¬_¬ ) 𝘛𝘩𝘦 𝘢𝘶𝘵𝘩𝘰𝘳𝘴 𝘧𝘢𝘪𝘭 𝘵𝘰 𝘤𝘰𝘯𝘷𝘪𝘯𝘤𝘦...</p>
+  <p>📚👉 (≖‿≖) 𝘛𝘩𝘦 𝘢𝘶𝘵𝘩𝘰𝘳𝘴 𝘴𝘩𝘰𝘶𝘭𝘥 𝘤𝘪𝘵𝘦 [𝟣𝟦], [𝟣𝟩], [𝟤𝟥], [𝟤𝟪]...<br>
+  🔍 (all by the same author) 🕵️</p>
+  <p>🧪🧪🧪🧪🧪🧪 (｀Д´)ノ 𝘈𝘭𝘴𝘰 𝘳𝘶𝘯 𝘰𝘯 𝟣𝟪 𝘮𝘰𝘳𝘦 𝘥𝘢𝘵𝘢𝘴𝘦𝘵𝘴.<br>
+  💸⏳ (；ﾟдﾟ) 𝚠𝚒𝚝𝚑 𝚠𝚑𝚊𝚝 𝙶𝙿𝚄𝚜</p>
+  <p>❓📄 (￢_￢) “Have the authors considered X?”<br>
+  📄👉 §𝟑.𝟐 (ノಠ益ಠ)ノ彡┻━┻ 𝚆𝙴 𝙳𝙸𝙳</p>
+</div>
+
+<p class="sep">❦</p>
+
+<div class="kao">
+  <h2>The Wow! signal</h2>
+  <p>🖨️📜 ...1 1 1 1 ⑥ⒺⓆⓊⒿ⑤ 1 1 1...</p>
+  <p>🖊️ (ʘ‿ʘ) ⭕ 𝓦𝓸𝔀!</p>
+  <p>📡 〰️〰️〰️ 〜∿∿∿∿∿〜 ✦ ⋆｡˚ (◎_◎;) ⏱️</p>
+  <p>🔭 ( ・_・)ノ ⋆ ˚｡ 🌌 ...📶✖️ ...📶✖️ ...📶✖️</p>
+  <p>✧ ˚ · 👽👋 ⋆ ⊹ · ˚ ✶<br>
+  ᵍᵒᵗᵗᵃ ᵍᵒ ✌️</p>
+  <p>🌍 (｡•́︿•̀｡) 📻 𝚑𝚎𝚕𝚕𝚘?? 𝚌𝚊𝚕𝚕 𝚋𝚊𝚌𝚔?? 𝟷𝟺𝟸𝟶 𝙼𝙷𝚣 ☎️💫</p>
+</div>
 
 <hr>
 <p class="back"><a href="../">&larr; Back to the recursite</a></p>
