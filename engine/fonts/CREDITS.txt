@@ -21,8 +21,9 @@ in the collage; images remain available at their original resolution.
 Typography for Kaomoji Nonsense
 
 Glyph fallbacks, subset to the characters the page uses:
-JuliaMono-kaomoji.woff2 (math letters) is cut from JuliaMono, above.
-NotoSansEgyptianHieroglyphs-kaomoji.woff2 and NotoSansYi-kaomoji.woff2 are
-cut from Noto Sans Egyptian Hieroglyphs and Noto Sans Yi by the Noto Project.
+NotoSansMath-kaomoji.woff2 (math letters), NotoSansEgyptianHieroglyphs-kaomoji.woff2,
+NotoSansYi-kaomoji.woff2 and NotoSansOldTurkic-kaomoji.woff2 are cut from
+Noto Sans Math, Egyptian Hieroglyphs, Yi and Old Turkic by the Noto Project.
 https://notofonts.github.io/
 See Noto-OFL.txt.
+JuliaMono-kaomoji.woff2 (the pinned note's box) is cut from JuliaMono, above.

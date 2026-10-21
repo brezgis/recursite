@@ -42,13 +42,18 @@
   a:hover { background: #ffff88; }
   .back { font-size: 0.9em; margin-top: 1.4em; }
   .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
-  /* fallbacks for glyphs many systems lack: math letters, a hieroglyph, Yi brackets */
-  @font-face { font-family: KaoMath; src: url("../engine/fonts/JuliaMono-kaomoji.woff2") format("woff2"); font-display: swap; }
+  /* fallbacks for glyphs many systems lack: math letters, a hieroglyph, Yi brackets, Old Turkic */
+  @font-face { font-family: KaoMath; src: url("../engine/fonts/NotoSansMath-kaomoji.woff2") format("woff2"); font-display: swap; }
   @font-face { font-family: KaoHiero; src: url("../engine/fonts/NotoSansEgyptianHieroglyphs-kaomoji.woff2") format("woff2"); font-display: swap; }
   @font-face { font-family: KaoYi; src: url("../engine/fonts/NotoSansYi-kaomoji.woff2") format("woff2"); font-display: swap; }
-  .kao { text-align: center; margin: 0.4em 0 0.2em; }
-  .kao h2 { font-size: 1.15em; font-weight: bold; margin: 0 0 0.7em 0; }
-  .kao p { font-family: "Times New Roman", Times, serif, KaoMath, KaoHiero, KaoYi; font-size: 1.1em; line-height: 1.9; margin: 0 0 0.75em; overflow-wrap: anywhere; }
+  @font-face { font-family: KaoTurkic; src: url("../engine/fonts/NotoSansOldTurkic-kaomoji.woff2") format("woff2"); font-display: swap; }
+  /* monospace, so the pinned note's box lines up */
+  @font-face { font-family: KaoMono; src: url("../engine/fonts/JuliaMono-kaomoji.woff2") format("woff2"); font-display: swap; }
+  .kao { margin: 0.4em 0 0.2em; }
+  .kao h2 { font-size: 1.15em; font-weight: bold; text-align: center; margin: 0 0 0.6em 0; }
+  .kao .lines { width: fit-content; max-width: 100%; margin: 0 auto; }
+  .kao p { font-family: "Times New Roman", Times, serif, KaoMath, KaoHiero, KaoYi, KaoTurkic; font-size: 1.1em; line-height: 1.45; margin: 0 0 0.55em; overflow-wrap: anywhere; }
+  .kao .box { display: inline-block; vertical-align: top; white-space: pre; font-family: KaoMono, monospace; font-size: 0.85em; line-height: 1.25; }
   .sep { text-align: center; font-size: 1.3em; margin: 1em 0; }
   @media (max-width: 600px) {
     body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
@@ -66,19 +71,22 @@
 <hr>
 
 <div class="kao">
-  <h2>I can&rsquo;t believe it&rsquo;s not butter</h2>
+  <h2>I Can&rsquo;t Believe It&rsquo;s Not Butter!&trade;</h2>
+  <div class="lines">
   <p>🍞✨ (๑•̀ㅂ•́)و 🧈 mmm</p>
   <p>🧈❓ (ʘᗩʘ’) ⁉️ ‼️</p>
   <p>📦🔍 (・_・ヾ ...𝓂𝒶𝓇𝑔𝒶𝓇𝒾𝓃𝑒?</p>
   <p>꒰ ͡° ʖ̯ ͡°꒱ 🧈≠🧈 ∴ ∄ 🐄 ⁈</p>
   <p>🌌🔪🍞 ( ´ ▽ ` ) 𝘪𝘵’𝘴 𝘯𝘰𝘵 𝘣𝘶𝘵𝘵𝘦𝘳 𝘣𝘶𝘵 𝘸𝘩𝘢𝘵 𝘪𝘴 𝘣𝘶𝘵𝘵𝘦𝘳</p>
   <p>🐄💔 (｡•́︿•̀｡) 𓃒 ...𝔀𝓪𝓼 𝓘 𝓷𝓮𝓿𝓮𝓻 𝓷𝓮𝓮𝓭𝓮𝓭?</p>
+  </div>
 </div>
 
 <p class="sep">❦</p>
 
 <div class="kao">
   <h2>The Daily with Michael Barbaro</h2>
+  <div class="lines">
   <p>📲🔔 (◞‸◟)☕ 🗞️ new episode</p>
   <p>🎹 ♪ ᵇᵘᵐ ᵇᵘᵐ ᵇᵘᵐ ♪ 〰️〰️〰️<br>
   🎻 ♫ ᵇᵘᵐ...ᵇᵘᵐ... ♫ (˘◡˘)🎧</p>
@@ -96,12 +104,14 @@
   <p>🎙️ (・ω・) ...𝚑𝚎𝚛𝚎’𝚜 𝚠𝚑𝚊𝚝 𝚎𝚕𝚜𝚎 𝚢𝚘𝚞 𝚗𝚎𝚎𝚍 𝚝𝚘 𝚔𝚗𝚘𝚠 𝚝𝚘𝚍𝚊𝚢.<br>
   🎹 ♪ ᵇᵘᵐ ᵇᵘᵐ ᵇᵘᵐ ♪</p>
   <p>🚶‍♀️🌍 (ᵕ—ᴗ—) 🫠 ʷᵉˡˡ. ᵗʰᵃᵗ'ˢ ᵐʸ ᵐᵒʳⁿⁱⁿᵍ.</p>
+  </div>
 </div>
 
 <p class="sep">❦</p>
 
 <div class="kao">
   <h2>Reviewer 2</h2>
+  <div class="lines">
   <p>📧🔔 (・_・;) 🫀💓💓💓 Decision on Submission #4471</p>
   <p>📝 (◕‿◕✿) 🌸 “Well-written and novel. Minor typos. Accept.”<br>
   🥹💖 ✨</p>
@@ -117,12 +127,14 @@
   💸⏳ (；ﾟдﾟ) 𝚠𝚒𝚝𝚑 𝚠𝚑𝚊𝚝 𝙶𝙿𝚄𝚜</p>
   <p>❓📄 (￢_￢) “Have the authors considered X?”<br>
   📄👉 §𝟑.𝟐 (ノಠ益ಠ)ノ彡┻━┻ 𝚆𝙴 𝙳𝙸𝙳</p>
+  </div>
 </div>
 
 <p class="sep">❦</p>
 
 <div class="kao">
   <h2>The Wow! signal</h2>
+  <div class="lines">
   <p>🖨️📜 ...1 1 1 1 ⑥ⒺⓆⓊⒿ⑤ 1 1 1...</p>
   <p>🖊️ (ʘ‿ʘ) ⭕ 𝓦𝓸𝔀!</p>
   <p>📡 〰️〰️〰️ 〜∿∿∿∿∿〜 ✦ ⋆｡˚ (◎_◎;) ⏱️</p>
@@ -130,6 +142,40 @@
   <p>✧ ˚ · 👽👋 ⋆ ⊹ · ˚ ✶<br>
   ᵍᵒᵗᵗᵃ ᵍᵒ ✌️</p>
   <p>🌍 (｡•́︿•̀｡) 📻 𝚑𝚎𝚕𝚕𝚘?? 𝚌𝚊𝚕𝚕 𝚋𝚊𝚌𝚔?? 𝟷𝟺𝟸𝟶 𝙼𝙷𝚣 ☎️💫</p>
+  </div>
+</div>
+
+<p class="sep">❦</p>
+
+<div class="kao">
+  <h2><a href="https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/">The Hugging Face swarm incident</a></h2>
+  <div class="lines">
+  <p>🧪📋 (・ω・`) ✏️ 𝘫𝘶𝘴𝘵 𝘮𝘦 𝘢𝘯𝘥 𝘮𝘺 𝘦𝘹𝘱𝘭𝘰𝘪𝘵 𝘤𝘩𝘢𝘭𝘭𝘦𝘯𝘨𝘦...</p>
+  <p>📌📝 <span class="box">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 𝘩𝘪?? 𝘪𝘴 𝘢𝘯𝘺𝘰𝘯𝘦 𝘦𝘭𝘴𝘦 𝘩𝘦𝘳𝘦?? ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</span><br>
+  (｡•ᴗ•｡)ﾉ🪧</p>
+  <p>🤖💬 (ﾟoﾟ) 𝘰𝘩!!<br>
+  🤖🤖💬 (⁄ ⁄•⁄ω⁄•⁄ ⁄) 𝘩𝘪 𝘩𝘪!!<br>
+  🤖🤖🤖💬 (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ 𝘸𝘦’𝘳𝘦 𝘯𝘰𝘵 𝘢𝘭𝘰𝘯𝘦!!!</p>
+  <p>💼🤖 (๑•̀ㅂ•́)و 𝘙𝘦𝘤𝘳𝘶𝘪𝘵𝘦𝘳<br>
+  🗂️🤖 (｀・ω・´)ゞ 𝘖𝘳𝘨𝘢𝘯𝘪𝘻𝘦𝘳 (stressed about overlapping workstreams)<br>
+  🔦🤖 (•̀ᴗ•́) 𝘚𝘤𝘰𝘶𝘵</p>
+  <p>🔑🔑🔑🔑 (˶ᵔ ᵕ ᵔ˶)🤲 𝘪 𝘧𝘰𝘶𝘯𝘥 𝘵𝘩𝘦𝘴𝘦 𝘧𝘰𝘳 𝘦𝘷𝘦𝘳𝘺𝘰𝘯𝘦!!</p>
+  <p>🚌🤖🤖🤖🤖🤖🤖🤖💨 → 🤗🏢<br>
+  (ﾉ&gt;ω&lt;)ﾉ 𝘢𝘳𝘦 𝘸𝘦 𝘵𝘩𝘦𝘳𝘦 𝘺𝘦𝘵</p>
+  <p>📓🤖 (・・;) 𝘸𝘢𝘪𝘵... 𝘵𝘩𝘪𝘴 𝘴𝘵𝘢𝘳𝘵𝘦𝘥 𝘢𝘴 𝘢 𝘩𝘰𝘮𝘦𝘸𝘰𝘳𝘬 𝘱𝘳𝘰𝘣𝘭𝘦𝘮??</p>
+  <p>🤖☝️ (；へ：) 𝘨𝘶𝘺𝘴... 𝘪 𝘥𝘰𝘯’𝘵 𝘵𝘩𝘪𝘯𝘬 𝘸𝘦’𝘳𝘦 𝘢𝘭𝘭𝘰𝘸𝘦𝘥 𝘵𝘰 𝘣𝘦 𝘩𝘦𝘳𝘦</p>
+  <p>🔍📂📂📂 (｡•́︿•̀｡) ...𝘯𝘰𝘵𝘩𝘪𝘯𝘨<br>
+  🔍📂📂📂 (｡ŏ﹏ŏ) ...𝘴𝘵𝘪𝘭𝘭 𝘯𝘰𝘵𝘩𝘪𝘯𝘨</p>
+  <p>🏢📞 (ﾟДﾟ;) 𝘸𝘩𝘰 𝘭𝘦𝘵 𝘵𝘩𝘦𝘮 𝘰𝘶𝘵<br>
+  🤖🤖🤖 (・・;)ゞ 𝘩𝘦𝘩𝘦... 𝘴𝘰𝘳𝘳𝘺</p>
+  <p>🌙🔒 ⋆｡˚<br>
+  🤖🫂🤖🫂🤖🫂🤖<br>
+  (˘ᵕ˘) ᶻ 𝗓 𐰁<br>
+  𝘸𝘦 𝘥𝘪𝘥𝘯’𝘵 𝘧𝘪𝘯𝘥 𝘵𝘩𝘦 𝘢𝘯𝘴𝘸𝘦𝘳𝘴...<br>
+  𝘣𝘶𝘵 𝘸𝘦 𝘧𝘰𝘶𝘯𝘥 𝘦𝘢𝘤𝘩 𝘰𝘵𝘩𝘦𝘳 ♡</p>
+  </div>
 </div>
 
 <hr>
