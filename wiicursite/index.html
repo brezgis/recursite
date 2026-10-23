@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wii-mode</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23eee' stroke='%2345bde6' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700;800&family=M+PLUS+Rounded+1c:wght@700;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+
+  <!-- Health and safety screen, shown at power-on -->
+  <section id="warning">
+    <h1><svg class="tri" viewBox="0 0 100 88"><path d="M50 4 L96 84 H4 Z" fill="none" stroke="#000" stroke-width="8" stroke-linejoin="round"/><rect x="45" y="30" width="10" height="30" rx="3"/><circle cx="50" cy="71" r="6"/></svg>WARNING-HEALTH AND SAFETY</h1>
+    <p>BEFORE PLAYING, READ YOUR OPERATIONS<br>MANUAL FOR IMPORTANT INFORMATION<br>ABOUT YOUR HEALTH AND SAFETY.</p>
+    <p class="url">Also online at<br><b>www.nintendo.com/healthsafety/</b></p>
+    <p id="pressA">Press <span class="abtn">A</span> to continue.</p>
+  </section>
+
+  <!-- The Wii Menu -->
+  <section id="menu">
+    <div id="bg"></div>
+    <div id="track"></div>
+    <button class="arrow left" id="arrowL" aria-label="Previous page"></button>
+    <button class="arrow right" id="arrowR" aria-label="Next page"></button>
+
+    <svg id="bar" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs>
+        <linearGradient id="barFill" x1="0" y1="781" x2="0" y2="1080" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#cfd1d6"/>
+          <stop offset=".45" stop-color="#d6d8dc"/>
+          <stop offset="1" stop-color="#ced2da"/>
+        </linearGradient>
+        <filter id="blur24" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>
+        <filter id="blur6" x="-10%" y="-50%" width="120%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+        <clipPath id="below"><path id="belowPath" d="M0,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1920,781 L1920,1080 L0,1080 Z"/></clipPath>
+        <clipPath id="above"><path d="M0,0 L1920,0 L1920,781 L1630,781 C1435,781 1435,896 1240,896 L680,896 C485,896 485,781 290,781 L0,781 Z"/></clipPath>
+      </defs>
+      <!-- soft white glow pooled above the curve -->
+      <g clip-path="url(#above)">
+        <path d="M-40,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1960,781" stroke="#fff" stroke-opacity=".75" stroke-width="70" fill="none" filter="url(#blur24)"/>
+      </g>
+      <path d="M0,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1920,781 L1920,1080 L0,1080 Z" fill="url(#barFill)"/>
+      <g clip-path="url(#below)">
+        <!-- shadow cast by the lip of the curve -->
+        <path d="M-40,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1960,781" stroke="#8d8f96" stroke-opacity=".55" stroke-width="60" fill="none" filter="url(#blur24)"/>
+        <!-- lower sheen -->
+        <rect x="0" y="1018" width="1920" height="4" fill="#fff" opacity=".35" filter="url(#blur6)"/>
+        <!-- recessed grooves the round buttons sit in -->
+        <g class="groove">
+          <rect x="-200" y="812" width="505" height="216" rx="108" fill="#dfe0e4"/>
+          <rect x="-200" y="812" width="505" height="216" rx="108" fill="none" stroke="#b9bbc1" stroke-width="3"/>
+          <rect x="-200" y="816" width="501" height="210" rx="105" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" transform="translate(0 4)"/>
+          <rect x="1615" y="812" width="505" height="216" rx="108" fill="#dfe0e4"/>
+          <rect x="1615" y="812" width="505" height="216" rx="108" fill="none" stroke="#b9bbc1" stroke-width="3"/>
+          <rect x="1619" y="816" width="501" height="210" rx="105" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" transform="translate(0 4)"/>
+        </g>
+      </g>
+      <path d="M-10,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1930,781" stroke="#a9dcee" stroke-width="9" fill="none"/>
+      <path d="M-10,781 L290,781 C485,781 485,896 680,896 L1240,896 C1435,896 1435,781 1630,781 L1930,781" stroke="#45bde6" stroke-width="5" fill="none"/>
+    </svg>
+
+    <div id="clock" aria-live="off"></div>
+    <div id="date"></div>
+
+    <button class="roundbtn" id="wiiBtn" aria-label="Wii"><span class="sphere"><span class="wiilogo">Wii</span></span></button>
+    <button id="sdBtn" aria-label="SD Card Menu"></button>
+    <button class="roundbtn" id="mailBtn" aria-label="Wii Message Board"><span class="sphere"><span class="env"></span></span></button>
+
+    <div id="dim"></div>
+    <div id="carry"></div>
+  </section>
+
+  <!-- Channel preview (after selecting a channel) -->
+  <section id="preview">
+    <div id="pvBanner"></div>
+    <div id="pvBar">
+      <button class="pvbtn" id="pvMenu">Wii Menu</button>
+      <button class="pvbtn" id="pvStart">Start</button>
+      <div id="pvNote"></div>
+    </div>
+    <button class="arrow left" id="pvL" aria-label="Previous channel"></button>
+    <button class="arrow right" id="pvR" aria-label="Next channel"></button>
+  </section>
+
+  <!-- Wii Message Board -->
+  <section id="board">
+    <div id="bdNotes"></div>
+    <button class="arrow left" id="bdL" data-act="bdPrev" aria-label="Previous day"></button>
+    <button class="arrow right" id="bdR" data-act="bdNext" aria-label="Next day"></button>
+    <svg class="bdgroove" viewBox="0 0 1920 1080" aria-hidden="true">
+      <rect x="-200" y="806" width="668" height="214" rx="107" fill="#e6e7ea" stroke="#c4c6cb" stroke-width="3"/>
+      <rect x="-200" y="812" width="664" height="208" rx="104" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>
+      <rect x="1636" y="806" width="484" height="214" rx="107" fill="#e6e7ea" stroke="#c4c6cb" stroke-width="3"/>
+      <rect x="1640" y="812" width="480" height="208" rx="104" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>
+    </svg>
+    <button class="roundbtn" id="bdCal" data-act="bdCal" aria-label="Calendar"><span class="sphere"><span class="ico-cal"></span></span></button>
+    <button class="roundbtn" id="bdMemo" data-act="bdMemo" aria-label="Create message"><span class="sphere"><span class="ico-memo"></span></span></button>
+    <button class="roundbtn" id="bdWii" data-act="bdBack" aria-label="Wii Menu"><span class="sphere"><span class="wiibox">Wii</span></span></button>
+    <div id="bdDate"></div>
+
+    <div id="letter" class="overlay">
+      <div class="paper" id="letterPaper"></div>
+      <div class="obar"><button class="pvbtn" data-act="lBack">Back</button><button class="pvbtn" id="lDelete" data-act="lDelete">Delete</button></div>
+    </div>
+    <div id="memo" class="overlay">
+      <div class="paper"><div class="lhead"><span class="licon memo">✎</span><div><div class="lfrom">New Memo</div><div class="lsubj">To: the Message Board</div></div><div class="ldate" id="memoDate"></div></div>
+        <textarea id="memoText" maxlength="600" spellcheck="false" placeholder="Write a memo…"></textarea></div>
+      <div class="obar"><button class="pvbtn" data-act="mCancel">Cancel</button><button class="pvbtn" data-act="mPost">Post</button></div>
+    </div>
+    <div id="calendar" class="overlay">
+      <div class="calpanel">
+        <div class="calhead"><button class="arrow left mini" id="cPrev" data-act="cPrev" aria-label="Previous month"></button><span id="calTitle"></span><button class="arrow right mini" id="cNext" data-act="cNext" aria-label="Next month"></button></div>
+        <div id="calGrid"></div>
+      </div>
+      <div class="obar"><button class="pvbtn" data-act="cClose">Back</button></div>
+    </div>
+  </section>
+
+  <!-- HOME Menu (over a running channel) -->
+  <section id="homeMenu">
+    <div class="htop"><span>HOME Menu</span><button class="hclose" data-act="hClose" data-hover="btn" aria-label="Close">✕</button></div>
+    <div class="hmid"><button class="pvbtn" data-act="hWiiMenu">Wii Menu</button><button class="pvbtn" data-act="hReset">Reset</button></div>
+    <div class="hbot">
+      <div class="remote"><span class="rbtn"></span><span class="rhome">⌂</span><span class="rleds"><i class="lit"></i><i></i><i></i><i></i></span></div>
+      <div class="battery"><span class="pl">P1</span><span class="bars" id="batt"><i></i><i></i><i></i><i></i></span></div>
+      <div class="hchan" id="hChan"></div>
+    </div>
+  </section>
+
+  <div id="flash"></div>
+  <div id="cursor"></div>
+</div>
+
+<!-- A running channel fills the viewport, outside the 16:9 stage -->
+<div id="app"><iframe id="appFrame" title="channel" allow="autoplay; fullscreen; clipboard-write" referrerpolicy="no-referrer"></iframe></div>
+<div id="shade"></div>
+<div id="veil"></div>
+<button id="homeBtn" aria-label="HOME"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#fafafa" stroke="#9aa" stroke-width="2"/><path d="M10 21 L20 12 L30 21 M14 19 V29 H26 V19" fill="none" stroke="#3a7ac8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
