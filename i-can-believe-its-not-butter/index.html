@@ -45,9 +45,15 @@
   .butter { text-align: center; }
   .butter img { max-width: 100%; height: auto; vertical-align: middle; }
   .butter .line { font-size: 1.5em; font-weight: bold; margin: 0.9em 0; }
-  .butter .photo { display: inline-block; width: 440px; max-width: 92%; border: 2px solid #000; box-shadow: 5px 5px 0 #c9b84a; margin: 0.5em 0 0.9em; }
-  .butter .photo img { display: block; width: 100%; }
-  .butter .tub { width: 360px; max-width: 80%; margin: 0.4em 0 0; }
+  /* framed photos share one height so the row and the lone stick match */
+  .butter .photos { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 1.4em; margin: 0.9em 0 1.3em; }
+  .butter .photo { background: #ffffff; border: 2px solid #000; box-shadow: 5px 5px 0 #c9b84a; }
+  .butter .photo img { display: block; height: 210px; width: auto; }
+  .butter .photo.tub img { padding: 10px 14px; height: 190px; }
+  .butter .photo.tall img { height: 340px; }
+  .butter .jail { display: flex; justify-content: center; align-items: center; gap: 0.7em; margin: 1.3em 0; }
+  .butter .jail .line { margin: 0; }
+  .butter .jail img { width: 96px; border: 1px solid #000; }
   /* WordArt, the 1997 kind */
   .wordart { font-family: Impact, "Arial Black", Haettenschweiler, sans-serif; font-weight: 900; line-height: 1.05; margin: 0.5em 0; letter-spacing: 0.02em; }
   .wa-rainbow {
@@ -76,9 +82,6 @@
   }
   .law blockquote { margin: 0.5em 0; font-style: italic; }
   .law .src { text-align: right; font-size: 0.85em; }
-  .jail { margin: -0.4em auto 0.6em; width: 220px; max-width: 70%; }
-  .jail img { display: block; width: 100%; border: 1px solid #000; }
-  .jail .cap { font-size: 0.85em; font-style: italic; margin-top: 0.25em; }
   .credits { margin: 4em 0 0.5em; font-size: 0.8em; color: #4a4a3a; line-height: 1.6; }
   @media (max-width: 600px) {
     body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
@@ -87,6 +90,9 @@
     .wa-rainbow { font-size: 2.2em; }
     .wa-never { font-size: 2.1em; }
     .butter .line { font-size: 1.25em; }
+    .butter .photo img, .butter .photo.tub img { height: auto; width: 100%; box-sizing: border-box; }
+    .butter .photo { width: 92%; }
+    .butter .jail img { width: 72px; }
   }
 </style>
 </head>
@@ -101,18 +107,22 @@
 <div class="butter">
   <div class="wordart wa-rainbow">You know what?</div>
 
-  <p><img class="tub" src="img/icbinb.png" width="500" height="313" alt="A tub of I Can&rsquo;t Believe It&rsquo;s Not Butter!"></p>
-
   <p class="line">I <span style="color: #ff0000">can</span> believe that it&rsquo;s not butter.</p>
 
-  <span class="photo"><img src="img/notbutter.jpg" width="500" height="332" alt="A tub of Taiwanese margarine whose lid reads &ldquo;Unbelieveable This is not butter&rdquo;"></span>
+  <div class="photos">
+    <span class="photo tub"><img src="img/icbinb.png" width="500" height="313" alt="A tub of I Can&rsquo;t Believe It&rsquo;s Not Butter!"></span>
+    <span class="photo"><img src="img/notbutter.jpg" width="500" height="332" alt="A tub of Taiwanese margarine whose lid reads &ldquo;Unbelieveable This is not butter&rdquo;"></span>
+  </div>
 
   <p class="line">It doesn&rsquo;t melt at room temperature.</p>
 
   <p class="line">It&rsquo;s not appropriately salted.</p>
 
   <p class="line">It tastes of disappointment and an outdated belief that saturated fats and cholesterols must be avoided at all costs.</p>
-  <span class="photo"><img src="img/stick.jpg" width="500" height="333" alt="A wrapped stick of salted butter"></span>
+
+  <div class="photos">
+    <span class="photo tall"><img src="img/delrich.jpg" width="960" height="1293" alt="A 1948 magazine ad for Delrich E-Z Color Pak Margarine: squeeze the color berry, knead the bag"></span>
+  </div>
 
   <div class="law">
     <blockquote>&ldquo;The serving of colored oleomargarine or margarine at a public eating place as a substitute for table butter is prohibited unless it is ordered by the customer.&rdquo;</blockquote>
@@ -122,8 +132,8 @@
   </div>
 
   <div class="jail">
+    <p class="line">Put them in JAIL.</p>
     <img src="img/right-to-jail.jpg" width="480" height="330" alt="Fred Armisen as President Antonio in Parks and Recreation, pointing: &ldquo;Right to jail&rdquo;">
-    <div class="cap">Put them in JAIL.</div>
   </div>
 
   <div class="wordart wa-never">I will never believe that it is butter.</div>
@@ -131,7 +141,7 @@
   <p class="credits">
     I Can&rsquo;t Believe It&rsquo;s Not Butter! tub from <a href="https://www.icantbelieveitsnotbutter.com/">icantbelieveitsnotbutter.com</a><br>
     &ldquo;<a href="https://commons.wikimedia.org/wiki/File:Unbelievable_This_is_not_butter_(51105053).jpg">Unbelievable This is not butter</a>&rdquo; by Wm Jas, CC BY-SA 2.0<br>
-    <a href="https://commons.wikimedia.org/wiki/File:Stick-of-butter-salted.jpg">Stick of butter</a>, CC0<br>
+    &ldquo;<a href="https://commons.wikimedia.org/wiki/File:Delrich_E-Z_Color_Pak_Margarine,_1948.jpg">Delrich E-Z Color Pak Margarine</a>,&rdquo; Cudahy Packing Co. advertisement, 1948, public domain<br>
     &ldquo;Right to jail,&rdquo; <i>Parks and Recreation</i>, NBC
   </p>
 </div>
