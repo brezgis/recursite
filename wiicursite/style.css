@@ -377,21 +377,25 @@ body.running:not(.home) #homeBtn { display: block; }
 .fog.f2 { top: 66%; animation-duration: 15s; animation-direction: alternate-reverse; opacity: .7; }
 @keyframes fog { from { transform: translateX(-12%) } to { transform: translateX(12%) } }
 /* snow-globe: falling snow */
-.snow { position: absolute; inset: 0; z-index: 3; opacity: .85;
-  background-image: radial-gradient(circle at 20% 30%, #fff 0 .45cqw, transparent .55cqw), radial-gradient(circle at 70% 60%, #fff 0 .3cqw, transparent .4cqw),
-    radial-gradient(circle at 45% 80%, rgba(255,255,255,.7) 0 .25cqw, transparent .35cqw);
-  background-size: 17cqw 23cqh, 13cqw 31cqh, 23cqw 19cqh; animation: snow 7s linear infinite; }
-@keyframes snow { to { background-position: 4cqw 92cqh, -3cqw 124cqh, 6cqw 76cqh } }
+.snow { position: absolute; inset: 0; z-index: 3; opacity: .85; overflow: hidden; }
+/* two snow layers, each one tile pattern on a strip 100cqh taller than the banner, slid down by exactly 100cqh:
+   a transform loop (composited), not background-position (which repaints and restyles every frame) */
+.snow i { position: absolute; left: 0; right: 0; top: -100cqh; height: 200cqh; will-change: transform;
+  background-image: radial-gradient(circle at 20% 30%, #fff 0 .45cqw, transparent .55cqw), radial-gradient(circle at 70% 70%, rgba(255,255,255,.75) 0 .3cqw, transparent .4cqw);
+  background-size: 17cqw 25cqh, 13cqw 20cqh; animation: snow 7s linear infinite; }
+.snow i + i { background-size: 23cqw 20cqh, 11cqw 25cqh; background-position: 6cqw 7cqh, 2cqw 11cqh; animation-duration: 10s; }
+@keyframes snow { from { transform: translateY(0) } to { transform: translateY(100cqh) } }
 /* corpora café: steam made of frequent words */
 .steam { position: relative; height: 22cqh; font: 700 3.6cqw/1 "M PLUS Rounded 1c", sans-serif; color: rgba(138,85,48,.7); }
 .steam span { position: absolute; left: 50%; bottom: 0; animation: steam 4.5s ease-out infinite; opacity: 0; }
 .steam span:nth-child(2) { animation-delay: 1.5s; } .steam span:nth-child(3) { animation-delay: 3s; }
 @keyframes steam { 0% { opacity: 0; transform: translate(-50%,0) } 20% { opacity: 1 } 100% { opacity: 0; transform: translate(-20%,-18cqh) } }
 /* flockquarium: rising bubbles */
-.bubbles { position: absolute; inset: 0; opacity: .7;
+.bubbles { position: absolute; inset: 0; opacity: .7; overflow: hidden; }
+.bubbles i { position: absolute; left: 0; right: 0; top: 0; height: 164cqh; will-change: transform;
   background-image: radial-gradient(circle, transparent 0 .6cqw, rgba(255,255,255,.9) .65cqw .85cqw, transparent .9cqw);
   background-size: 13cqw 16cqh; animation: bub 5s linear infinite; }
-@keyframes bub { to { background-position: 0 -64cqh } }
+@keyframes bub { from { transform: translateY(0) } to { transform: translateY(-64cqh) } }
 /* fly-paradise: a sun with soft rays */
 .sun { position: absolute; right: 6%; top: 8%; width: 14cqw; aspect-ratio: 1; border-radius: 50%;
   background: radial-gradient(circle, #fffbe0 0 35%, rgba(255,240,160,.6) 45%, transparent 70%); animation: pnPulse 3s ease-in-out infinite alternate; }

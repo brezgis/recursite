@@ -85,7 +85,7 @@ function brezgiLv() {
 function snowGlobe() {
   return banner({ bg: 'radial-gradient(100% 120% at 50% 30%, #2f4f8f 0, #15254e 70%)', tint: '#1f3366' },
     pane('snowglobe', { x: 50, y: 58, w: 36, anim: 'sway', dur: 4, amp: .6 }),
-    `<div class="snow"></div>`,
+    `<div class="snow"><i></i><i></i></div>`,
     wtitle('snow-globe', { x: 50, y: 13, size: 9, dark: true }));
 }
 
@@ -129,7 +129,7 @@ function petroglyphs() {
 
 function flockquarium() {
   return banner({ bg: 'radial-gradient(110% 120% at 50% 40%, #e6f8ff 0, #9edcf5 60%, #4fb3e0 100%)', tint: '#9ad8f0', scan: true },
-    `<div class="bubbles"></div>`,
+    `<div class="bubbles"><i></i></div>`,
     pane('fishbowl', { x: 50, y: 58, w: 36, anim: 'pulse', dur: 3, reflect: true }),
     wtitle('What the flock?!', { x: 50, y: 13, size: 8, dark: true }));
 }

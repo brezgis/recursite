@@ -114,7 +114,7 @@ function setAnimating(el, on) {
   el.querySelectorAll('svg').forEach((s) => s.pauseAnimations && (on ? s.unpauseAnimations() : s.pauseAnimations()));
 }
 function updateAnimations() {
-  const menuShowing = ['menu', 'zoom', 'fading', 'closing'].includes(mode) && !$('#preview').classList.contains('on') && !$('#board').classList.contains('on');
+  const menuShowing = ['menu', 'zoom', 'fading', 'closing'].includes(mode) && !$('#preview').classList.contains('on') && !$('#board').classList.contains('on') && !$('#rii').classList.contains('on') && !$('#sd').classList.contains('on');
   tiles.forEach((t, i) => setAnimating(t, menuShowing && onScreen(i)));
 }
 function markLive() {
@@ -398,12 +398,12 @@ function leaveBoard() {
 function showScreen(id) {
   sfx.select(); mode = 'zoom';
   $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { $('#' + id).classList.add('on'); mode = id; refreshHover(); }, 260);
+  setTimeout(() => { $('#' + id).classList.add('on'); mode = id; updateAnimations(); refreshHover(); }, 260);
 }
 function hideScreen(id) {
   sfx.back(); mode = 'zoom';
   $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { $('#' + id).classList.remove('on'); mode = 'menu'; refreshHover(); }, 260);
+  setTimeout(() => { $('#' + id).classList.remove('on'); mode = 'menu'; updateAnimations(); refreshHover(); }, 260);
 }
 function riiView(v) {   // 'main' | 'data' | 'ask'
   $('#riiMain').hidden = v !== 'main'; $('#riiDataCards').hidden = v !== 'data'; $('#riiAsk').hidden = v !== 'ask';
