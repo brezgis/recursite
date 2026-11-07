@@ -78,7 +78,9 @@ let lastT = '';
 // ---------- channel layout ----------
 let layout;
 try { layout = JSON.parse(localStorage.getItem('wii-mode-layout')); } catch { }
-if (!Array.isArray(layout) || layout.length !== 48 || layout[0] !== 'disc' || !layout.every((id) => id === null || CHANNELS[id]) || DEFAULT_LAYOUT.some((id) => id && !layout.includes(id))) layout = [...DEFAULT_LAYOUT];
+if (!Array.isArray(layout) || layout.length !== 48 || layout[0] !== 'disc' || !layout.every((id) => id === null || CHANNELS[id])) layout = [...DEFAULT_LAYOUT];
+// channels added since the layout was saved go into the first empty slots
+DEFAULT_LAYOUT.forEach((id) => { if (id && !layout.includes(id)) { const k = layout.indexOf(null); if (k < 0) layout = [...DEFAULT_LAYOUT]; else layout[k] = id; } });
 const save = () => { try { localStorage.setItem('wii-mode-layout', JSON.stringify(layout)); } catch { } };
 
 let page = 0;
@@ -229,6 +231,8 @@ function tileTransform(slot) {
 function paintBackdrop(canvas, art) {
   const g = canvas.getContext('2d');
   g.fillStyle = '#f2f2f2'; g.fillRect(0, 0, 48, 25);
+  const tint = art.match(/^<div class="wb[^>]*data-tint="([^"]+)"/);
+  if (tint) { g.fillStyle = tint[1]; g.fillRect(0, 0, 48, 25); return; }
   if (!art.startsWith('<svg')) return;
   const img = new Image();
   img.onload = () => g.drawImage(img, 0, 0, 48, 25);
