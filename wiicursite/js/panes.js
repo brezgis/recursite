@@ -13,7 +13,7 @@ export function banner({ bg = '#fff', tint = '#f2f2f2', scan = false, cls = '' }
 export function pane(name, { x = 50, y = 50, w = 40, anim = '', dur = 4, delay = 0, rot = 0, flip = false, z = 1, reflect = false, op = 1, amp = 1 } = {}) {
   const outer = `left:${x}%;top:${y}%;width:${w}cqw;z-index:${z};opacity:${op};transform:translate(-50%,-50%) rotate(${rot}deg)${flip ? ' scaleX(-1)' : ''}`;
   const inner = `--d:${dur}s;--dl:${delay}s;--amp:${amp}`;
-  return `<div class="pn${reflect ? ' rf' : ''}" style="${outer}"><img class="${anim ? 'a-' + anim : ''}" style="${inner}" src="img/${name}.webp" alt="" draggable="false"></div>`;
+  return `<div class="pn${reflect ? ' rf' : ''}" style="${outer}"><img class="${anim ? 'a-' + anim : ''}" style="${inner}" src="img/sm/${name}.webp" alt="" draggable="false" loading="lazy" decoding="async"></div>`;
 }
 
 // Any HTML in a positioned box (text overlays, CSS shapes), animated like a pane.
@@ -32,8 +32,10 @@ export function wtitle(text, { x = 50, y = 22, size = 9, dark = false, color = '
 export const glint = (dur = 5, delay = 1) => `<div class="glint" style="--d:${dur}s;--dl:${delay}s"></div>`;
 
 // Small twinkling sparkles scattered over an area (x0..x1, y0..y1 in %).
+const starURL = (c) => `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M10 0 L11.3 8.7 L20 10 L11.3 11.3 L10 20 L8.7 11.3 L0 10 L8.7 8.7Z' fill='${c}'/><circle cx='10' cy='10' r='2.2' fill='${c}'/></svg>`)}")`;
 export function sparkles(n, { x0 = 0, x1 = 100, y0 = 0, y1 = 100, color = '#fff', size = 1.6, seed = 7 } = {}) {
   let s = seed;
+  const star = starURL(color);
   const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
-  return Array.from({ length: n }, () => `<i class="spk" style="left:${(x0 + r() * (x1 - x0)).toFixed(1)}%;top:${(y0 + r() * (y1 - y0)).toFixed(1)}%;--s:${(size * (.6 + r() * .8)).toFixed(2)}cqw;--d:${(1.6 + r() * 2.4).toFixed(2)}s;--dl:${(-r() * 4).toFixed(2)}s;color:${color}"></i>`).join('');
+  return Array.from({ length: n }, () => `<i class="spk" style="left:${(x0 + r() * (x1 - x0)).toFixed(1)}%;top:${(y0 + r() * (y1 - y0)).toFixed(1)}%;--s:${(size * (.6 + r() * .8)).toFixed(2)}cqw;--d:${(1.6 + r() * 2.4).toFixed(2)}s;--dl:${(-r() * 4).toFixed(2)}s;--star:${star.replace(/"/g, '&quot;')}"></i>`).join('');
 }

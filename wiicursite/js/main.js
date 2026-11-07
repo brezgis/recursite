@@ -15,12 +15,16 @@ const slotXY = (i) => {
 
 // ---------- stage scaling + pointer ----------
 let scale = 1, offX = 0, offY = 0;
+// Size from the visual viewport: on phones the 1920px stage can widen the layout viewport (innerWidth),
+// which would scale everything for a screen that is not there.
 function fit() {
-  scale = Math.min(innerWidth / 1920, innerHeight / 1080);
-  offX = (innerWidth - 1920 * scale) / 2; offY = (innerHeight - 1080 * scale) / 2;
+  const vw = window.visualViewport ? visualViewport.width : document.documentElement.clientWidth;
+  const vh = window.visualViewport ? visualViewport.height : document.documentElement.clientHeight;
+  scale = Math.min(vw / 1920, vh / 1080);
+  offX = (vw - 1920 * scale) / 2; offY = (vh - 1080 * scale) / 2;
   stage.style.transform = `translate(${offX}px, ${offY}px) scale(${scale})`;
 }
-addEventListener('resize', fit); fit();
+addEventListener('resize', fit); window.visualViewport?.addEventListener('resize', fit); fit();
 const toStage = (e) => ({ x: (e.clientX - offX) / scale, y: (e.clientY - offY) / scale });
 
 const HAND = `<svg viewBox="0 0 96 128"><defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1">
@@ -182,6 +186,7 @@ function hoverAt(x, y) {
   if (t === hovered) return;
   if (hovered) hovered.classList.remove('hover');
   hovered = t;
+  if (t && t.dataset.slot != null) prefetchFull(t);
   if (t) {
     t.classList.add('hover');
     if (t.matches('.roundbtn, #sdBtn, .pvbtn, .hclose')) sfx.hoverBtn(); else sfx.hover();
@@ -190,6 +195,17 @@ function hoverAt(x, y) {
   if (carrying && t && t.classList.contains('arrow')) {
     arrowTimer = setTimeout(() => { arrowTimer = null; goPage(page + (t.id === 'arrowR' ? 1 : -1)); }, 650);
   }
+}
+// Tiles' sprites are loading="lazy" so page 1 gets the bandwidth first; once the page has loaded,
+// the other pages fill in behind it, so turning the page never shows a banner popping in.
+const eagerAll = () => document.querySelectorAll('#track img[loading="lazy"]').forEach((im) => { im.loading = 'eager'; });
+if (document.readyState === 'complete') setTimeout(eagerAll, 300); else addEventListener('load', () => setTimeout(eagerAll, 300));
+// Hovering a channel fetches its full-size sprites, so the preview opens sharp.
+const fetched = new Set();
+function prefetchFull(tile) {
+  const urls = [...tile.querySelectorAll('img')].map((i) => i.getAttribute('src'))
+    .concat((tile.innerHTML.match(/img\/sm\/[\w-]+\.webp/g) || [])).filter((u) => u && u.includes('img/sm/')).map((u) => u.replace('img/sm/', 'img/'));
+  for (const u of urls) if (!fetched.has(u)) { fetched.add(u); const im = new Image(); im.decoding = 'async'; im.src = u; }
 }
 const refreshHover = () => { if (hovered) hovered.classList.remove('hover'); hovered = null; setTimeout(() => hoverAt(px, py), 450); };
 let arrowTimer = null;
@@ -249,7 +265,7 @@ function buildPreview(slot) {
   pvSlot = slot;
   const ch = CHANNELS[layout[slot]];
   // banners keep their tile shape; a blurred copy fills the wider preview screen
-  const art = ch.art();
+  const art = ch.art().replaceAll('img/sm/', 'img/');   // tiles use small sprites; the full-screen preview the full ones
   $('#pvBanner').innerHTML = `<canvas class="pvback" width="48" height="25"></canvas><div class="pvfront">${art}</div>` + (ch.msg ? `<div class="pvmsg">${ch.msg}</div>` : '');
   paintBackdrop($('#pvBanner .pvback'), art);
   $('#pvStart').classList.toggle('disabled', !ch.url);
@@ -410,8 +426,22 @@ function riiView(v) {   // 'main' | 'data' | 'ask'
   refreshHover();
 }
 function openRii() { riiView('main'); showScreen('rii'); }
+// The SD card reads the recursite homepage's Miscellaneous list, so new pages show up on their own.
+// SD_PAGES is the fallback (and what the dev server shows, where ../ is not the recursite).
+let sdPages = SD_PAGES;
+const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1500));
+idle(() => fetch('../', { cache: 'no-cache' }).then((r) => r.ok ? r.text() : '').then((html) => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const h = [...doc.querySelectorAll('h2')].find((e) => e.textContent.trim() === 'Miscellaneous');
+  let ul = h && h.nextElementSibling; while (ul && ul.tagName !== 'UL') ul = ul.nextElementSibling;
+  const slugs = ul ? [...ul.querySelectorAll('a.proj')].map((a) => decodeURIComponent(a.getAttribute('href') || '').replace(/^\.?\/?|\/$/g, '')).filter((x) => x && !x.includes(':') && !x.includes('/')) : [];
+  if (slugs.length) {
+    sdPages = slugs;
+    slugs.forEach((slug) => { CHANNELS['sd:' + slug] ||= { title: slug, url: RECURSITE + slug + '/' }; });
+  }
+}).catch(() => { }), { timeout: 4000 });   // after the menu is up, so it never competes with first paint
 function openSD() {
-  $('#sdList').innerHTML = SD_PAGES.map((slug) => `<button class="sdrow" data-act="sdOpen" data-hover="btn" data-id="sd:${slug}">${slug}</button>`).join('');
+  $('#sdList').innerHTML = sdPages.map((slug) => `<button class="sdrow" data-act="sdOpen" data-hover="btn" data-id="sd:${slug}">${slug}</button>`).join('');
   showScreen('sd');
 }
 let riiPending = null;
@@ -481,15 +511,18 @@ function pressA() {
   }
 }
 
+// Touch: a tap is A, a sideways swipe turns the page, and the Wii hand stays hidden.
+let touchy = false;
 addEventListener('pointermove', (e) => {
   ({ x: px, y: py } = toStage(e));
-  cursor.classList.add('on');
+  touchy = e.pointerType === 'touch';
+  cursor.classList.toggle('on', !touchy);
   if (downAt && Math.hypot(px - downAt.x, py - downAt.y) > 14) { clearTimeout(holdTimer); holdTimer = null; }
   moveCarry(); hoverAt(px, py);
 });
 addEventListener('pointerleave', () => cursor.classList.remove('on'));
 addEventListener('pointerdown', (e) => {
-  initAudio();
+  initAudio(); touchy = e.pointerType === 'touch'; if (touchy) cursor.classList.remove('on');
   ({ x: px, y: py } = toStage(e)); hoverAt(px, py);
   downAt = { x: px, y: py };
   if (mode === 'menu' && hovered && hovered.dataset.slot != null) {
@@ -497,13 +530,24 @@ addEventListener('pointerdown', (e) => {
     holdTimer = setTimeout(() => { holdTimer = null; downAt = null; pickUp(slot); }, 550);
   }
 });
-addEventListener('pointerup', () => {
+addEventListener('pointerup', (e) => {
   if (carrying) { drop(); downAt = null; return; }
   if (!downAt) return;
+  const p = toStage(e), dx = p.x - downAt.x, dy = p.y - downAt.y;
   downAt = null;
   if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+  if (Math.hypot(dx, dy) > 40) {   // a drag, not a press: swipe pages (or the board's days), else ignore
+    if (Math.abs(dx) > 120 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (mode === 'menu') goPage(page + (dx < 0 ? 1 : -1));
+      else if (mode === 'preview') stepPreview(dx < 0 ? 1 : -1);
+    }
+    if (touchy) { if (hovered) hovered.classList.remove('hover'); hovered = null; }
+    return;
+  }
   pressA();
+  if (touchy) setTimeout(() => { if (hovered) hovered.classList.remove('hover'); hovered = null; }, 250);   // no hover to linger on a touch screen
 });
+addEventListener('pointercancel', () => { downAt = null; if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } });
 addEventListener('keydown', (e) => {
   if (e.repeat || e.target.tagName === 'TEXTAREA') return;
   const k = e.key;

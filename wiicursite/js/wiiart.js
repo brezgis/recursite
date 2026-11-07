@@ -12,10 +12,10 @@ function recursite() {
   // the CRT's screen in the sprite, as fractions of the sprite box (measured from img/crt.webp)
   const S = { x: .441, y: .338, w: .568 };   // the screen's box in img/crt.webp, measured by colour
   const nest = (n) => n === 0 ? '' : `<div class="rc-scr"><div class="rc-page"><b>Recursite</b><i></i>
-    <div class="rc-crt"><img src="img/crt.webp" alt="">${nest(n - 1)}</div></div></div>`;
+    <div class="rc-crt"><img src="img/sm/crt.webp" alt="">${nest(n - 1)}</div></div></div>`;
   return banner({ bg: 'linear-gradient(180deg,#ffffe6 0,#ffffcc 100%)', tint: '#fbf6c4', cls: 'rc' },
     `<div class="rc-rain"></div>`,
-    box(`<div class="rc-crt"><img src="img/crt.webp" alt="">${nest(3)}</div>`, { x: 70, y: 58, w: 42, anim: 'zoom', dur: 6, cls: 'rc-wrap', style: `--sx:${S.x};--sy:${S.y};--sw:${S.w}` }),
+    box(`<div class="rc-crt"><img src="img/sm/crt.webp" alt="">${nest(3)}</div>`, { x: 70, y: 58, w: 42, anim: 'zoom', dur: 6, cls: 'rc-wrap', style: `--sx:${S.x};--sy:${S.y};--sw:${S.w}` }),
     wtitle('Recursite', { x: 25, y: 40, size: 10, color: '#202020', font: "'Times New Roman', Times, serif" }),
     `<div class="rc-bar"></div>`,
     glint(6, 1.5));
@@ -62,7 +62,7 @@ function annagram() {
 }
 
 function stochasticShore() {
-  return banner({ bg: `url(img/bg-shore.webp) center/cover`, tint: '#7fb8b0' },
+  return banner({ bg: `url(img/sm/bg-shore.webp) center/cover`, tint: '#7fb8b0' },
     `<div class="shore-wave"></div>`,
     pane('shell', { x: 22, y: 72, w: 12, rot: -14 }),
     pane('gull', { x: 34, y: 46, w: 18, anim: 'bob', dur: 2.6, amp: .4 }),
@@ -96,7 +96,7 @@ function dinoTrain() {
 }
 
 function grotte() {
-  return banner({ bg: `url(img/bg-cave.webp) center/cover`, tint: '#8a5a32' },
+  return banner({ bg: `url(img/sm/bg-cave.webp) center/cover`, tint: '#8a5a32' },
     `<div class="cave-glow"></div>`,
     pane('torch', { x: 14, y: 62, w: 14, anim: 'flicker' }),
     pane('torch', { x: 88, y: 62, w: 12, anim: 'flicker', delay: -.4, flip: true }),
@@ -121,7 +121,7 @@ function corporaCafe() {
 }
 
 function petroglyphs() {
-  return banner({ bg: `url(img/bg-dusk.webp) center/cover`, tint: '#c88a78' },
+  return banner({ bg: `url(img/sm/bg-dusk.webp) center/cover`, tint: '#c88a78' },
     pane('stone', { x: 50, y: 60, w: 34, anim: 'zoom', dur: 7, amp: .5 }),
     sparkles(6, { y0: 5, y1: 35, seed: 8 }),
     wtitle('Petroglyph Gallery', { x: 50, y: 13, size: 7.5, dark: true }));
@@ -194,7 +194,7 @@ function brezvax() {
   const T = { x: .49, y: .345, w: .38, h: .36 };   // the screen in img/terminal.webp, measured by colour
   const lines = ['brezvax!login: guest', 'Welcome to brezvax.', '% rn net.general', '% tip arpa'];
   return banner({ bg: 'radial-gradient(100% 120% at 50% 30%, #2a3a30 0, #0d140f 80%)', tint: '#1a2a1e' },
-    box(`<div class="term"><img src="img/terminal.webp" alt=""><div class="tscr" style="left:${(T.x - T.w / 2) * 100}%;top:${(T.y - T.h / 2) * 100}%;width:${T.w * 100}%;height:${T.h * 100}%">${lines.map((l, i) => `<p style="--i:${i}">${l}</p>`).join('')}<p class="cur">█</p></div></div>`, { x: 50, y: 54, w: 56 }));
+    box(`<div class="term"><img src="img/sm/terminal.webp" alt=""><div class="tscr" style="left:${(T.x - T.w / 2) * 100}%;top:${(T.y - T.h / 2) * 100}%;width:${T.w * 100}%;height:${T.h * 100}%">${lines.map((l, i) => `<p style="--i:${i}">${l}</p>`).join('')}<p class="cur">█</p></div></div>`, { x: 50, y: 54, w: 56 }));
 }
 
 export const WII_ART = { recursite, notbell, annasArxiv, honeypot, whatThePh, annagram, stochasticShore, bukvarium, brezgiLv, snowGlobe, dinoTrain, grotte, namedayParty, corporaCafe, petroglyphs, flockquarium, flyParadise, noosphere, lavaHash, ancientClub, soundscapade, snridworld, brezvax };

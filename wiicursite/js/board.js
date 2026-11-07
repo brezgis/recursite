@@ -32,7 +32,7 @@ addEventListener('pagehide', logEnd);
 
 // ---------- what's on a day's board ----------
 let QUOTES = [];
-fetch('data/quotes.json').then((r) => r.json()).then((q) => { QUOTES = q; refreshMailLight(); }).catch(() => { });
+(window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(() => fetch('data/quotes.json').then((r) => r.json()).then((q) => { QUOTES = q; refreshMailLight(); }).catch(() => { }), { timeout: 3000 });
 
 function hash(str) { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.codePointAt(0), 16777619); return h >>> 0; }
 const shortName = (from) => from.split(/[,(]/)[0].trim().replace(/\b\w/g, (c) => c.toUpperCase());
