@@ -425,3 +425,35 @@ body.running:not(.home) #homeBtn { display: block; }
 .tscr p.cur { animation: blink 1s steps(1) infinite; opacity: 1; }
 @keyframes tline { 0% { opacity: 1 } 90% { opacity: 1 } 100% { opacity: 0 } }
 @keyframes blink { 50% { opacity: 0 } }
+
+/* ---------- Rii Options and SD Card Menu: the black pinstripe screens ---------- */
+.bscreen { display: none; z-index: 10; background: #000; }
+.bscreen.on { display: block; }
+.bsTop { position: absolute; left: 0; right: 0; top: 0; height: 152px; background: linear-gradient(180deg, #000, #111); border-bottom: 6px solid #fff; }
+.bsLogo { position: absolute; right: 130px; top: 62px; font: 800 78px/1 "Arial Rounded MT Bold", var(--font); color: #fff; }
+.bsTitle { position: absolute; left: 150px; top: 70px; font: 700 62px/1 var(--font); color: #fff; }
+.bsBand { position: absolute; left: 0; right: 0; top: 158px; height: 694px; border-bottom: 6px solid #fff;
+  background: repeating-linear-gradient(180deg, #2a2a2a 0 4px, #0c0c0c 4px 9px); }
+.bsBot { position: absolute; left: 0; right: 0; top: 858px; bottom: 0; background: linear-gradient(180deg, #050505, #1a1a1a); }
+.bsBot .pvbtn { position: absolute; left: 190px; top: 34px; width: 480px; height: 130px; font-size: 64px;
+  background: linear-gradient(180deg, #fff 0%, #f0f2f6 48%, #dfe3ea 52%, #e8ebf0 100%); }
+.cards { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: 290px; }
+.cards[hidden], .riiAsk[hidden] { display: none; }
+.bigcard { width: 572px; height: 456px; border-radius: 22px; overflow: hidden; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, #a8a8a8 0, #d6d6d6 14%, #fff 42%, #fff 100%);
+  box-shadow: 0 0 0 7px #fff, 0 0 0 12px #5ec8ec; transition: transform .14s, box-shadow .14s; }
+.bigcard .ic { flex: 1; display: flex; align-items: center; justify-content: center; padding: 30px 40px 0; color: #9a9a9a; }
+.bigcard .ic svg { width: 100%; height: auto; font-family: var(--font); }
+.bigcard .ic.big { font-size: 170px; line-height: 1; }
+.bigcard .lbl { height: 124px; border-top: 3px solid #d2d2d2; display: flex; align-items: center; justify-content: center;
+  font: 500 54px/1 var(--font); color: #6a6a6a; }
+.bigcard.hover { transform: scale(1.05); box-shadow: 0 0 0 7px #fff, 0 0 0 14px var(--hover-blue), 0 0 30px 14px rgba(95,212,247,.55); }
+.riiAsk { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 70px; }
+.riiAsk p { margin: 0; font: 700 56px/1.35 var(--font); color: #fff; text-align: center; }
+.riiAsk .askbtns { display: flex; gap: 150px; }
+.riiAsk .pvbtn { width: 420px; height: 130px; font-size: 60px; }
+#sdList { position: absolute; left: 130px; right: 130px; top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px 40px; }
+.sdrow { height: 122px; border-radius: 20px; padding: 0 30px; text-align: left; font: 700 32px/1.2 var(--font); color: #5a5a5a;
+  background: linear-gradient(180deg, #fff 0, #f2f2f2 50%, #e4e4e4 100%); box-shadow: 0 0 0 4px #9a9a9a;
+  overflow-wrap: anywhere; transition: transform .12s, box-shadow .12s; }
+.sdrow.hover { transform: scale(1.04); box-shadow: 0 0 0 6px var(--hover-blue), 0 0 20px 6px rgba(95,212,247,.5); color: #333; }

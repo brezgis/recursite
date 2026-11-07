@@ -81,6 +81,13 @@ try { layout = JSON.parse(localStorage.getItem('wii-mode-layout')); } catch { }
 if (!Array.isArray(layout) || layout.length !== 48 || layout[0] !== 'disc' || !layout.every((id) => id === null || CHANNELS[id])) layout = [...DEFAULT_LAYOUT];
 // channels added since the layout was saved go into the first empty slots
 DEFAULT_LAYOUT.forEach((id) => { if (id && !layout.includes(id)) { const k = layout.indexOf(null); if (k < 0) layout = [...DEFAULT_LAYOUT]; else layout[k] = id; } });
+// The SD card holds the recursite's Miscellaneous pages, and the Rii button's Options screen
+// opens the recursite's Health and Safety page. They run like channels but have no tiles.
+const RECURSITE = 'https://recursite.brezgis.com/';
+const SD_PAGES = ['favorite-words', 'links', 'cool-gifs', 'amazing-figures', 'even-more-quotes', 'its-weird-and-i-need-to-share',
+  'on-erosion-and-the-end-of-all-things', 'theres-a-gödel-number-for-that', 'weird-journalism', 'amazing-videos', 'i-can-believe-its-not-butter'];
+SD_PAGES.forEach((slug) => { CHANNELS['sd:' + slug] = { title: slug, url: RECURSITE + slug + '/' }; });
+CHANNELS.healthsafety = { title: 'Health and Safety', url: RECURSITE + 'healthsafety/' };
 const save = () => { try { localStorage.setItem('wii-mode-layout', JSON.stringify(layout)); } catch { } };
 
 let page = 0;
@@ -313,6 +320,13 @@ const frame = $('#appFrame');
 function startChannel() {
   const id = layout[pvSlot], ch = CHANNELS[id];
   if (!ch.url || mode !== 'preview') { if (!ch.url) sfx.back(); return; }
+  returnTo = null;
+  runApp(id);
+}
+// where quitting a running app goes back to: the menu, or the screen it was opened from
+let returnTo = null;
+function runApp(id) {
+  const ch = CHANNELS[id];
   sfx.start(); logStart(id);
   if (ch.newTab) {
     $('#flash').animate([{ opacity: 0 }, { opacity: .8 }, { opacity: 0 }], { duration: 600, easing: 'ease-in-out' });
@@ -332,6 +346,7 @@ function startChannel() {
     frame.src = ch.url;
     $('#app').classList.add('on'); document.body.classList.add('running');
     $('#preview').classList.remove('on'); $('#pvBanner').innerHTML = '';
+    if (returnTo) $('#' + returnTo).classList.remove('on');
   });
 }
 function openHome() {
@@ -356,8 +371,9 @@ function quitToMenu() {
     closeHome(); logEnd();
     frame.src = 'about:blank'; running = null;
     $('#app').classList.remove('on'); document.body.classList.remove('running');
+    if (returnTo) { $('#' + returnTo).classList.add('on'); mode = returnTo; duckMusic(false); fadeIn(520); refreshHover(); return; }
     const p = Math.floor(pvSlot / 12);
-    if (p !== page) { page = p; track.style.transition = 'none'; track.style.transform = `translateX(${-page * PAGE_W}px)`; track.offsetWidth; track.style.transition = ''; markLive(); }
+    if (pvSlot != null && p !== page) { page = p; track.style.transition = 'none'; track.style.transform = `translateX(${-page * PAGE_W}px)`; track.offsetWidth; track.style.transition = ''; markLive(); }
     mode = 'menu'; duckMusic(false); refreshMailLight();
     fadeIn(520); refreshHover();
   });
@@ -378,6 +394,33 @@ function leaveBoard() {
   setTimeout(() => { $('#board').classList.remove('on'); refreshMailLight(); mode = 'menu'; refreshHover(); }, 260);
 }
 
+// ---------- Rii Options and the SD Card Menu ----------
+function showScreen(id) {
+  sfx.select(); mode = 'zoom';
+  $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
+  setTimeout(() => { $('#' + id).classList.add('on'); mode = id; refreshHover(); }, 260);
+}
+function hideScreen(id) {
+  sfx.back(); mode = 'zoom';
+  $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
+  setTimeout(() => { $('#' + id).classList.remove('on'); mode = 'menu'; refreshHover(); }, 260);
+}
+function riiView(v) {   // 'main' | 'data' | 'ask'
+  $('#riiMain').hidden = v !== 'main'; $('#riiDataCards').hidden = v !== 'data'; $('#riiAsk').hidden = v !== 'ask';
+  refreshHover();
+}
+function openRii() { riiView('main'); showScreen('rii'); }
+function openSD() {
+  $('#sdList').innerHTML = SD_PAGES.map((slug) => `<button class="sdrow" data-act="sdOpen" data-hover="btn" data-id="sd:${slug}">${slug}</button>`).join('');
+  showScreen('sd');
+}
+let riiPending = null;
+const RII_ASK = {
+  layout: ['Put every channel back<br>where it started?', () => { layout = [...DEFAULT_LAYOUT]; save(); page = 0; track.style.transform = 'translateX(0)'; buildTiles(); }],
+  board: ['Erase every memo and the play log<br>from the Message Board?', () => { ['wii-mode-memos', 'wii-mode-log', 'wii-mode-read'].forEach((k) => { try { localStorage.removeItem(k); } catch { } }); refreshMailLight(); }],
+};
+const ask = (k) => { sfx.select(); riiPending = k; $('#riiAskText').innerHTML = RII_ASK[k][0]; riiView('ask'); };
+
 // data-act buttons: board + HOME Menu. A board action returns the mode it lands in.
 const ACTIONS = {
   ...Object.fromEntries(Object.entries(boardActions).map(([k, fn]) => [k, (el) => {
@@ -391,6 +434,15 @@ const ACTIONS = {
   bdBack: () => leaveBoard(),
   hClose: () => { sfx.back(); closeHome(); mode = 'app'; },
   hWiiMenu: () => quitToMenu(),
+  riiData: () => { sfx.select(); riiView('data'); },
+  riiSafety: () => { returnTo = 'rii'; runApp('healthsafety'); },
+  riiAskLayout: () => ask('layout'),
+  riiAskBoard: () => ask('board'),
+  riiYes: () => { RII_ASK[riiPending][1](); sfx.pressA(); riiView('data'); },
+  riiNo: () => { sfx.back(); riiView('data'); },
+  riiBack: () => { if (!$('#riiAsk').hidden) return ACTIONS.riiNo(); if (!$('#riiDataCards').hidden) { sfx.back(); return riiView('main'); } hideScreen('rii'); },
+  sdOpen: (el) => { returnTo = 'sd'; runApp(el.dataset.id); },
+  sdBack: () => hideScreen('sd'),
   hReset: () => { sfx.start(); closeHome(); mode = 'app'; logEnd(); logStart(running); frame.src = CHANNELS[running].url; },
 };
 
@@ -421,6 +473,8 @@ function pressA() {
   if (hovered.id === 'arrowR') return goPage(page + 1);
   if (hovered.dataset.slot != null) return openPreview(+hovered.dataset.slot);
   if (hovered.id === 'mailBtn') return enterBoard();
+  if (hovered.id === 'wiiBtn') return openRii();
+  if (hovered.id === 'sdBtn') return openSD();
   if (hovered.classList.contains('roundbtn') || hovered.id === 'sdBtn') {
     sfx.select(); hovered.classList.add('press');
     const h = hovered; setTimeout(() => h.classList.remove('press'), 140);
@@ -460,6 +514,8 @@ addEventListener('keydown', (e) => {
   else if (mode === 'preview' && (k === 'ArrowLeft' || k === '-' || k === '_')) stepPreview(-1);
   else if ((k === 'b' || k === 'B' || k === 'Escape') && mode === 'preview') closePreview();
   else if ((k === 'b' || k === 'B' || k === 'Escape') && mode === 'board') leaveBoard();
+  else if ((k === 'b' || k === 'B' || k === 'Escape') && mode === 'rii') ACTIONS.riiBack();
+  else if ((k === 'b' || k === 'B' || k === 'Escape') && mode === 'sd') ACTIONS.sdBack();
   else if ((k === 'b' || k === 'B' || k === 'Escape') && ['letter', 'calendar'].includes(mode)) ACTIONS[mode === 'letter' ? 'lBack' : 'cClose']();
   else if (mode === 'board' && k === 'ArrowLeft') ACTIONS.bdPrev();
   else if (mode === 'board' && k === 'ArrowRight' && !$('#bdR').hidden) ACTIONS.bdNext();

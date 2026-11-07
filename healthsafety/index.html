@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Health and Safety Information</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* After the Health and Safety Information pages of the Wii Operations Manual (System Setup). */
+  :root { --ink: #111; --rule: #111; --grey: #555; }
+  * { box-sizing: border-box; }
+  html { background: #fff; }
+  body { margin: 0; background: #fff; color: var(--ink); font: 400 17px/1.5 "M PLUS 1p", "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 48px 16px 64px; }
+  .masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+    border-bottom: 6px solid var(--rule); padding-bottom: 10px; margin-bottom: 28px; }
+  .masthead h1 { margin: 0; font-weight: 800; font-size: clamp(28px, 5vw, 44px); letter-spacing: .01em; }
+  .masthead .manual { text-align: right; font-weight: 700; font-size: 15px; line-height: 1.3; }
+  .masthead .manual b { display: block; font-size: 22px; font-weight: 800; }
+  .spread { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  @media (max-width: 820px) { .spread { grid-template-columns: 1fr; } }
+  .boxed { border: 3px solid var(--rule); padding: 16px 20px; margin: 0 0 22px; }
+  .boxed.caps { font-weight: 800; text-transform: uppercase; line-height: 1.4; }
+  h2 { display: flex; align-items: flex-start; gap: 10px; margin: 26px 0 8px; font-size: 21px; font-weight: 800; line-height: 1.25; }
+  h2:first-child { margin-top: 0; }
+  h2 svg, .tri { flex: none; width: 1.25em; height: 1.1em; }
+  .tri { display: inline-block; vertical-align: -.15em; }
+  p { margin: 0 0 10px; }
+  ul { margin: 6px 0 12px; padding-left: 1.2em; }
+  li { margin: 0 0 4px; }
+  .symptoms { columns: 2; list-style: none; padding: 0; margin: 8px 0 12px 1em; font-weight: 700; }
+  .legend p { margin: 4px 0; }
+  .note { font-size: 15px; }
+  .parents { background: #f2f2f2; border-left: 6px solid var(--rule); padding: 12px 16px; margin: 18px 0; }
+  .parents b { display: block; margin-bottom: 4px; }
+  a { color: inherit; }
+  .spec { font-size: 14px; color: var(--grey); }
+  .press { margin: 46px 0 0; text-align: center; font-size: clamp(22px, 4vw, 34px); font-weight: 800; color: #6a6a6a; }
+  .press a { text-decoration: none; }
+  .press a:hover { color: #34beed; }
+  .abtn { display: inline-flex; align-items: center; justify-content: center; width: 1.15em; height: 1.15em; border: .12em solid currentColor;
+    border-radius: 50%; font-size: .78em; line-height: 1; vertical-align: .08em; }
+  .page { text-align: center; color: var(--grey); font-size: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="warn" viewBox="0 0 100 88"><path d="M50 4 L96 84 H4 Z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/><rect x="44.5" y="30" width="11" height="30" rx="3" fill="currentColor"/><circle cx="50" cy="71" r="6.5" fill="currentColor"/></symbol>
+</svg>
+<main>
+  <header class="masthead">
+    <h1>Health and Safety Information</h1>
+    <div class="manual"><b>Recursite Operations Manual</b>System Setup</div>
+  </header>
+
+  <div class="spread">
+    <section>
+      <div class="boxed caps">Important safety information – read the following warnings before setup or use of the Recursite. If this website will be used by young children, this manual should be read and explained to them by an adult. Failing to do so may cause recursion.</div>
+
+      <p>To protect your health and safety, and for correct use of the Recursite, please read and follow the instructions in this operations manual before setup or use.</p>
+      <p class="note">NOTE: This Recursite is not compatible with Nintendo GameCube Game Discs or accessories.</p>
+
+      <div class="legend">
+        <p>Throughout this manual, you will see this symbol <svg class="tri" aria-label="warning symbol"><use href="#warn"/></svg> followed by WARNING or CAUTION. These terms have different levels of meaning:</p>
+        <p><b>WARNING</b> – Warns you about incorrect use of the Recursite that could result in serious recursion.</p>
+        <p><b>CAUTION</b> – Cautions you about incorrect use of the Recursite that could result in recursion or damage to the Recursite, its CRTs, glass terminals or margarine.</p>
+      </div>
+
+      <div class="parents"><b>IMPORTANT NOTE FOR PARENTS:</b>
+        Before allowing any child to use the Recursite, a parent or other responsible adult should determine whether the Recursite is appropriate for the child. Only children who are old enough and capable of wearing the wrist strap and properly gripping the Rii Remote should use the system. You should also consider whether children should be supervised while reading Usenet, dialling the ARPANET, and/or downloading Gödel numbers. Be sure to explain all safety and health information and instructions to any children who are going to use the system. Failure to do so may result in injuries or damage to the system or other property.</div>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>WARNING - Recursion</h2>
+      <p>Some people (about 1 in 4000) may have recursion triggered by links or pages that contain themselves, and this may occur while they are watching TV or browsing the Recursite, even if they have never recursed before.</p>
+      <p>Anyone who has had a recursion, loss of base case, or other symptom linked to a recursive condition should consult a computer scientist before browsing the Recursite.</p>
+      <p>Parents should watch their children browse the Recursite. Stop browsing and consult a computer scientist if you or your child has any of the following symptoms:</p>
+      <ul class="symptoms">
+        <li>Déjà vu</li><li>Altered vision</li><li>Déjà vu</li>
+        <li>Involuntary clicking</li><li>Loss of awareness of the current year</li><li>Stack overflow</li>
+      </ul>
+      <p>To reduce the likelihood of recursion when browsing the Recursite:</p>
+      <ul>
+        <li>Sit or stand as far from the screen as possible.</li>
+        <li>Browse the Recursite on the smallest available television screen.</li>
+        <li>Do not browse if you are tired or need sleep.</li>
+        <li>Browse in a well-lit room.</li>
+        <li>Always have a base case.</li>
+        <li>Take a 10 to 15 minute break every hour.</li>
+      </ul>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>WARNING - Repetitive Motion Injuries and Eyestrain</h2>
+      <p>Browsing the Recursite can make your muscles, joints, skin or eyes hurt. Follow these instructions to avoid problems such as tendinitis, carpal tunnel syndrome, phosphor burn-in or eyestrain:</p>
+      <ul>
+        <li>Avoid excessive recursion. Parents should monitor their children for appropriate recursion.</li>
+        <li>Take a 10 to 15 minute break every hour, even if you don’t think you need it.</li>
+        <li>If your hands, wrists, arms or eyes become tired or sore while browsing, or if you still see green text when you close your eyes, stop and rest for several hours before browsing again.</li>
+        <li>If you continue to have any of the above symptoms or other discomfort during or after browsing, HANG UP (BACK TO 1984) and see a doctor.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>WARNING - Electric Shock</h2>
+      <p>To avoid electric shock when you use this system:</p>
+      <ul>
+        <li>Do not dial the ARPANET during a lightning storm. There may be a risk of electric shock from lightning.</li>
+        <li>Use only the AC Adapter that comes with your Rii.</li>
+        <li>Do not use the AC Adapter if it has damaged, split or broken cords or wires.</li>
+        <li>Always carefully disconnect from SUMEX-AIM by typing LOGOUT, and not by pulling on the cord.</li>
+      </ul>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>WARNING - Margarine Leakage</h2>
+      <p>Leakage of margarine can cause personal injury as well as damage to your toast. If margarine leakage occurs, thoroughly wash the affected skin and clothes. Keep margarine away from your eyes and mouth. Leaking margarine may make popping sounds.</p>
+      <p>To avoid margarine leakage:</p>
+      <ul>
+        <li>Do not mix used and new margarine (replace all margarine at the same time).</li>
+        <li>Do not mix different brands of margarine.</li>
+        <li>Do not put the margarine in backwards.</li>
+        <li>Do not dispose of margarine in a fire.</li>
+        <li>It is <a href="../i-can-believe-its-not-butter/">not butter</a>.</li>
+      </ul>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>WARNING - Radio Frequency Interference</h2>
+      <p>The Recursite can emit radio waves that can affect the operation of nearby electronics, including the Big Ear radio telescope.</p>
+      <ul>
+        <li>If you receive a strong narrowband signal lasting 72 seconds, do not circle it in red pen. It was probably the Recursite.</li>
+      </ul>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>CAUTION - Motion Sickness</h2>
+      <p>Browsing the Recursite can cause motion sickness in some players, particularly in Rii Mode while carrying a channel across pages. If you or your child feel dizzy or nauseous when browsing, stop browsing and rest. Do not drive or engage in other demanding activity until you feel better.</p>
+
+      <h2><svg aria-hidden="true"><use href="#warn"/></svg>CAUTION - Recursive Device</h2>
+      <p>The Recursite is a Class I recursive product. Do not attempt to disassemble the Recursite. Refer servicing to qualified personnel only.</p>
+      <p class="spec">Caution: Use of controls or adjustments or procedures other than those specified herein may result in hazardous recursion exposure.<br>
+        Recursion type: Semiconductor recursion · Recursion depth: Max. 3 (1990s, 1984, 1977) · Base case: 21 January 1977</p>
+
+      <div class="boxed">
+        <b>Warning</b><br>
+        Not suitable for children under 36 months of age. The Rii Remote Wrist Strap and the cord of the acoustic coupler can coil around the neck.
+      </div>
+      <p class="note">Additional cautionary information appears in this manual. Read this manual completely before setup or use of the Recursite.</p>
+    </section>
+  </div>
+
+  <p class="press"><a href="../">Press <span class="abtn">A</span> to continue.</a></p>
+  <p class="page">2–3</p>
+</main>
+</body>
+</html>
