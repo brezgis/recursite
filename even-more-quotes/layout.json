@@ -445,9 +445,75 @@
    }
   },
   {
+   "id": "b66",
+   "x": 134,
+   "y": 1780,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "❦",
+    "font": "Times New Roman",
+    "size": 22,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#8a7f5a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b67",
+   "x": 134,
+   "y": 1844,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "Facilis descensus Averno… sed revocare gradum superasque evadere ad auras, hoc opus, hic labor est.\n(The descent to the underworld is easy… but to retrace your steps and climb back to the upper air, that is the work, that is the labor.)",
+    "font": "Times New Roman",
+    "size": 20,
+    "bold": false,
+    "italic": false,
+    "align": "left",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b68",
+   "x": 134,
+   "y": 1964,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "— [Virgil, *Aeneid* 6.126–129 (c. 19 BC)](https://www.thelatinlibrary.com/vergil/aen6.shtml)",
+    "font": "Times New Roman",
+    "size": 15,
+    "bold": false,
+    "italic": false,
+    "align": "right",
+    "color": "#4a4a3a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
    "id": "b21",
    "x": 134,
-   "y": 1784,
+   "y": 2018,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -469,7 +535,7 @@
   {
    "id": "b22",
    "x": 134,
-   "y": 1848,
+   "y": 2082,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -491,7 +557,7 @@
   {
    "id": "b23",
    "x": 134,
-   "y": 1886,
+   "y": 2120,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -513,7 +579,7 @@
   {
    "id": "b24",
    "x": 134,
-   "y": 1960,
+   "y": 2194,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -535,7 +601,7 @@
   {
    "id": "b25",
    "x": 134,
-   "y": 2024,
+   "y": 2258,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -557,7 +623,7 @@
   {
    "id": "b26",
    "x": 134,
-   "y": 2146,
+   "y": 2380,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -579,7 +645,7 @@
   {
    "id": "b27",
    "x": 134,
-   "y": 2200,
+   "y": 2434,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -601,7 +667,7 @@
   {
    "id": "b28",
    "x": 134,
-   "y": 2264,
+   "y": 2498,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -623,7 +689,7 @@
   {
    "id": "b29",
    "x": 134,
-   "y": 2330,
+   "y": 2564,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -645,7 +711,7 @@
   {
    "id": "b30",
    "x": 134,
-   "y": 2408,
+   "y": 2642,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -667,7 +733,7 @@
   {
    "id": "b31",
    "x": 134,
-   "y": 2472,
+   "y": 2706,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -689,7 +755,7 @@
   {
    "id": "b32",
    "x": 134,
-   "y": 2762,
+   "y": 2996,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -711,7 +777,7 @@
   {
    "id": "b33",
    "x": 134,
-   "y": 2816,
+   "y": 3050,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -733,7 +799,7 @@
   {
    "id": "b34",
    "x": 134,
-   "y": 2880,
+   "y": 3114,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -755,7 +821,7 @@
   {
    "id": "b35",
    "x": 134,
-   "y": 3030,
+   "y": 3264,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -777,7 +843,7 @@
   {
    "id": "b36",
    "x": 134,
-   "y": 3088,
+   "y": 3322,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -799,7 +865,7 @@
   {
    "id": "b37",
    "x": 134,
-   "y": 3152,
+   "y": 3386,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -821,7 +887,7 @@
   {
    "id": "b38",
    "x": 134,
-   "y": 3274,
+   "y": 3508,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -843,7 +909,7 @@
   {
    "id": "b39",
    "x": 134,
-   "y": 3328,
+   "y": 3562,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -865,7 +931,7 @@
   {
    "id": "b40",
    "x": 134,
-   "y": 3392,
+   "y": 3626,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -887,7 +953,7 @@
   {
    "id": "b41",
    "x": 134,
-   "y": 3542,
+   "y": 3776,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -909,7 +975,7 @@
   {
    "id": "b42",
    "x": 134,
-   "y": 3600,
+   "y": 3834,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -931,7 +997,7 @@
   {
    "id": "b43",
    "x": 134,
-   "y": 3664,
+   "y": 3898,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -953,7 +1019,7 @@
   {
    "id": "b44",
    "x": 134,
-   "y": 3786,
+   "y": 4020,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -975,7 +1041,7 @@
   {
    "id": "b45",
    "x": 134,
-   "y": 3840,
+   "y": 4074,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -997,7 +1063,7 @@
   {
    "id": "b46",
    "x": 134,
-   "y": 3904,
+   "y": 4138,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1019,7 +1085,7 @@
   {
    "id": "b47",
    "x": 134,
-   "y": 3970,
+   "y": 4204,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1041,7 +1107,7 @@
   {
    "id": "b48",
    "x": 134,
-   "y": 4024,
+   "y": 4258,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1063,7 +1129,7 @@
   {
    "id": "b49",
    "x": 134,
-   "y": 4088,
+   "y": 4322,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1085,7 +1151,7 @@
   {
    "id": "b50",
    "x": 134,
-   "y": 4182,
+   "y": 4416,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1107,7 +1173,7 @@
   {
    "id": "b51",
    "x": 134,
-   "y": 4240,
+   "y": 4474,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1129,7 +1195,7 @@
   {
    "id": "b52",
    "x": 134,
-   "y": 4304,
+   "y": 4538,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1151,7 +1217,7 @@
   {
    "id": "b53",
    "x": 134,
-   "y": 4566,
+   "y": 4800,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1173,7 +1239,7 @@
   {
    "id": "b54",
    "x": 134,
-   "y": 4624,
+   "y": 4858,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1195,7 +1261,7 @@
   {
    "id": "b55",
    "x": 134,
-   "y": 4688,
+   "y": 4922,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1217,7 +1283,7 @@
   {
    "id": "b56",
    "x": 134,
-   "y": 4950,
+   "y": 5184,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1239,7 +1305,7 @@
   {
    "id": "b57",
    "x": 134,
-   "y": 5024,
+   "y": 5258,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1261,7 +1327,7 @@
   {
    "id": "b58",
    "x": 134,
-   "y": 5088,
+   "y": 5322,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1283,7 +1349,7 @@
   {
    "id": "b59",
    "x": 134,
-   "y": 5182,
+   "y": 5416,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1305,7 +1371,7 @@
   {
    "id": "b60",
    "x": 134,
-   "y": 5235,
+   "y": 5469,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1327,7 +1393,7 @@
   {
    "id": "b61",
    "x": 134,
-   "y": 5299,
+   "y": 5533,
    "w": 560,
    "z": 1,
    "rot": 0,
@@ -1349,13 +1415,145 @@
   {
    "id": "b62",
    "x": 134,
-   "y": 5366,
+   "y": 5600,
    "w": 560,
    "z": 1,
    "rot": 0,
    "type": "text",
    "text": {
     "text": "— [Simone Weil, letter to Joë Bousquet, 13 April 1942; first printed in *Cahiers du Sud* (1950)](https://kfitz.info/la-plus-rare-et-la-plus-pure/)",
+    "font": "Times New Roman",
+    "size": 15,
+    "bold": false,
+    "italic": false,
+    "align": "right",
+    "color": "#4a4a3a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b63",
+   "x": 134,
+   "y": 5654,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "❦",
+    "font": "Times New Roman",
+    "size": 22,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#8a7f5a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b64",
+   "x": 134,
+   "y": 5718,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "“One of the miseries of life is that everybody names things a little bit wrong.”",
+    "font": "Times New Roman",
+    "size": 20,
+    "bold": false,
+    "italic": false,
+    "align": "left",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b65",
+   "x": 134,
+   "y": 5784,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "— [Richard Feynman, lecture on computer heuristics (26 September 1985)](https://www.youtube.com/watch?v=EKWGGDXe5MA&t=297s)",
+    "font": "Times New Roman",
+    "size": 15,
+    "bold": false,
+    "italic": false,
+    "align": "right",
+    "color": "#4a4a3a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b69",
+   "x": 134,
+   "y": 5838,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "❦",
+    "font": "Times New Roman",
+    "size": 22,
+    "bold": false,
+    "italic": false,
+    "align": "center",
+    "color": "#8a7f5a",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b70",
+   "x": 134,
+   "y": 5902,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "Forsan et haec olim meminisse iuvabit.\n(Perhaps someday it will be a pleasure to remember even these things.)",
+    "font": "Times New Roman",
+    "size": 20,
+    "bold": false,
+    "italic": false,
+    "align": "left",
+    "color": "#000000",
+    "outline": false,
+    "bg": "none",
+    "pad": 0,
+    "source": ""
+   }
+  },
+  {
+   "id": "b71",
+   "x": 134,
+   "y": 5995,
+   "w": 560,
+   "z": 1,
+   "rot": 0,
+   "type": "text",
+   "text": {
+    "text": "— [Virgil, *Aeneid* 1.203 (c. 19 BC)](https://www.thelatinlibrary.com/vergil/aen1.shtml)",
     "font": "Times New Roman",
     "size": 15,
     "bold": false,
