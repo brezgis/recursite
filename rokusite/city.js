@@ -321,9 +321,20 @@ function render(L, viewW) {
 /* The far haze: a continuous, very simple city silhouette right on the horizon, so the background
    is never empty between the skyline clusters. Painted once; low detail on purpose. */
 
-let hazeURL = null, hazeCanvas = null;
+/* Baked pictures are turned into images with toBlob (encoded in the background, never blocking
+   the page) and shared by every strip copy. Plain images composite far cheaper than canvases. */
+const blobURLs = new WeakMap();
+function blobURL(c) {
+  if (!blobURLs.has(c)) blobURLs.set(c, new Promise((res) => c.toBlob((b) => res(URL.createObjectURL(b)))));  // encoded off the main thread
+  return blobURLs.get(c);
+}
+function canvasAt(src, css) {
+  const i = el('img', 'it', css); i.alt = ''; i.decoding = 'async';
+  blobURL(src).then((u) => { i.src = u; }); return i;
+}
+let hazeCanvas = null;
 function hazeImage(W) {
-  if (!hazeURL) {
+  if (!hazeCanvas) {
     const H = 150, c = document.createElement('canvas'); c.width = Math.ceil(W); c.height = H; const g = c.getContext('2d');
     let seed = 4242; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     for (const [col, hmin, hmax, wmin, wmax] of [['#6d3a9e', 40, 120, 30, 90], ['#5a2c8a', 18, 70, 24, 70]]) {
@@ -336,12 +347,12 @@ function hazeImage(W) {
           if (rnd() < .2) g.fillRect(x + w / 2 - 2, H - h - 14 - rnd() * 18, 4, 30);
           x += w - 2;
         }
-        x += 220 + rnd() * 420;
+        x += 40 + rnd() * 120;  // short breaks only: the horizon is never empty
       }
     }
-    hazeURL = c.toDataURL(); hazeCanvas = c;
+    hazeCanvas = c;
   }
-  return hazeURL;
+  return hazeCanvas;
 }
 
 /* ---- reflections, baked ----
@@ -384,15 +395,15 @@ function bakeReflection(key, width, draws) {
     const [R, G, B] = waterAt(y);
     g.fillStyle = `rgba(${R},${G},${B},${(1 - RF.strength * fade * ripple).toFixed(3)})`; g.fillRect(0, r, W, 1);
   }
-  return (bakeCache[key] = c.toDataURL());
+  return (bakeCache[key] = c);
 }
-function reflImg(url, width) { const i = el('img', 'it', { left: '0px', top: px(HORIZON), width: px(width), height: px(RF.depth) }); i.src = url; i.alt = ''; return i; }
+function reflImg(c, width) { return canvasAt(c, { left: '0px', top: px(HORIZON), width: px(width), height: px(RF.depth) }); }
 let farCanvas = null;
 function farImage(w) {
   if (farCanvas) return farCanvas;
   const H = 280, top = FAR.base - H, c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = H; const g = c.getContext('2d');
   hazeImage(w); g.drawImage(hazeCanvas, 0, HORIZON - 148 - top);
-  for (const it of shoreLayout().items) if (it.clear) g.clearRect(it.g0, 0, it.g1 - it.g0, H);  // the hill stands alone
+  for (const it of shoreLayout().items) if (it.clear) { const hw = size(it.s).w * (it.k || 1); g.clearRect(it.x + hw * .08, 0, hw * .84, H); }  // the hill stands alone
   const t = document.createElement('canvas'), tg = t.getContext('2d');
   for (const it of farLayout().items) {
     const im = IMGS[it.s], z = size(it.s); if (!im) continue;
@@ -409,7 +420,13 @@ function farRefl(strip) {
 }
 function shoreRefl(strip) {
   const { items, w } = shoreLayout();
-  strip.appendChild(reflImg(bakeReflection('shore', w, items.map((it) => ({ s: it.s, x: it.x, bottom: it.y, w: size(it.s).w * (it.k || 1), h: size(it.s).h * (it.k || 1), flip: it.flip }))), w));
+  const draws = [];
+  for (const it of items) {
+    const z = { w: size(it.s).w * (it.k || 1), h: size(it.s).h * (it.k || 1) };
+    draws.push({ s: it.s, x: it.x, bottom: it.y, w: z.w, h: z.h, flip: it.flip });
+    if (it.sign) draws.push({ img: signImage(it.sign, z.w, z.h), x: it.x, bottom: it.y, w: z.w, h: z.h + 40 });  // the letters reflect too
+  }
+  strip.appendChild(reflImg(bakeReflection('shore', w, draws), w));
 }
 function bayRefl(strip) {
   const draws = BAY.items.map((it) => ({ s: it.s, x: it.x, bottom: it.y, w: size(it.s).w * (it.k || 1), h: size(it.s).h * (it.k || 1) }));
@@ -429,7 +446,7 @@ function signImage(text, w, h) {
       g.fillStyle = 'rgba(40,10,70,.35)'; g.fillText(ch, cx + 1.5, cy + 2.5);
       g.fillStyle = '#fbf6ff'; g.fillText(ch, cx, cy);
     });
-    signCache[key] = c.toDataURL();
+    signCache[key] = c;
   }
   return signCache[key];
 }
@@ -450,8 +467,8 @@ function shoreLayout() {
 function farStrip(strip) {
   const { w } = farLayout(), c = farImage(w);
   farRefl(strip);
-  const i = el('img', 'it', { left: '0px', top: px(FAR.base - c.height), width: px(c.width), height: px(c.height) }); i.src = c.toDataURL(); i.alt = ''; strip.appendChild(i);
-  Object.assign(strip.style, glints('far', w, HORIZON + 6, 140, Math.round(w / 12), [4, 14]));
+  strip.appendChild(canvasAt(c, { left: '0px', top: px(FAR.base - c.height), width: px(c.width), height: px(c.height) }));
+  strip.appendChild(glints('far', w, HORIZON + 6, 140, Math.round(w / 12), [4, 14]));
   return w;
 }
 /* Water glints, painted once and carried by a depth layer so they flow with the parallax.
@@ -467,9 +484,9 @@ function glints(id, w, top, h, n, len) {
       g.globalAlpha = .1 + .22 * (1 - d) * rnd() + .06; g.strokeStyle = rnd() < .3 ? '#ffe2b0' : '#ffd0ec'; g.lineWidth = 1 + d * 1.2;
       const x = rnd() * (w - l); g.beginPath(); g.moveTo(x, y); g.lineTo(x + l, y); g.stroke();
     }
-    glintCache[id] = c.toDataURL();
+    glintCache[id] = c;
   }
-  return { backgroundImage: `url(${glintCache[id]})`, backgroundRepeat: 'no-repeat', backgroundPosition: `0 ${top}px` };
+  const c = glintCache[id]; return canvasAt(c, { left: '0px', top: px(top), width: px(c.width), height: px(c.height) });
 }
 function cloudStrip(strip) {
   for (const it of CLOUDS.items) strip.appendChild(sprite(it.s, it.x, it.y, it.flip ? { transform: 'scaleX(-1)' } : null));
@@ -482,8 +499,7 @@ function shoreStrip(strip) {
     const k = it.k || 1, z0 = size(it.s), z = { ...z0, w: z0.w * k, h: z0.h * k };
     strip.appendChild(sprite(it.s, it.x, it.y, it.flip ? { transform: 'scaleX(-1)' } : null, k));
     if (it.sign && !z0.missing) {
-      const im = el('img', 'it', { left: px(it.x), top: px(it.y - z.h - 40), width: px(z.w), height: px(z.h + 40) });
-      im.src = signImage(it.sign, z.w, z.h); im.alt = ''; strip.appendChild(im);
+      strip.appendChild(canvasAt(signImage(it.sign, z.w, z.h), { left: px(it.x), top: px(it.y - z.h - 40), width: px(z.w), height: px(z.h + 40) }));
     }
     if (it.ad) {
       const ad = ADS.find((a) => a.id === it.ad), h = el('a', 'hot', { left: px(it.x), top: px(it.y - z.h), width: px(z.w), height: px(z.h) });
@@ -494,7 +510,7 @@ function shoreStrip(strip) {
 }
 function bayStrip(strip) {
   bayRefl(strip);
-  Object.assign(strip.style, glints('bay', BAY.width, HORIZON + 120, 320, 60, [14, 40]));
+  strip.appendChild(glints('bay', BAY.width, HORIZON + 120, 320, 60, [14, 40]));
   for (const it of BAY.items) {
     const k = it.k || 1, z0 = size(it.s), z = { ...z0, w: z0.w * k, h: z0.h * k }, box = sprite(it.s, it.x, it.y, null, k);
     if (it.beam && !z.missing) strip.appendChild(el('div', 'beam', { left: px(it.x + z.w * .62 - 45), top: px(it.y - z.h * .93 - 520) }));
@@ -835,6 +851,7 @@ async function start() {
     if (e.key === 'Escape') go('../');
   });
   addEventListener('pointermove', wake); wake(); hoverTips();
+  addEventListener('dragstart', (e) => e.preventDefault());  // nothing in the city can be dragged off
   requestAnimationFrame(frame);
 }
 start();

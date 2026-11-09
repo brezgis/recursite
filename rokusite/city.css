@@ -232,3 +232,6 @@ body.idle #tip { opacity: 0; }
   font: italic 400 1.15em/1 'Limelight', serif; color: #fff; box-shadow: 0 0 10px rgba(160,80,255,.6); padding-top: .1em; }
 #rkey span::before { content: "for more: "; font-weight: 600; opacity: .75; }
 body.idle #rkey { opacity: 0; pointer-events: none; }
+
+/* nothing in the city can be picked up and dragged */
+a, img, canvas { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
