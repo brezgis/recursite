@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RecurCity</title>
+<meta name="description" content="The recursite in Roku City mode: a slow night drive past RecurCity, where every billboard is a recursite project.">
+<link rel="icon" href="../favicon.svg">
+<meta name="theme-color" content="#10033d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Josefin+Sans:wght@600;700&family=Limelight&family=Monoton&family=Righteous&family=Rubik+Mono+One&family=Cinzel+Decorative:wght@700&family=VT323&display=swap&text=%20%21%26%27%28%29%2A%2C-.%2F0123456789%3A%3B%3FABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz%C2%B7%C3%A9%E2%80%99" rel="stylesheet">
+<link rel="stylesheet" href="city.css">
+</head>
+<body>
+<main id="tv" aria-label="RecurCity, a scrolling night cityscape. Billboards link to recursite projects.">
+  <div id="stage">
+    <div id="sky"><canvas id="stars"></canvas><div id="glow"></div><div id="planet"></div></div>
+    <div class="layer" id="clouds"></div>
+    <div id="water"><div class="layer refl" id="far-refl"></div><div id="glint"></div></div>
+    <div class="layer" id="far"></div>
+    <div class="layer" id="shore"></div>
+    <div class="layer" id="bay"></div>
+    <div id="boats"></div>
+    <div class="layer" id="aloft"></div>
+    <div id="ground"></div>
+    <div id="curb"></div>
+    <div class="layer" id="street"></div>
+    <div id="traffic"></div>
+  </div>
+  <a id="plate" href="../" title="back to the recursite"><span>recursite</span></a>
+  <div id="tip" aria-hidden="true"></div>
+</main>
+<noscript><p style="color:#fff;font:16px sans-serif;padding:2em">RecurCity needs JavaScript. <a style="color:#ffd" href="../">Back to the recursite</a>.</p></noscript>
+<script src="city.js"></script>
+</body>
+</html>

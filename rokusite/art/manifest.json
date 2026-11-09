@@ -1,0 +1,299 @@
+{
+ "ad_ancient": {
+  "edge": "#0c1710",
+  "fx": 0.58,
+  "fy": 0.41,
+  "h": 300,
+  "w": 450
+ },
+ "ad_arpanet": {
+  "edge": "#020914",
+  "fx": 0.63,
+  "fy": 0.48,
+  "h": 300,
+  "w": 450
+ },
+ "ad_brezvax": {
+  "edge": "#030a12",
+  "fx": 0.74,
+  "fy": 0.52,
+  "h": 300,
+  "w": 450
+ },
+ "ad_corpora": {
+  "edge": "#11140e",
+  "fx": 0.62,
+  "fy": 0.5,
+  "h": 300,
+  "w": 450
+ },
+ "ad_dinotrain": {
+  "edge": "#3b1808",
+  "fx": 0.55,
+  "fy": 0.4,
+  "h": 300,
+  "w": 450
+ },
+ "ad_flockquarium": {
+  "edge": "#000918",
+  "fx": 0.68,
+  "fy": 0.48,
+  "h": 300,
+  "w": 450
+ },
+ "ad_fly": {
+  "edge": "#262630",
+  "fx": 0.54,
+  "fy": 0.44,
+  "h": 300,
+  "w": 450
+ },
+ "ad_grotte": {
+  "edge": "#1c0d06",
+  "fx": 0.6,
+  "fy": 0.44,
+  "h": 300,
+  "w": 450
+ },
+ "ad_lavahash": {
+  "edge": "#100710",
+  "fx": 0.61,
+  "fy": 0.42,
+  "h": 300,
+  "w": 450
+ },
+ "ad_nameday": {
+  "edge": "#260e0b",
+  "fx": 0.63,
+  "fy": 0.46,
+  "h": 300,
+  "w": 450
+ },
+ "ad_noosphere": {
+  "edge": "#10051e",
+  "fx": 0.66,
+  "fy": 0.43,
+  "h": 300,
+  "w": 450
+ },
+ "ad_petroglyph": {
+  "edge": "#250e19",
+  "fx": 0.55,
+  "fy": 0.42,
+  "h": 300,
+  "w": 450
+ },
+ "ad_recursite": {
+  "edge": "#15091a",
+  "fx": 0.63,
+  "fy": 0.49,
+  "h": 300,
+  "w": 450
+ },
+ "ad_snowglobe": {
+  "edge": "#000717",
+  "fx": 0.65,
+  "fy": 0.44,
+  "h": 300,
+  "w": 450
+ },
+ "ad_snridworld": {
+  "edge": "#010b00",
+  "fx": 0.63,
+  "fy": 0.39,
+  "h": 300,
+  "w": 450
+ },
+ "ad_soundscapade": {
+  "edge": "#262134",
+  "fx": 0.55,
+  "fy": 0.37,
+  "h": 300,
+  "w": 450
+ },
+ "adtower": {
+  "fmt": "svg",
+  "h": 700,
+  "w": 315
+ },
+ "aquarium": {
+  "fmt": "svg",
+  "h": 110,
+  "w": 186
+ },
+ "billboard": {
+  "fmt": "svg",
+  "h": 260,
+  "w": 413
+ },
+ "billboardbldg": {
+  "fmt": "svg",
+  "h": 620,
+  "w": 393
+ },
+ "blimp": {
+  "fmt": "svg",
+  "h": 120,
+  "w": 247
+ },
+ "bowling": {
+  "fmt": "svg",
+  "h": 380,
+  "w": 674
+ },
+ "bridge": {
+  "fmt": "svg",
+  "h": 150,
+  "w": 419
+ },
+ "bus": {
+  "fmt": "svg",
+  "h": 130,
+  "w": 273
+ },
+ "car_parked": {
+  "fmt": "svg",
+  "h": 78,
+  "w": 229
+ },
+ "cityhall": {
+  "fmt": "svg",
+  "h": 470,
+  "w": 718
+ },
+ "clouds": {
+  "fmt": "svg",
+  "h": 90,
+  "w": 758
+ },
+ "club": {
+  "fmt": "svg",
+  "h": 430,
+  "w": 391
+ },
+ "diner": {
+  "fmt": "svg",
+  "h": 300,
+  "w": 568
+ },
+ "ferry": {
+  "fmt": "svg",
+  "h": 58,
+  "w": 125
+ },
+ "firehouse": {
+  "fmt": "svg",
+  "h": 520,
+  "w": 353
+ },
+ "foliage": {
+  "fmt": "svg",
+  "h": 230,
+  "w": 529
+ },
+ "hill": {
+  "fmt": "svg",
+  "h": 105,
+  "w": 746
+ },
+ "hotel": {
+  "fmt": "svg",
+  "h": 760,
+  "w": 409
+ },
+ "island": {
+  "fmt": "svg",
+  "h": 130,
+  "w": 129
+ },
+ "lamp": {
+  "fmt": "svg",
+  "h": 250,
+  "w": 114
+ },
+ "pickup": {
+  "fmt": "svg",
+  "h": 84,
+  "w": 144
+ },
+ "recordshop": {
+  "fmt": "svg",
+  "h": 500,
+  "w": 341
+ },
+ "rowhouse_a": {
+  "fmt": "svg",
+  "h": 560,
+  "w": 337
+ },
+ "rowhouse_b": {
+  "fmt": "svg",
+  "h": 640,
+  "w": 390
+ },
+ "sailboat": {
+  "fmt": "svg",
+  "h": 70,
+  "w": 72
+ },
+ "sedan": {
+  "fmt": "svg",
+  "h": 80,
+  "w": 178
+ },
+ "shore_a": {
+  "fmt": "svg",
+  "h": 74,
+  "w": 570
+ },
+ "shore_b": {
+  "fmt": "svg",
+  "h": 74,
+  "w": 415
+ },
+ "skyline_a": {
+  "fmt": "svg",
+  "h": 230,
+  "w": 379
+ },
+ "skyline_b": {
+  "fmt": "svg",
+  "h": 230,
+  "w": 505
+ },
+ "skyline_c": {
+  "fmt": "svg",
+  "h": 190,
+  "w": 368
+ },
+ "skyline_d": {
+  "fmt": "svg",
+  "h": 240,
+  "w": 297
+ },
+ "taxi": {
+  "fmt": "svg",
+  "h": 82,
+  "w": 169
+ },
+ "theater": {
+  "fmt": "svg",
+  "h": 660,
+  "w": 435
+ },
+ "tree": {
+  "fmt": "svg",
+  "h": 190,
+  "w": 151
+ },
+ "van": {
+  "fmt": "svg",
+  "h": 96,
+  "w": 178
+ },
+ "warehouse": {
+  "fmt": "svg",
+  "h": 420,
+  "w": 627
+ }
+}
