@@ -171,8 +171,10 @@ function adEl(ad, w, h) {
 const slots = [];
 function slot(kind, w, h) { const s = { kind, w, h, ad: firstFor(kind), nodes: [] }; slots.push(s); return s; }
 /* Swap a sign's content without ever showing an empty frame: the new ad goes in underneath,
-   and the old one is removed only once the new poster has decoded. */
-function decoded(node) { const i = node.querySelector('img'); return i && i.decode ? i.decode().catch(() => {}) : Promise.resolve(); }
+   and the old one is removed only once the new poster has decoded. Every image under the node
+   counts: a turning slat holds both the outgoing and the incoming face, and it is the incoming
+   one that matters. A poster that fails to decode is not worth stalling the sign over. */
+function decoded(node) { return Promise.all([...node.querySelectorAll('img')].map((i) => (i.decode ? i.decode().catch(() => {}) : null))); }
 function mountBillboard(s, node) {
   const fresh = adEl(ADS[s.ad], s.w, s.h), old = [...node.children];
   node.onclick = () => go(ADS[s.ad].url); node.title = ADS[s.ad].title;
@@ -260,9 +262,11 @@ function nextMarquee() {
    fonts load, then reused (a turning billboard builds the same ad eighteen times). */
 const fitMemo = new Map();
 function applyFit(span, k, v) { span.style.display = 'inline-block'; span.style.whiteSpace = 'nowrap'; span.style.transform = k < 1 ? `scale${v ? 'Y' : 'X'}(${k.toFixed(3)})` : ''; }
-function fit(span, max, key, v) {
+function fit(span, max, key, v, tries = 0) {
   if (key && fitMemo.has(key)) return applyFit(span, fitMemo.get(key), v);
-  if (!span.isConnected) return requestAnimationFrame(() => fit(span, max, key, v));
+  // built detached, so wait for it to be attached; a span that never is (its sign was rebuilt
+  // first) is dropped after a second rather than polled forever
+  if (!span.isConnected) { if (tries < 60) requestAnimationFrame(() => fit(span, max, key, v, tries + 1)); return; }
   document.fonts.ready.then(() => {
     if (key && fitMemo.has(key)) return applyFit(span, fitMemo.get(key), v);
     applyFit(span, 1, v); const len = v ? span.scrollHeight : span.scrollWidth, k = len > max ? max / len : 1;
@@ -763,7 +767,7 @@ const Q = new URLSearchParams(location.search);
 let t0 = performance.now() - (+Q.get('t') || 0) * 1000, nextCar = 3, nextBlimp = 8, nextSnail = 20, nextShoot = 12, nextBalloon = 25, last = 0;
 function frame(now) {
   const t = (now - t0) / 1000, dt = Math.min(.1, t - last); last = t;
-  const k = reduced ? .35 : 1;
+  const k = 1;
   for (const L of layers) L.track.style.transform = `translate3d(${-((t * L.speed * k) % L.width)}px,0,0)`;
   for (let i = movers.length - 1; i >= 0; i--) {
     const m = movers[i]; m.x += m.v * k * dt; m.box.style.transform = `translate3d(${m.x}px,0,0)`;
@@ -840,10 +844,11 @@ async function start() {
   preload(['taxi', 'sedan', 'pickup', 'bus', 'van', 'blimp', 'ferry', 'sailboat', 'foliage', 'clouds', 'balloon']).then(() => BOATS.forEach((_, i) => spawnBoat(i, true)));
   addEventListener('resize', () => { clearTimeout(start.r); start.r = setTimeout(layout, 150); });
   // billboards take turns: one turns every few seconds
+  // nobody is watching a hidden tab: skip the turns rather than build signs for it
   let bi = 0;
-  setInterval(() => { const s = slots[bi++ % slots.length]; if (s) turnBillboard(s, nextAd(s)); }, 6500);
-  setInterval(turnBand, 8000);
-  setInterval(updateR, 1200); updateR();
+  setInterval(() => { if (document.hidden) return; const s = slots[bi++ % slots.length]; if (s) turnBillboard(s, nextAd(s)); }, 6500);
+  setInterval(() => { if (!document.hidden) turnBand(); }, 8000);
+  setInterval(() => { if (!document.hidden) updateR(); }, 1200); updateR();
   $('#rkey').onclick = () => go($('#rkey').dataset.url);
   addEventListener('keydown', (e) => {
     wake();
@@ -852,6 +857,8 @@ async function start() {
   });
   addEventListener('pointermove', wake); wake(); hoverTips();
   addEventListener('dragstart', (e) => e.preventDefault());  // nothing in the city can be dragged off
-  requestAnimationFrame(frame);
+  // reduced motion gets a still city: the streets don't scroll and no traffic sets out; boats rest
+  // where they were placed, and billboards still change, as a plain swap instead of a turn
+  if (!reduced) requestAnimationFrame(frame);
 }
 start();

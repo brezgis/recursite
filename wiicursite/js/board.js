@@ -81,7 +81,7 @@ export function renderBoard() {
   $('#bdNotes').innerHTML = shown.map((n, i) => {
     const [x, y] = spots[i], rot = ((hash(viewKey + n.key) % 7) - 3) * .8;
     const unread = n.kind !== 'memo' && !read.has(`${viewKey}/${n.key}`);
-    return `<div class="note ${n.kind}${unread ? ' unread' : ''}" data-hover="note" data-act="openNote" data-i="${notes.indexOf(n)}" style="left:${x - 178}px;top:${y - 125}px;--rot:${rot}deg">
+    return `<div class="note ${n.kind}${unread ? ' unread' : ''}" role="button" tabindex="0" data-hover="note" data-act="openNote" data-i="${notes.indexOf(n)}" style="left:${x - 178}px;top:${y - 125}px;--rot:${rot}deg">
       <div class="nhead">${n.kind === 'wii' ? '<span class="wiitag">Wii</span>' : ''}</div><div class="pin ${n.kind}"></div>
       <div class="subj">${esc(n.subject)}</div></div>`;
   }).join('') || '<div class="nothing">There are no messages.</div>';
@@ -164,7 +164,7 @@ function renderCal() {
   for (let d = 1; d <= n; d++) {
     const k = dayKey(new Date(y, m, d)), future = k > today;
     const extra = (memos[k]?.length ? 1 : 0) + (log[k]?.length ? 1 : 0);
-    cells += `<div class="cday${k === today ? ' today' : ''}${k === viewKey ? ' sel' : ''}${future ? ' future' : ''}" ${future ? '' : `data-hover="cday" data-act="cDay" data-day="${k}"`}>
+    cells += `<div class="cday${k === today ? ' today' : ''}${k === viewKey ? ' sel' : ''}${future ? ' future' : ''}" ${future ? '' : `role="button" tabindex="0" aria-label="${k}" data-hover="cday" data-act="cDay" data-day="${k}"`}>
       <span>${d}</span>${future ? '' : `<i class="env${extra ? ' more' : ''}"></i>`}</div>`;
   }
   $('#calTitle').textContent = `${MONTHS[m]} ${y}`;

@@ -470,3 +470,8 @@ body.running:not(.home) #homeBtn { display: block; }
   background: linear-gradient(180deg, #fff 0, #f2f2f2 50%, #e4e4e4 100%); box-shadow: 0 0 0 4px #9a9a9a;
   overflow-wrap: anywhere; transition: transform .12s, box-shadow .12s; }
 .sdrow.hover { transform: scale(1.04); box-shadow: 0 0 0 6px var(--hover-blue), 0 0 20px 6px rgba(95,212,247,.5); color: #333; }
+
+/* Keyboard focus shows as the same Wii glow as hovering (the focused thing is the hovered thing),
+   so the browser's own ring would only double it. */
+#stage :focus-visible { outline: none; }
+#homeBtn:focus-visible { outline: 3px solid #5fd4f7; outline-offset: 3px; opacity: 1; }

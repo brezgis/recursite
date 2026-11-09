@@ -104,6 +104,7 @@ function buildTiles() {
     t.className = 'tile' + (id ? '' : ' empty');
     t.style.left = x + 'px'; t.style.top = y + 'px';
     t.dataset.slot = i; t.dataset.hover = id ? 'tile' : 'empty';
+    if (id) { t.setAttribute('role', 'button'); t.setAttribute('aria-label', CHANNELS[id].title || id); }
     t.innerHTML = `<div class="art">${id ? CHANNELS[id].art() : ''}</div>`;
     track.appendChild(t); tiles.push(t);
   });
@@ -122,7 +123,11 @@ function updateAnimations() {
   tiles.forEach((t, i) => setAnimating(t, menuShowing && onScreen(i)));
 }
 function markLive() {
-  tiles.forEach((t, i) => { t.style.pointerEvents = Math.floor(i / 12) === page ? 'auto' : 'none'; });
+  tiles.forEach((t, i) => {
+    const live = Math.floor(i / 12) === page;
+    t.style.pointerEvents = live ? 'auto' : 'none';
+    if (layout[i]) t.tabIndex = live ? 0 : -1;   // Tab only reaches this page's channels
+  });
   if (typeof mode !== 'undefined') updateAnimations();
   $('#arrowL').hidden = page === 0;
   $('#arrowR').hidden = page === PAGES - 1;
@@ -207,7 +212,55 @@ function prefetchFull(tile) {
     .concat((tile.innerHTML.match(/img\/sm\/[\w-]+\.webp/g) || [])).filter((u) => u && u.includes('img/sm/')).map((u) => u.replace('img/sm/', 'img/'));
   for (const u of urls) if (!fetched.has(u)) { fetched.add(u); const im = new Image(); im.decoding = 'async'; im.src = u; }
 }
-const refreshHover = () => { if (hovered) hovered.classList.remove('hover'); hovered = null; setTimeout(() => hoverAt(px, py), 450); };
+// Keyboard hover. With no Wii Remote, focus is the pointer: whatever has keyboard focus glows
+// and is what A/Enter presses. Arrow keys walk the channel grid and cross pages at its edges.
+let keyboard = false, kbSlot = null;
+function hoverEl(t) {
+  if (t === hovered) return;
+  if (hovered) hovered.classList.remove('hover');
+  hovered = t;
+  if (!t) return;
+  t.classList.add('hover');
+  if (t.dataset.slot != null) { kbSlot = +t.dataset.slot; prefetchFull(t); }
+  if (t.matches('.roundbtn, #sdBtn, .pvbtn, .hclose')) sfx.hoverBtn(); else sfx.hover();
+}
+addEventListener('focusin', (e) => {
+  if (!keyboard) return;
+  const t = e.target.closest && e.target.closest(HOVERABLE);
+  if (t && t.dataset.hover !== 'empty') hoverEl(t);
+});
+const SCREEN = { menu: '#menu', preview: '#preview', board: '#board', letter: '#letter', memo: '#memo', calendar: '#calendar', rii: '#rii', sd: '#sd', home: '#homeMenu' };
+const shown = (el) => el.offsetParent !== null && !el.hidden;
+// after a screen change, put keyboard focus somewhere sensible on the new screen
+function keyboardLand() {
+  const box = SCREEN[mode] && $(SCREEN[mode]); if (!box) return;
+  let t = null;
+  if (mode === 'menu' && kbSlot != null && Math.floor(kbSlot / 12) === page && layout[kbSlot]) t = tiles[kbSlot];
+  else if (mode === 'menu') t = tiles.find((x, i) => Math.floor(i / 12) === page && layout[i]);
+  else if (mode === 'preview') t = $('#pvStart');
+  if (!t || !shown(t)) t = [...box.querySelectorAll('button, [role="button"], textarea')].find(shown);
+  if (t) { t.focus({ preventScroll: true }); hoverEl(t.closest(HOVERABLE)); }
+}
+// the channel grid: global column gc runs across all pages, rows 0-2
+function gridStep(dx, dy) {
+  const cur = hovered && hovered.dataset.slot != null ? +hovered.dataset.slot : null;
+  if (cur == null) return keyboardLand();
+  let gc = Math.floor(cur / 12) * 4 + cur % 4, r = Math.floor((cur % 12) / 4);
+  for (;;) {
+    gc += dx; r += dy;
+    if (gc < 0 || gc >= PAGES * 4 || r < 0 || r > 2) return;
+    const i = Math.floor(gc / 4) * 12 + r * 4 + gc % 4;
+    if (!layout[i]) continue;   // skip empty slots
+    const p = Math.floor(i / 12);
+    if (p !== page) { sfx.page(p - page); page = p; track.style.transform = `translateX(${-page * PAGE_W}px)`; markLive(); }
+    tiles[i].focus({ preventScroll: true }); hoverEl(tiles[i]);
+    return;
+  }
+}
+const refreshHover = () => {
+  if (hovered) hovered.classList.remove('hover'); hovered = null;
+  setTimeout(() => (keyboard ? keyboardLand() : hoverAt(px, py)), 450);
+};
 let arrowTimer = null;
 
 // ---------- picking up and moving channels (hold A) ----------
@@ -238,6 +291,14 @@ function drop() {
 
 // ---------- channel preview ----------
 let mode = 'warning', pvSlot = null;
+// Every mode change comes through here. Animations are re-evaluated once the current task
+// finishes, since callers often flip a screen's .on class just after changing the mode; and the
+// menu is inert whenever it isn't the screen in use, so Tab can't wander behind a preview.
+function setMode(m) {
+  mode = m;
+  $('#menu').inert = m !== 'menu';
+  queueMicrotask(updateAnimations);
+}
 function tileRect(slot) { const { x, y } = slotXY(slot); return { x: x - page * PAGE_W, y, w: 392, h: 208 }; }
 // Transitions run as composited transform/opacity animations only. The preview is built
 // up front, and its banner flies out of the tile you picked while the button bar rises
@@ -279,7 +340,7 @@ function previewParts() {
 }
 function openPreview(slot) {
   const id = layout[slot]; if (!id) return;
-  sfx.select(); duckMusic(true); mode = 'zoom';
+  sfx.select(); duckMusic(true); setMode('zoom');
   buildPreview(slot);
   $('#preview').classList.add('on');
   const { front, back, msg, bar, arrows } = previewParts();
@@ -289,13 +350,13 @@ function openPreview(slot) {
   anim(back, [{ opacity: 0 }, { opacity: 1 }], { duration: ZOOM_MS * .9 });
   anim(bar, [{ transform: 'translateY(290px)' }, { transform: 'none' }]);
   [msg, ...arrows].forEach((el) => el && anim(el, [{ opacity: 0 }, { opacity: 0, offset: .6 }, { opacity: 1 }]));
-  setTimeout(() => { setAnimating(front, true); mode = 'preview'; refreshHover(); }, ZOOM_MS);
+  setTimeout(() => { setAnimating(front, true); setMode('preview'); refreshHover(); }, ZOOM_MS);
 }
 function stepPreview(dir) {
   const filled = layout.map((id, i) => id ? i : -1).filter((i) => i >= 0);
   const k = filled.indexOf(pvSlot) + dir;
   if (k < 0 || k >= filled.length || mode !== 'preview') return;
-  sfx.page(dir); mode = 'zoom';
+  sfx.page(dir); setMode('zoom');
   // the old banner slides off one side while the next one slides in from the other
   const old = $('#pvBanner'), ghost = document.createElement('div');
   ghost.className = 'pvghost';
@@ -306,10 +367,10 @@ function stepPreview(dir) {
   const ms = 360;
   anim(ghost, [{ transform: 'none' }, { transform: `translateX(${-dir * 1920}px)` }], { duration: ms }).onfinish = () => ghost.remove();
   anim(old, [{ transform: `translateX(${dir * 1920}px)` }, { transform: 'none' }], { duration: ms });
-  setTimeout(() => { mode = 'preview'; refreshHover(); }, ms);
+  setTimeout(() => { setMode('preview'); refreshHover(); }, ms);
 }
 function closePreview() {
-  sfx.back(); mode = 'zoom';
+  sfx.back(); setMode('zoom');
   const slot = pvSlot, p = Math.floor(slot / 12);
   if (p !== page) { page = p; track.style.transition = 'none'; track.style.transform = `translateX(${-page * PAGE_W}px)`; track.offsetWidth; track.style.transition = ''; markLive(); }
   const { front, back, msg, bar, arrows } = previewParts();
@@ -319,11 +380,11 @@ function closePreview() {
   anim(back, [{ opacity: 0 }, { opacity: 1 }], o);
   anim(bar, [{ transform: 'translateY(290px)' }, { transform: 'none' }], o);
   [msg, ...arrows].forEach((el) => el && anim(el, [{ opacity: 0 }, { opacity: 0, offset: .6 }, { opacity: 1 }], { ...o, duration: ZOOM_MS * .5 }));
-  mode = 'closing';   // the menu starts animating again under the shrinking banner
+  setMode('closing');   // the menu starts animating again under the shrinking banner
   setTimeout(() => {
     $('#preview').classList.remove('on'); $('#pvBanner').innerHTML = '';
     bar.getAnimations().forEach((a) => a.cancel());
-    mode = 'menu'; duckMusic(false); refreshHover();
+    setMode('menu'); duckMusic(false); refreshHover();
   }, ZOOM_MS);
 }
 // Fade the whole viewport to black and back, outside the stage so it also covers a running app.
@@ -352,7 +413,7 @@ function runApp(id) {
   }
   // Like the real Wii: fade to black, load the channel behind the black, then fade up
   // once it has loaded. Waits at most 6 s, so a slow app still appears.
-  mode = 'app'; duckMusic('off');
+  setMode('app'); duckMusic('off');
   fadeOut().then(() => {
     running = id;
     let shown = false;
@@ -367,7 +428,7 @@ function runApp(id) {
 }
 function openHome() {
   if (mode !== 'app') return;
-  sfx.select(); mode = 'home';
+  sfx.select(); setMode('home');
   document.body.classList.add('home');
   $('#shade').classList.add('on'); $('#homeMenu').classList.add('on');
   $('#hChan').textContent = CHANNELS[running].title;
@@ -382,15 +443,15 @@ function closeHome() {
   $('#shade').classList.remove('on'); $('#homeMenu').classList.remove('on');
 }
 function quitToMenu() {
-  sfx.back(); mode = 'zoom';
+  sfx.back(); setMode('zoom');
   fadeOut(300).then(() => {
     closeHome(); logEnd();
     frame.src = 'about:blank'; running = null;
     $('#app').classList.remove('on'); document.body.classList.remove('running');
-    if (returnTo) { $('#' + returnTo).classList.add('on'); mode = returnTo; duckMusic(false); fadeIn(520); refreshHover(); return; }
+    if (returnTo) { $('#' + returnTo).classList.add('on'); setMode(returnTo); duckMusic(false); fadeIn(520); refreshHover(); return; }
     const p = Math.floor(pvSlot / 12);
     if (pvSlot != null && p !== page) { page = p; track.style.transition = 'none'; track.style.transform = `translateX(${-page * PAGE_W}px)`; track.offsetWidth; track.style.transition = ''; markLive(); }
-    mode = 'menu'; duckMusic(false); refreshMailLight();
+    setMode('menu'); duckMusic(false); refreshMailLight();
     fadeIn(520); refreshHover();
   });
 }
@@ -398,28 +459,28 @@ $('#homeBtn').addEventListener('click', (e) => { e.stopPropagation(); initAudio(
 
 // ---------- Message Board ----------
 function enterBoard() {
-  sfx.select(); mode = 'zoom';
+  sfx.select(); setMode('zoom');
   const f = $('#flash');
   f.animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { openBoard(); $('#board').classList.add('on'); mode = 'board'; refreshHover(); }, 260);
+  setTimeout(() => { openBoard(); $('#board').classList.add('on'); setMode('board'); refreshHover(); }, 260);
 }
 function leaveBoard() {
-  sfx.back(); mode = 'zoom';
+  sfx.back(); setMode('zoom');
   const f = $('#flash');
   f.animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { $('#board').classList.remove('on'); refreshMailLight(); mode = 'menu'; refreshHover(); }, 260);
+  setTimeout(() => { $('#board').classList.remove('on'); refreshMailLight(); setMode('menu'); refreshHover(); }, 260);
 }
 
 // ---------- Rii Options and the SD Card Menu ----------
 function showScreen(id) {
-  sfx.select(); mode = 'zoom';
+  sfx.select(); setMode('zoom');
   $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { $('#' + id).classList.add('on'); mode = id; updateAnimations(); refreshHover(); }, 260);
+  setTimeout(() => { $('#' + id).classList.add('on'); setMode(id); updateAnimations(); refreshHover(); }, 260);
 }
 function hideScreen(id) {
-  sfx.back(); mode = 'zoom';
+  sfx.back(); setMode('zoom');
   $('#flash').animate([{ opacity: 0 }, { opacity: .9 }, { opacity: 0 }], { duration: 560, easing: 'ease-in-out' });
-  setTimeout(() => { $('#' + id).classList.remove('on'); mode = 'menu'; updateAnimations(); refreshHover(); }, 260);
+  setTimeout(() => { $('#' + id).classList.remove('on'); setMode('menu'); updateAnimations(); refreshHover(); }, 260);
 }
 function riiView(v) {   // 'main' | 'data' | 'ask'
   $('#riiMain').hidden = v !== 'main'; $('#riiDataCards').hidden = v !== 'data'; $('#riiAsk').hidden = v !== 'ask';
@@ -456,13 +517,13 @@ const ACTIONS = {
   ...Object.fromEntries(Object.entries(boardActions).map(([k, fn]) => [k, (el) => {
     const r = fn(el);
     if (r === 'page-1' || r === 'page1') { sfx.page(r === 'page1' ? 1 : -1); if (mode === 'board') renderBoard(); }
-    else if (r === 'posted') { sfx.pressA(); mode = 'board'; renderBoard(); }
-    else if (r === 'letter' || r === 'memo' || r === 'calendar') { sfx.select(); mode = r; }
-    else { sfx.back(); mode = r; renderBoard(); }
+    else if (r === 'posted') { sfx.pressA(); setMode('board'); renderBoard(); }
+    else if (r === 'letter' || r === 'memo' || r === 'calendar') { sfx.select(); setMode(r); }
+    else { sfx.back(); setMode(r); renderBoard(); }
     refreshHover();
   }])),
   bdBack: () => leaveBoard(),
-  hClose: () => { sfx.back(); closeHome(); mode = 'app'; },
+  hClose: () => { sfx.back(); closeHome(); setMode('app'); },
   hWiiMenu: () => quitToMenu(),
   riiData: () => { sfx.select(); riiView('data'); },
   riiSafety: () => { returnTo = 'rii'; runApp('healthsafety'); },
@@ -473,7 +534,7 @@ const ACTIONS = {
   riiBack: () => { if (!$('#riiAsk').hidden) return ACTIONS.riiNo(); if (!$('#riiDataCards').hidden) { sfx.back(); return riiView('main'); } hideScreen('rii'); },
   sdOpen: (el) => { returnTo = 'sd'; runApp(el.dataset.id); },
   sdBack: () => hideScreen('sd'),
-  hReset: () => { sfx.start(); closeHome(); mode = 'app'; logEnd(); logStart(running); frame.src = CHANNELS[running].url; },
+  hReset: () => { sfx.start(); closeHome(); setMode('app'); logEnd(); logStart(running); frame.src = CHANNELS[running].url; },
 };
 
 // ---------- health & safety → menu ----------
@@ -481,9 +542,9 @@ let canContinue = false;
 setTimeout(() => { $('#pressA').classList.add('on'); canContinue = true; }, 2600);
 function continueFromWarning() {
   if (!canContinue) return;
-  initAudio(); sfx.pressA(); mode = 'fading';
+  initAudio(); sfx.pressA(); setMode('fading');
   $('#warning').classList.add('gone');
-  setTimeout(() => { $('#menu').classList.add('on'); startMusic(); mode = 'menu'; refreshHover(); }, 600);
+  setTimeout(() => { $('#menu').classList.add('on'); startMusic(); setMode('menu'); refreshHover(); }, 600);
 }
 
 // ---------- input ----------
@@ -514,6 +575,7 @@ function pressA() {
 // Touch: a tap is A, a sideways swipe turns the page, and the Wii hand stays hidden.
 let touchy = false;
 addEventListener('pointermove', (e) => {
+  if (keyboard && Math.hypot(e.movementX, e.movementY) > 2) keyboard = false;
   ({ x: px, y: py } = toStage(e));
   touchy = e.pointerType === 'touch';
   cursor.classList.toggle('on', !touchy);
@@ -549,11 +611,20 @@ addEventListener('pointerup', (e) => {
 });
 addEventListener('pointercancel', () => { downAt = null; if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } });
 addEventListener('keydown', (e) => {
-  if (e.repeat || e.target.tagName === 'TEXTAREA') return;
+  if (e.target.tagName === 'TEXTAREA') return;
   const k = e.key;
+  if (k === 'Tab' || k.startsWith('Arrow')) {
+    if (!keyboard) { keyboard = true; if (k.startsWith('Arrow') && mode === 'menu' && !(hovered && hovered.dataset.slot != null)) { e.preventDefault(); return keyboardLand(); } }
+    if (k === 'Tab') { if (hovered && !hovered.matches(':focus')) hovered.focus({ preventScroll: true }); return; }
+  }
+  if (mode === 'menu' && k.startsWith('Arrow')) {   // arrows hold to keep walking
+    e.preventDefault();
+    return gridStep(k === 'ArrowRight' ? 1 : k === 'ArrowLeft' ? -1 : 0, k === 'ArrowDown' ? 1 : k === 'ArrowUp' ? -1 : 0);
+  }
+  if (e.repeat) return;
   if (k === 'Enter' || k === ' ' || k === 'a' || k === 'A') { e.preventDefault(); pressA(); }
-  else if (mode === 'menu' && (k === 'ArrowRight' || k === '+' || k === '=')) goPage(page + 1);
-  else if (mode === 'menu' && (k === 'ArrowLeft' || k === '-' || k === '_')) goPage(page - 1);
+  else if (mode === 'menu' && (k === '+' || k === '=')) goPage(page + 1);
+  else if (mode === 'menu' && (k === '-' || k === '_')) goPage(page - 1);
   else if (mode === 'preview' && (k === 'ArrowRight' || k === '+' || k === '=')) stepPreview(1);
   else if (mode === 'preview' && (k === 'ArrowLeft' || k === '-' || k === '_')) stepPreview(-1);
   else if ((k === 'b' || k === 'B' || k === 'Escape') && mode === 'preview') closePreview();
@@ -570,6 +641,4 @@ addEventListener('keydown', (e) => {
 
 buildTiles();
 
-// Re-evaluate which banners animate whenever the mode changes.
-let lastMode = null;
-setInterval(() => { if (mode !== lastMode) { lastMode = mode; updateAnimations(); } }, 100);
+
