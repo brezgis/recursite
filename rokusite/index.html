@@ -17,9 +17,13 @@
   <div id="stage">
     <div id="sky"><canvas id="stars"></canvas><div id="glow"></div><div id="planet"></div></div>
     <div class="layer" id="clouds"></div>
-    <div id="water"><div class="layer refl" id="far-refl"></div><div id="glint"></div></div>
+    <div id="water">
+      <div id="boat-refl"></div>
+      <div id="glint"></div>
+    </div>
     <div class="layer" id="far"></div>
     <div class="layer" id="shore"></div>
+    <div id="boats-far"></div>
     <div class="layer" id="bay"></div>
     <div id="boats"></div>
     <div class="layer" id="aloft"></div>
@@ -30,6 +34,7 @@
   </div>
   <a id="plate" href="../" title="back to the recursite"><span>recursite</span></a>
   <div id="tip" aria-hidden="true"></div>
+  <button id="rkey" type="button" aria-label="open the featured billboard (press R)"><b>R</b> <span></span></button>
 </main>
 <noscript><p style="color:#fff;font:16px sans-serif;padding:2em">RecurCity needs JavaScript. <a style="color:#ffd" href="../">Back to the recursite</a>.</p></noscript>
 <script src="city.js"></script>

@@ -46,7 +46,7 @@ const SKYWRITING = [
 const OV = {  // measured from the sprites' pixels by roku-mode/tools/measure.py
   theater: { blade: [0.446, 0.101, 0.108, 0.446], band: [0.072, 0.689, 0.853, 0.063], caseL: [0.145, 0.845, 0.098, 0.108], caseR: [0.755, 0.845, 0.1, 0.108] },
   billboard: { bb: [0.026, 0.094, 0.949, 0.546] },
-  billboardbldg: { bb: [0.113, 0.033, 0.775, 0.132], egg: 'terminal', win: [0.536, 0.49, 0.128, 0.091] },
+  billboardbldg: { bb: [0.113, 0.033, 0.775, 0.132], egg: 'terminal', win: [0.545, 0.497, 0.11, 0.077] },
   adtower: { screens: [[0.094, 0.235, 0.238, 0.518], [0.402, 0.35, 0.51, 0.115], [0.701, 0.518, 0.199, 0.088], [0.384, 0.65, 0.531, 0.111]] },
   diner: { sign: [0.244, 0.035, 0.513, 0.205] },
   bowling: { lucky: [.183, .297, .14, .12] },
@@ -63,18 +63,26 @@ const OV = {  // measured from the sprites' pixels by roku-mode/tools/measure.py
 /* scene: logical stage units, 1080 tall. Buildings advance the cursor; props (p:1) don't. */
 const HORIZON = 300, BASE = 968;
 /* the skyline: separate clusters, each with its own landmark, over the haze; the hill carries the sign */
-const FAR = { speed: 3.2, base: HORIZON + 4, tail: 120, items: [
-  { s: 'skyline_a' }, { s: 'hill', gap: 60, sign: 'RECURCITY' }, { s: 'skyline_c', gap: 40 },
-  { s: 'skyline_b', gap: 140 }, { s: 'skyline_d', gap: 120 }, { s: 'skyline_a', gap: 150, flip: 1 },
+/* The far skyline is one quiet violet band: clusters are tinted toward the haze (tint: how far),
+   and only the landmark clusters keep a little of their own colour. */
+const FAR = { speed: 3.2, base: HORIZON + 4, tail: 300, items: [
+  { s: 'skyline_a', tint: .7 }, { s: 'skyline_c', gap: 1240, tint: .42 },   // the gap is the RECURCITY hill's
+  { s: 'skyline_b', gap: 260, tint: .45 }, { s: 'skyline_d', gap: 640, tint: .4 }, // bridge
+  { s: 'skyline_a', gap: 420, flip: 1, tint: .72 },                          // aquarium
 ] };
 const CLOUDS = { speed: 1.4, items: [{ s: 'clouds', x: 120, y: HORIZON - 120 }, { s: 'clouds', x: 1500, y: HORIZON - 175, flip: 1 }], width: 2900 };
 /* the far shore is just a few things on the waterline: the bridge, a little harbour, the aquarium */
-const SHORE = { speed: 5.5, base: HORIZON + 9, items: [
-  { s: 'shore_a' }, { s: 'bridge', gap: -40 }, { s: 'shore_a', gap: -40, flip: 1 },
-  { s: 'shore_b', gap: 900 }, { s: 'aquarium', gap: 30, ad: 'flockquarium', dy: -4 },
-], tail: 1100 };
+/* The far shore: just three things, far apart and moving together, so nothing ever slides in
+   front of the hillside sign. */
+/* The far shore scrolls exactly with the skyline, each thing centred in its own gap of the
+   skyline (gapAfter: index of the cluster before it), so nothing on the horizon ever crosses. */
+const SHORE = { speed: 3.2, base: HORIZON + 9, items: [
+  { s: 'hill', gapAfter: 0, k: 1.3, sign: 'RECURCITY', clear: 1 },
+  { s: 'bridge', gapAfter: 2, k: 1.15 },
+  { s: 'aquarium', gapAfter: 3, ad: 'flockquarium', dy: -4 },
+] };
 const BAY = { speed: 9, width: 3200, items: [
-  { s: 'island', x: 520, y: HORIZON + 58, beam: 1 },
+  { s: 'island', x: 520, y: HORIZON + 70, k: .82, beam: 1 },
 ] };
 /* boats: [sprite, depth 0 (horizon) .. 1 (near), own speed through the water px/s] */
 const BOATS = [['ferry', .07, 5], ['sailboat', .22, -3]];
@@ -86,7 +94,7 @@ function groundSpeed(y) { const f = Math.max(0, (y - HORIZON) / (BASE - HORIZON)
 const STREET = { speed: 24, items: [
   { s: 'rowhouse_b' },
   { s: 'tree', fill: 170, y: BASE + 6 },
-  { s: 'recordshop' },
+  { s: 'recordshop', ad: 'soundscapade' },
   { s: 'lamp', fill: 120, y: BASE + 8, egg: 'fly' },
   { s: 'theater' }, { s: 'car_parked', p: 1, ox: -330, y: BASE + 46 },
   { s: 'lamp', fill: 120, y: BASE + 8 },
@@ -231,14 +239,21 @@ function pickAd(k, kind, except) {
 function nextAd(s) { s.hist = [...(s.hist || []), s.ad].slice(-5); return pickAd(s.ad, s.kind, s); }
 const firstFor = (kind) => pickAd(-1, kind, null);
 /* the marquee skips any message whose project is already showing */
-const mqHist = [];
+function visibleNow() {
+  const on = new Set(), vis = (n) => { const r = n.getBoundingClientRect(); return r.right > 0 && r.left < innerWidth; };
+  for (const o of slots) if (o.nodes.some(vis)) on.add(o.ad);
+  for (const m of movers) if (m.ad != null) on.add(m.ad);
+  if (blimp && blimp.ad != null) on.add(blimp.ad);
+  return on;
+}
 function nextMarquee() {
-  const on = showing(null), free = (i) => i !== mq && (!MARQUEE[i].ad || !on.has(adIndex(MARQUEE[i].ad)));
-  let c = MARQUEE.map((_, i) => i).filter((i) => free(i) && !mqHist.includes(i));
-  if (!c.length) c = MARQUEE.map((_, i) => i).filter(free);
-  if (!c.length) return mq;
-  mqHist.push(mq); if (mqHist.length > 2) mqHist.shift();
-  return c[(Math.random() * c.length) | 0];
+  const on = visibleNow();
+  for (let n = 0; n < MARQUEE.length; n++) {
+    if (mqPos >= mqDeck.length) { const last = mqDeck[mqDeck.length - 1]; mqDeck.length = 0; mqDeck.push(...shuffle(MARQUEE.map((_, i) => i))); if (mqDeck[0] === last) mqDeck.push(mqDeck.shift()); mqPos = 0; }
+    const i = mqDeck[mqPos++], a = MARQUEE[i].ad;
+    if (i !== mq && (!a || !on.has(adIndex(a)))) return i;
+  }
+  return mq;
 }
 
 /* Squeeze a line of text horizontally if it is wider than its sign. Measured once per key after
@@ -256,7 +271,10 @@ function fit(span, max, key, v) {
   });
 }
 /* ---- the marquee ---- */
-let mq = (Math.random() * 5) | 0; const marquees = [];
+/* The marquee deals from a deck shuffled fresh on every visit; it skips a message only when that
+   project is visibly on screen this moment. */
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const mqDeck = shuffle(MARQUEE.map((_, i) => i)); let mqPos = 1, mq = mqDeck[0]; const marquees = [];
 function mountBand(node) {
   node.innerHTML = '';
   const m = el('div', 'msg'); const M = MARQUEE[mq];
@@ -303,60 +321,137 @@ function render(L, viewW) {
 /* The far haze: a continuous, very simple city silhouette right on the horizon, so the background
    is never empty between the skyline clusters. Painted once; low detail on purpose. */
 
-let hazeURL = null;
+let hazeURL = null, hazeCanvas = null;
 function hazeImage(W) {
   if (!hazeURL) {
-    const H = 150, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+    const H = 150, c = document.createElement('canvas'); c.width = Math.ceil(W); c.height = H; const g = c.getContext('2d');
     let seed = 4242; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     for (const [col, hmin, hmax, wmin, wmax] of [['#6d3a9e', 40, 120, 30, 90], ['#5a2c8a', 18, 70, 24, 70]]) {
-      g.fillStyle = col; let x = 0;
+      g.fillStyle = col; let x = rnd() * 200;
       while (x < W) {
-        const w = wmin + rnd() * (wmax - wmin), h = hmin + rnd() * (hmax - hmin);
-        g.fillRect(x, H - h, w, h);
-        if (rnd() < .3) g.fillRect(x + w / 2 - 2, H - h - 14 - rnd() * 18, 4, 30);  // a mast now and then
-        x += w - 2;
+        const run = 260 + rnd() * 520, end = Math.min(W, x + run);  // a stretch of low city, then open horizon
+        while (x < end) {
+          const w = wmin + rnd() * (wmax - wmin), h = (hmin + rnd() * (hmax - hmin)) * .8;
+          g.fillRect(x, H - h, w, h);
+          if (rnd() < .2) g.fillRect(x + w / 2 - 2, H - h - 14 - rnd() * 18, 4, 30);
+          x += w - 2;
+        }
+        x += 220 + rnd() * 420;
       }
-      g.fillStyle = '#ffd9a8';
-      for (let i = 0; i < W / 22; i++) { g.globalAlpha = .35 + rnd() * .4; g.fillRect(rnd() * W, H - rnd() * hmin * .9, 2, 2); }
-      g.globalAlpha = 1;
     }
-    hazeURL = c.toDataURL();
+    hazeURL = c.toDataURL(); hazeCanvas = c;
   }
   return hazeURL;
 }
-/* The hillside sign: plain white letters standing along the crest, painted into the skyline
-   layer's own background (no extra elements riding the layer). */
-let hillURL = null;
-function hillSign(w, signs) {
-  if (!hillURL) {
-    const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = 170; const g = c.getContext('2d');
-    g.font = "700 27px 'Josefin Sans', sans-serif"; g.textAlign = 'center'; g.textBaseline = 'top';
-    for (const { text, x, z } of signs) {
-      const n = text.length, top = FAR.base - z.h - (HORIZON - 160);
-      [...text].forEach((ch, i) => {
-        const u = .33 + .34 * (i / (n - 1)), lift = Math.sin(Math.PI * u) * .74;  // follow the hill's curve
-        const cx = x + u * z.w, cy = top + z.h * (1 - lift) - 10;
-        g.fillStyle = '#b98fd8'; g.fillText(ch, cx, cy + 1); g.fillStyle = '#f6eefc'; g.fillText(ch, cx, cy);
-      });
-    }
-    hillURL = c.toDataURL();
-  }
-  return hillURL;
+
+/* ---- reflections, baked ----
+   A reflection only ever slides sideways over water that never changes, so each reflection layer is
+   painted once, into one picture: the sprites flipped below their waterlines, then every row mixed
+   with the colour of the water at that depth (strong at the horizon, gone by RF.depth, in ripple
+   bands). Where reflections overlap, the nearer one simply covers the farther. Baked at half
+   resolution on purpose: stretched back up, they come out soft, like reflections should. */
+const IMGS = {};
+function loadImg(n) {
+  const z = MAN[n]; if (!z) return Promise.resolve(null);
+  if (IMGS[n]) return Promise.resolve(IMGS[n]);
+  const i = new Image(); i.src = 'art/' + n + '.' + (z.fmt || 'webp');
+  return i.decode().then(() => (IMGS[n] = i), () => null);
 }
-function farStrip(strip, refl) {
-  let x = 0; const signs = [];
-  for (const it of FAR.items) {
-    x += it.gap || 0; const z = size(it.s);
-    strip.appendChild(sprite(it.s, x, FAR.base, it.flip ? { transform: 'scaleX(-1)' } : null));
-    if (it.sign && !z.missing) signs.push({ text: it.sign, x, z });
-    x += z.w;
+const WATER = [[0, [215, 127, 182]], [.06, [164, 59, 163]], [.30, [108, 24, 141]], [.70, [76, 16, 118]], [1, [58, 12, 102]]], WATER_H = 680;
+function waterAt(y) {
+  const t = Math.min(1, Math.max(0, y / WATER_H));
+  for (let i = 1; i < WATER.length; i++) if (t <= WATER[i][0]) {
+    const [a, ca] = WATER[i - 1], [b, cb] = WATER[i], f = (t - a) / (b - a);
+    return ca.map((v, j) => Math.round(v + (cb[j] - v) * f));
   }
-  const w = x + (FAR.tail || 40);
-  // the haze and the near-horizon glints ride in this same layer (one layer instead of three)
-  const bg = [[`url(${hazeImage(w)})`, `0 ${HORIZON - 148}px`]];
-  if (signs.length) bg.unshift([`url(${hillSign(w, signs)})`, `0 ${HORIZON - 160}px`]);
-  if (!refl) { const gl = glints('far', w, HORIZON + 6, 140, Math.round(w / 9), [4, 16]); bg.push([gl.backgroundImage, gl.backgroundPosition]); }
-  Object.assign(strip.style, { backgroundImage: bg.map((b) => b[0]).join(','), backgroundPosition: bg.map((b) => b[1]).join(','), backgroundRepeat: 'no-repeat' });
+  return WATER[WATER.length - 1][1];
+}
+const RF = { k: .5, depth: 340, strength: .36 };
+const bakeCache = {};
+function bakeReflection(key, width, draws) {
+  if (bakeCache[key]) return bakeCache[key];
+  const k = RF.k, W = Math.max(1, Math.ceil(width * k)), H = Math.ceil(RF.depth * k);
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+  for (const d of draws) {
+    const im = d.img || IMGS[d.s]; if (!im) continue;
+    const w = d.w * k, h = d.h * k;
+    g.save(); g.translate(d.x * k + (d.flip ? w : 0), (d.bottom - HORIZON) * k); g.scale(d.flip ? -1 : 1, -1);
+    g.drawImage(im, 0, -h, w, h); g.restore();
+  }
+  g.globalCompositeOperation = 'source-atop';
+  for (let r = 0; r < H; r++) {
+    const y = r / k, fade = Math.max(0, 1 - y / RF.depth) ** 1.4, ripple = r % 3 === 2 ? .4 : 1;
+    const [R, G, B] = waterAt(y);
+    g.fillStyle = `rgba(${R},${G},${B},${(1 - RF.strength * fade * ripple).toFixed(3)})`; g.fillRect(0, r, W, 1);
+  }
+  return (bakeCache[key] = c.toDataURL());
+}
+function reflImg(url, width) { const i = el('img', 'it', { left: '0px', top: px(HORIZON), width: px(width), height: px(RF.depth) }); i.src = url; i.alt = ''; return i; }
+let farCanvas = null;
+function farImage(w) {
+  if (farCanvas) return farCanvas;
+  const H = 280, top = FAR.base - H, c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = H; const g = c.getContext('2d');
+  hazeImage(w); g.drawImage(hazeCanvas, 0, HORIZON - 148 - top);
+  for (const it of shoreLayout().items) if (it.clear) g.clearRect(it.g0, 0, it.g1 - it.g0, H);  // the hill stands alone
+  const t = document.createElement('canvas'), tg = t.getContext('2d');
+  for (const it of farLayout().items) {
+    const im = IMGS[it.s], z = size(it.s); if (!im) continue;
+    t.width = Math.ceil(z.w); t.height = Math.ceil(z.h); tg.clearRect(0, 0, t.width, t.height);
+    tg.save(); if (it.flip) { tg.translate(t.width, 0); tg.scale(-1, 1); } tg.drawImage(im, 0, 0, z.w, z.h); tg.restore();
+    tg.globalCompositeOperation = 'source-atop'; tg.fillStyle = `rgba(96,52,150,${it.tint || .5})`; tg.fillRect(0, 0, t.width, t.height); tg.globalCompositeOperation = 'source-over';
+    g.drawImage(t, it.x, H - z.h);
+  }
+  return (farCanvas = c);
+}
+function farRefl(strip) {
+  const { w } = farLayout(), c = farImage(w);
+  strip.appendChild(reflImg(bakeReflection('far', w, [{ img: c, x: 0, bottom: FAR.base, w: c.width, h: c.height }]), w));
+}
+function shoreRefl(strip) {
+  const { items, w } = shoreLayout();
+  strip.appendChild(reflImg(bakeReflection('shore', w, items.map((it) => ({ s: it.s, x: it.x, bottom: it.y, w: size(it.s).w * (it.k || 1), h: size(it.s).h * (it.k || 1), flip: it.flip }))), w));
+}
+function bayRefl(strip) {
+  const draws = BAY.items.map((it) => ({ s: it.s, x: it.x, bottom: it.y, w: size(it.s).w * (it.k || 1), h: size(it.s).h * (it.k || 1) }));
+  strip.appendChild(reflImg(bakeReflection('bay', BAY.width, draws), BAY.width));
+}
+/* The hillside sign, Hollywood style: big white letters standing along the hill's crest. */
+const signCache = {};
+function signImage(text, w, h) {
+  const key = text + w;
+  if (!signCache[key]) {
+    const pad = 40, c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h + pad); const g = c.getContext('2d');
+    const fs = Math.round(h * .27); g.font = `700 ${fs}px 'Josefin Sans', sans-serif`; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    const n = text.length;
+    [...text].forEach((ch, i) => {
+      const u = .27 + .46 * (i / (n - 1)), crest = h * (1 - Math.sin(Math.PI * u) * .86);  // the hill's curve
+      const cx = u * w, cy = pad + crest + fs * .92;
+      g.fillStyle = 'rgba(40,10,70,.35)'; g.fillText(ch, cx + 1.5, cy + 2.5);
+      g.fillStyle = '#fbf6ff'; g.fillText(ch, cx, cy);
+    });
+    signCache[key] = c.toDataURL();
+  }
+  return signCache[key];
+}
+function farLayout() {
+  let x = 0; const items = [];
+  for (const it of FAR.items) { x += it.gap || 0; items.push({ ...it, x }); x += size(it.s).w; }
+  return { items, w: x + (FAR.tail || 40) };
+}
+function shoreLayout() {
+  const far = farLayout(), items = [];
+  for (const it of SHORE.items) {
+    const a = far.items[it.gapAfter], b = far.items[it.gapAfter + 1];
+    const g0 = a.x + size(a.s).w, g1 = b ? b.x : far.w, w = size(it.s).w * (it.k || 1);
+    items.push({ ...it, x: g0 + (g1 - g0 - w) / 2, y: SHORE.base + (it.dy || 0), g0, g1 });
+  }
+  return { items, w: far.w };
+}
+function farStrip(strip) {
+  const { w } = farLayout(), c = farImage(w);
+  farRefl(strip);
+  const i = el('img', 'it', { left: '0px', top: px(FAR.base - c.height), width: px(c.width), height: px(c.height) }); i.src = c.toDataURL(); i.alt = ''; strip.appendChild(i);
+  Object.assign(strip.style, glints('far', w, HORIZON + 6, 140, Math.round(w / 12), [4, 14]));
   return w;
 }
 /* Water glints, painted once and carried by a depth layer so they flow with the parallax.
@@ -381,33 +476,31 @@ function cloudStrip(strip) {
   return CLOUDS.width;
 }
 function shoreStrip(strip) {
-  let x = 0;
-  for (const it of SHORE.items) {
-    x += it.gap || 0; const z = size(it.s), y = SHORE.base + (it.dy || 0);
-    strip.appendChild(mirror(it.s, x, y, 1, it.flip));
-    strip.appendChild(sprite(it.s, x, y, it.flip ? { transform: 'scaleX(-1)' } : null));
+  const { items, w } = shoreLayout();
+  shoreRefl(strip);
+  for (const it of items) {
+    const k = it.k || 1, z0 = size(it.s), z = { ...z0, w: z0.w * k, h: z0.h * k };
+    strip.appendChild(sprite(it.s, it.x, it.y, it.flip ? { transform: 'scaleX(-1)' } : null, k));
+    if (it.sign && !z0.missing) {
+      const im = el('img', 'it', { left: px(it.x), top: px(it.y - z.h - 40), width: px(z.w), height: px(z.h + 40) });
+      im.src = signImage(it.sign, z.w, z.h); im.alt = ''; strip.appendChild(im);
+    }
     if (it.ad) {
-      const ad = ADS.find((a) => a.id === it.ad), h = el('a', 'hot', { left: px(x), top: px(y - z.h), width: px(z.w), height: px(z.h) });
+      const ad = ADS.find((a) => a.id === it.ad), h = el('a', 'hot', { left: px(it.x), top: px(it.y - z.h), width: px(z.w), height: px(z.h) });
       h.href = ad.url; h.title = ad.title; h.setAttribute('aria-label', ad.title); strip.appendChild(h);
     }
-    x += z.w;
   }
-  return x + (SHORE.tail || 0);
+  return w;
 }
 function bayStrip(strip) {
+  bayRefl(strip);
   Object.assign(strip.style, glints('bay', BAY.width, HORIZON + 120, 320, 60, [14, 40]));
   for (const it of BAY.items) {
-    const z = size(it.s), box = sprite(it.s, it.x, it.y);
+    const k = it.k || 1, z0 = size(it.s), z = { ...z0, w: z0.w * k, h: z0.h * k }, box = sprite(it.s, it.x, it.y, null, k);
     if (it.beam && !z.missing) strip.appendChild(el('div', 'beam', { left: px(it.x + z.w * .62 - 45), top: px(it.y - z.h * .93 - 520) }));
-    strip.appendChild(mirror(it.s, it.x, it.y)); strip.appendChild(box);
+    strip.appendChild(box);
   }
   return BAY.width;
-}
-/* a reflection: the same sprite flipped below its waterline, faint */
-function mirror(s, x, bottom, k = 1, flip) {
-  const z = size(s), m = sprite(s, x, bottom + z.h * k, null, k);
-  m.classList.add('mirror'); m.style.transform = flip ? 'scale(-1,-1)' : 'scaleY(-1)';
-  return m;
 }
 function streetStrip(strip) {
   let x = 0, last = null;
@@ -445,7 +538,7 @@ function decorate(it, box, z) {
   if (z.missing) return;
   const o = OV[it.s] || {}, B = { w: z.w, h: z.h };
   const place = (r, cls, tag = cls === 'blade' ? 'div' : 'a') => { const n = el(tag, (tag === 'a' ? 'hot ' : '') + cls, { position: 'absolute', ...at(B, r) }); box.appendChild(n); return n; };
-  const BLEED = 2;  // posters tuck a little under their frames so no painted blank peeks out
+  const BLEED = 3;  // posters tuck a little under their frames so no painted blank peeks out
   const poster = (r) => { const n = place(r, ''); n.className = 'hot ' + (r === o.caseL || r === o.caseR ? 'case' : 'bb');
     n.style.left = px(r[0] * z.w - BLEED); n.style.top = px(r[1] * z.h - BLEED); n.style.width = px(r[2] * z.w + 2 * BLEED); n.style.height = px(r[3] * z.h + 2 * BLEED); return n; };
   for (const sg of o.texts || []) {
@@ -485,22 +578,34 @@ function decorate(it, box, z) {
     const band = place(o.band, 'band'); band.tabIndex = 0; marquees.push(band); mountBand(band);
     band.style.setProperty('--bh', px(o.band[3] * z.h));
     for (const k of ['caseL', 'caseR']) {
-      const r = o[k], w = r[2] * z.w + 4, h = r[3] * z.h + 4;
+      const r = o[k], w = r[2] * z.w + 6, h = r[3] * z.h + 6;
       const s = slotFor('case' + k, () => slot('case', w, h));
       const n = poster(r); s.nodes.push(n); mountBillboard(s, n);
     }
   }
   (o.screens || []).forEach((r, i) => {
-    const w = r[2] * z.w + 4, h = r[3] * z.h + 4;
+    const w = r[2] * z.w + 6, h = r[3] * z.h + 6;
     const s = slotFor('scr' + it.s + i, () => slot(i === 2 ? 'case' : 'bb', w, h));
     const n = poster(r); s.nodes.push(n); mountBillboard(s, n);
   });
   if (o.bb) {
-    const r = o.bb, w = r[2] * z.w + 4, h = r[3] * z.h + 4;
+    const r = o.bb, w = r[2] * z.w + 6, h = r[3] * z.h + 6;
     const s = slotFor('bb' + it.s, () => slot('bb', w, h));
     const n = poster(r); s.nodes.push(n); mountBillboard(s, n);
   }
   if (it.egg === 'fly') { const f = el('a', 'hot egg-fly', { left: px(z.w * .5 - 40), top: px(-6), width: '80px', height: '80px' }); f.href = 'https://fly.brezgis.com'; f.title = 'Fly Paradise'; f.innerHTML = '<i></i>'; box.appendChild(f); box.style.pointerEvents = 'none'; }
+  // buildings whose sign changes: the whole facade follows the sign (the cinema plays whatever its
+  // marquee shows; the bowling alley is LUCKY). Billboards on a building don't count.
+  if (it.s === 'theater' || o.lucky) {
+    const b = el('a', 'hot whole', { position: 'absolute', inset: 0 }); b.href = '#';
+    b.dataset.tip = it.s; b.classList.add(it.s === 'theater' ? 'w-cinema' : 'w-lucky');
+    b.onclick = (e) => { e.preventDefault(); go(it.s === 'theater' ? MARQUEE[mq].url : ADS[(Math.random() * ADS.length) | 0].url); };
+    box.insertBefore(b, box.firstChild.nextSibling);
+  }
+  if (it.ad) {  // the whole building goes there, not just its sign
+    const ad = ADS.find((a) => a.id === it.ad), b = el('a', 'hot whole', { position: 'absolute', inset: 0 });
+    b.href = ad.url; b.title = ad.title; box.insertBefore(b, box.firstChild.nextSibling);
+  }
   if (it.ad && o.sign) {
     const ad = ADS.find((a) => a.id === it.ad), n = place(o.sign, 'panel');
     n.href = ad.url; n.title = ad.title;
@@ -538,9 +643,11 @@ function spawnCar(lane) {
     if (s === 'van') p.style.fontSize = px(pr[3] * z.h * .36);
     box.appendChild(p); fit(sp, pr[2] * z.w * .86, 'car|' + s + ad.id);
   }
-  $('#traffic').appendChild(box);
   const sv = L.dir * L.v - STREET.speed;  // the road itself scrolls left with the street
-  movers.push({ box, lane, ad: adIdx, x: sv > 0 ? -z.w - 20 : viewW + 20, v: sv, w: z.w });
+  const x0 = sv > 0 ? -z.w - 20 : viewW + 20;
+  box.style.transform = `translate3d(${x0}px,0,0)`;  // placed before its first paint (no flash at the left edge)
+  $('#traffic').appendChild(box);
+  movers.push({ box, lane, ad: adIdx, x: x0, v: sv, w: z.w });
 }
 /* boats drift across the bay at their own depths; nearer is bigger and lower */
 const boats = [];
@@ -557,12 +664,23 @@ function spawnBoat(i, anywhere) {
   const [s, depth, v] = BOATS[i], z = size(s), k = .55 + depth * .9;
   const y = HORIZON + 26 + depth * 230;
   const box = sprite(s, 0, y, { zIndex: Math.round(depth * 10) }, k);
-  $('#boats').appendChild(box);
-  $('#boats').appendChild(Object.assign(mirror(s, 0, y, k), {}));
-  const mb = $('#boats').lastChild;
+  const islandY = Math.min(...BAY.items.map((b) => b.y));
+  (y < islandY ? $('#boats-far') : $('#boats')).appendChild(box);  // farther than the island: behind it
+  const w = z.w * k, mb = reflImg(bakeReflection('boat|' + s, w, [{ s, x: 0, bottom: y, w, h: z.h * k }]), w); $('#boat-refl').appendChild(mb);
   const sv = v - groundSpeed(y);  // own motion on top of the water's scroll
-  const w = z.w * k, x = anywhere ? rand(0, viewW) : (sv > 0 ? -w - 30 : viewW + 30);
+  const x = anywhere ? rand(0, viewW) : (sv > 0 ? -w - 30 : viewW + 30);
+  box.style.transform = mb.style.transform = `translate3d(${x}px,0,0)`;  // placed before its first paint
   boats[i] = { box, mb, x, v: sv, w };
+}
+/* now and then a samovar drifts very slowly across the sky (samovar is the server brezgis.com lives on) */
+let balloon = null;
+function spawnBalloon() {
+  const a = el('a', 'hot balloon', { zIndex: 1 }); a.href = 'https://brezgis.com'; a.title = 'brezgis.com';
+  a.appendChild(sprite('balloon', 0, 0)); const z = size('balloon');
+  Object.assign(a.style, { position: 'absolute', left: '0px', top: px(rand(40, 120)), width: px(z.w), height: px(z.h) });
+  a.firstChild.style.top = '0px';
+  const x = viewW + 30; a.style.transform = `translate3d(${x}px,0,0)`; $('#aloft').appendChild(a);
+  balloon = { box: a, x, v: -6, w: z.w };
 }
 let blimp = null, sw = (Math.random() * 3) | 0;
 function spawnBlimp() {
@@ -577,6 +695,7 @@ function spawnBlimp() {
     Object.assign(p.style, { fontSize: px(OV.blimp.panel[3] * z.h * .34), textDecoration: 'none', lineHeight: 1 });
     box.appendChild(p); fit(p.firstChild, OV.blimp.panel[2] * z.w * .86, 'blimp|' + S.text);
   }
+  box.style.transform = `translate3d(${viewW + 40}px,0,0)`;
   $('#aloft').appendChild(box);
   blimp = { box, ad: typeof blimpAd === 'number' ? blimpAd : null, x: viewW + 40, v: -14, w: z.w };
 }
@@ -586,6 +705,7 @@ let snail = null;
 function spawnSnail() {
   const a = el('a', 'hot egg-snail', { zIndex: 1 }); a.href = 'https://snail.brezgis.com'; a.title = 'snridworld';
   a.innerHTML = '<svg viewBox="0 0 40 24" width="40" height="24"><path d="M3 22 Q2 17 9 17 L30 17 Q36 17 37 22 Z" fill="#f2b6c9"/><path d="M33 17 L35 9 M36 17 L39 10" stroke="#f2b6c9" stroke-width="1.6" stroke-linecap="round"/><circle cx="18" cy="12" r="9" fill="#a3268a"/><path d="M18 12 m0 -5 a5 5 0 1 1 -4.6 3 a3 3 0 1 1 3.2 3.6" fill="none" stroke="#ff8fc8" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  a.style.transform = `translate3d(${viewW + 20}px,0,0)`;
   $('#traffic').appendChild(a);
   snail = { box: a, x: viewW + 20, v: -(STREET.speed - 2.2) };
 }
@@ -624,7 +744,7 @@ function layout() {
 }
 
 const Q = new URLSearchParams(location.search);
-let t0 = performance.now() - (+Q.get('t') || 0) * 1000, nextCar = 3, nextBlimp = 8, nextSnail = 20, nextShoot = 12, last = 0;
+let t0 = performance.now() - (+Q.get('t') || 0) * 1000, nextCar = 3, nextBlimp = 8, nextSnail = 20, nextShoot = 12, nextBalloon = 25, last = 0;
 function frame(now) {
   const t = (now - t0) / 1000, dt = Math.min(.1, t - last); last = t;
   const k = reduced ? .35 : 1;
@@ -634,12 +754,14 @@ function frame(now) {
     if (m.x > viewW + 60 || m.x < -m.w - 60) { m.box.remove(); movers.splice(i, 1); }
   }
   for (let i = 0; i < boats.length; i++) {
-    const b = boats[i]; if (!b) continue; b.x += b.v * k * dt; b.box.style.transform = `translate3d(${b.x}px,0,0)`; b.mb.style.transform = `translate3d(${b.x}px,0,0) scaleY(-1)`;
+    const b = boats[i]; if (!b) continue; b.x += b.v * k * dt; b.box.style.transform = `translate3d(${b.x}px,0,0)`; b.mb.style.transform = `translate3d(${b.x}px,0,0)`;
     if (b.x > viewW + 60 || b.x < -b.w - 60) { b.box.remove(); b.mb.remove(); boats[i] = null; setTimeout(() => spawnBoat(i), rand(4000, 20000)); }
   }
   if (t > nextCar) { if (movers.length < 2) spawnCar(Math.random() < .4 ? 0 : 1); nextCar = t + rand(12, 26); }
   if (snail) { snail.x += snail.v * k * dt; snail.box.style.transform = `translate3d(${snail.x}px,0,0)`; if (snail.x < -60) { snail.box.remove(); snail = null; nextSnail = t + rand(60, 150); } }
   else if (t > nextSnail) spawnSnail();
+  if (balloon) { balloon.x += balloon.v * k * dt; balloon.box.style.transform = `translate3d(${balloon.x}px,0,0)`; if (balloon.x < -balloon.w - 40) { balloon.box.remove(); balloon = null; nextBalloon = t + rand(120, 260); } }
+  else if (t > nextBalloon && ready.has('balloon')) spawnBalloon();
   if (t > nextShoot) { shootingStar(); nextShoot = t + rand(60, 150); }
   if (blimp) { blimp.x += blimp.v * k * dt; blimp.box.style.transform = `translate3d(${blimp.x}px,0,0)`; if (blimp.x < -blimp.w - 40) { blimp.box.remove(); blimp = null; nextBlimp = t + rand(70, 140); } }
   else if (t > nextBlimp) spawnBlimp();
@@ -648,6 +770,10 @@ function frame(now) {
 
 /* The Roku remote's ✱ button opened the billboard you were looking at; here * (or ↑) opens the
    visible billboard nearest the middle of the screen. A quiet nod; nothing on screen mentions it. */
+function updateR() {
+  const s = featured(), b = $('#rkey');
+  if (s) { b.querySelector('span').textContent = ADS[s.ad].title; b.dataset.url = ADS[s.ad].url; b.classList.add('on'); } else b.classList.remove('on');
+}
 function featured() {
   let best = null, bd = 1e9;
   for (const s of slots) for (const n of s.nodes) {
@@ -660,8 +786,10 @@ function featured() {
 /* "Visit …?" follows the cursor over anything that goes somewhere. Titles move into data-tip
    so the browser's own tooltip doesn't double up. */
 function tipText(a) {
-  if (a.classList.contains('lucky')) return 'Feeling lucky?';
+  if (a.classList.contains('lucky') || a.classList.contains('w-lucky')) return 'Feeling lucky?';
+  if (a.classList.contains('w-cinema')) return `Visit ${MARQUEE[mq].name}?`;
   if (a.id === 'plate') return 'Back to the recursite?';
+  if (a.classList.contains('balloon')) return 'Visit brezgis.com?';
   return `Visit ${a.dataset.tip}?`;
 }
 function hoverTips() {
@@ -684,24 +812,26 @@ function wake() { document.body.classList.remove('idle'); clearTimeout(idleT); i
 
 async function start() {
   try { MAN = await (await fetch('art/manifest.json', { cache: 'no-cache' })).json(); } catch { MAN = {}; }
-  await Promise.race([document.fonts.load("700 27px 'Josefin Sans'"), new Promise((r) => setTimeout(r, 1500))]);
+  const baked = new Set([...FAR.items, ...SHORE.items, ...BAY.items].map((i) => i.s).concat(BOATS.map((b) => b[0])));
+  await Promise.race([Promise.all([document.fonts.load("700 27px 'Josefin Sans'"), ...[...baked].map(loadImg)]), new Promise((r) => setTimeout(r, 4000))]);
   layer('clouds', CLOUDS.speed, cloudStrip);
-  layer('far', FAR.speed, (st) => farStrip(st, false));
-  layer('far-refl', FAR.speed, (st) => farStrip(st, true));
+  layer('far', FAR.speed, farStrip);
   layer('shore', SHORE.speed, shoreStrip);
   layer('bay', BAY.speed, bayStrip);
   layer('street', STREET.speed, streetStrip);
   layout();
   preload(Object.keys(MAN).filter((k) => /^(ad|mini)_/.test(k)));  // posters decoded before their first turn
-  preload(['taxi', 'sedan', 'pickup', 'bus', 'van', 'blimp', 'ferry', 'sailboat', 'foliage', 'clouds']).then(() => BOATS.forEach((_, i) => spawnBoat(i, true)));
+  preload(['taxi', 'sedan', 'pickup', 'bus', 'van', 'blimp', 'ferry', 'sailboat', 'foliage', 'clouds', 'balloon']).then(() => BOATS.forEach((_, i) => spawnBoat(i, true)));
   addEventListener('resize', () => { clearTimeout(start.r); start.r = setTimeout(layout, 150); });
   // billboards take turns: one turns every few seconds
   let bi = 0;
   setInterval(() => { const s = slots[bi++ % slots.length]; if (s) turnBillboard(s, nextAd(s)); }, 6500);
   setInterval(turnBand, 8000);
+  setInterval(updateR, 1200); updateR();
+  $('#rkey').onclick = () => go($('#rkey').dataset.url);
   addEventListener('keydown', (e) => {
     wake();
-    if (e.key === '*' || e.key === 'ArrowUp' || e.key === 'Enter') { const s = featured(); if (s && document.activeElement === document.body) go(ADS[s.ad].url); }
+    if (e.key === 'r' || e.key === 'R' || e.key === '*') { const s = featured(); if (s) go(ADS[s.ad].url); }
     if (e.key === 'Escape') go('../');
   });
   addEventListener('pointermove', wake); wake(); hoverTips();

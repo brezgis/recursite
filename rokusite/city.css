@@ -43,7 +43,9 @@ body.idle { cursor: none; }
   position: absolute; left: 0; right: 0; top: var(--horizon); height: 680px; overflow: hidden;
   background: linear-gradient(to bottom, #d77fb6 0%, var(--wat0) 6%, var(--wat1) 30%, var(--wat2) 70%, #3a0c66 100%);
 }
-#far-refl { top: calc(-1 * var(--horizon)); transform: scaleY(-1); transform-origin: 0 var(--horizon); opacity: .24; }
+/* Reflections are baked into each layer's own picture (see bakeReflection in city.js). */
+#boat-refl { top: calc(-1 * var(--horizon)); }
+#boat-refl { position: absolute; left: 0; width: 100%; height: 1080px; }
 #glint { position: absolute; inset: 0; background: radial-gradient(40% 26% at 70% 0%, rgba(255,222,150,.42), rgba(255,222,150,0)); }
 
 /* searchlight from the lighthouse island */
@@ -126,7 +128,7 @@ body.idle { cursor: none; }
   .beam, .blade, .tw { animation: none; }
 }
 
-#boats { position: absolute; left: 0; top: 0; width: 100%; height: 1080px; pointer-events: none; z-index: 0; }
+#boats, #boats-far { position: absolute; left: 0; top: 0; width: 100%; height: 1080px; pointer-events: none; z-index: 0; }
 #shore .it { filter: saturate(.85); }
 
 /* signs painted in HTML */
@@ -152,7 +154,7 @@ body.idle { cursor: none; }
 .clock b { position: absolute; left: 50%; top: 50%; width: 9%; height: 9%; margin: -4.5% 0 0 -4.5%; border-radius: 50%; background: #4a1450; }
 
 /* the green terminal in a dark window */
-.egg-term { will-change: transform; background: #021208; box-shadow: inset 0 0 6px #19ff7044, 0 0 8px #19ff7033; display: flex; align-items: flex-start; padding: 8% 10%; font: 11px/1 'VT323', monospace; color: #3dff8a; text-decoration: none; overflow: hidden; }
+.egg-term { will-change: transform; background: #021208; box-shadow: inset 0 0 4px #19ff7055; display: flex; align-items: flex-start; padding: 8% 10%; font: 11px/1 'VT323', monospace; color: #3dff8a; text-decoration: none; overflow: hidden; }
 .egg-term i { display: inline-block; width: 6px; height: 10px; margin-left: 3px; background: #3dff8a; animation: blink 1.06s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
@@ -192,8 +194,6 @@ body.idle { cursor: none; }
 .ad.tall .g, .ad.tall .star { display: none; }
 .ad.tall .shade { background: linear-gradient(to left, rgba(10,0,30,.85), rgba(10,0,30,0) 70%); }
 #water .layer { height: 680px; }
-.mirror { opacity: .22; pointer-events: none; }
-#shore .mirror, #bay .mirror { clip-path: inset(0 0 35% 0); }
 
 /* medium screens: the art fills the screen, the title sits on a strip at the bottom */
 .ad.mid .shade { background: linear-gradient(to top, rgba(10,0,30,.9), rgba(10,0,30,0) 52%); }
@@ -218,3 +218,17 @@ body.idle #tip { opacity: 0; }
 /* the hotel's vertical blade is a pale glowing tube: dark letters read on it, like LUCKY */
 .neon.vert { color: #7a1650; text-shadow: 0 0 1px #fff, 0 0 6px #ffd27a; font-family: 'Josefin Sans', sans-serif; font-weight: 700; }
 .neon.vert > span { opacity: 1; animation: none; }
+
+/* posters sit a few pixels under their frames, and a dark rim hides any sliver of painted blank */
+.bb, .case { box-shadow: 0 0 0 1.5px #1a0838; }
+.whole { z-index: 0; }
+
+/* the R button: the Roku remote's star, recursite edition. Press R, or click it. */
+#rkey { position: fixed; right: max(24px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); z-index: 5;
+  display: flex; align-items: center; gap: .5em; border: 0; cursor: pointer; font: 700 clamp(12px, 1.7vh, 19px) 'Josefin Sans', sans-serif;
+  color: #fff; background: rgba(20,4,50,.66); border-radius: 99px; padding: .3em .9em .3em .3em; opacity: 0; transition: opacity .8s; pointer-events: none; }
+#rkey.on { opacity: 1; pointer-events: auto; }
+#rkey b { display: grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 50%; background: #6b1fd0;
+  font: italic 400 1.15em/1 'Limelight', serif; color: #fff; box-shadow: 0 0 10px rgba(160,80,255,.6); padding-top: .1em; }
+#rkey span::before { content: "for more: "; font-weight: 600; opacity: .75; }
+body.idle #rkey { opacity: 0; pointer-events: none; }
