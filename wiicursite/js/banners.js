@@ -23,6 +23,6 @@ export const DEFAULT_LAYOUT = [
   'bukvarium', 'brezgilv', 'snowglobe', 'dinotrain',
   'grotte', 'nameday', 'corpora', 'petroglyphs',
   'flock', 'fly', 'noosphere', 'lavahash',
-  'ancientclub', 'soundscapade', 'snridworld', null,
-  ...Array(23).fill(null), 'brezvax',
+  'ancientclub', 'soundscapade', 'snridworld', 'shabaqo',
+  'myhouse', 'samogitia', ...Array(21).fill(null), 'brezvax',
 ];

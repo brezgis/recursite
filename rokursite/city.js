@@ -18,6 +18,9 @@ const ADS = [
   { id: 'snridworld', title: 'snridworld', tag: 'A Markov garden. The snails are learning.', url: 'https://snail.brezgis.com', font: "'VT323'", ph: ['#021a07', '#32ff6a'] },
   { id: 'snowglobe', title: 'Snow-Globe', tag: 'Now broadcasting. 24/7.', url: 'https://tv.brezgis.com', font: "'Monoton'", ph: ['#1b2f66', '#cfe6ff'] },
   { id: 'dinotrain', title: 'Dino-Train-Table', tag: 'All aboard the Cretaceous Express.', url: 'https://brezgis.com/dino-train-table/', font: "'Bungee'", ph: ['#2f5d2a', '#f0c35a'] },
+  { id: 'house', title: 'Anna’s House', tag: 'The door is open and the kettle is on.', url: 'https://house.brezgis.com', font: "'Righteous'", ph: ['#4a2a5e', '#ffb86b'] },
+  { id: 'samogitia', title: 'Samogitia Records', tag: 'Old parish registers, read at last.', url: 'https://samogitia.brezgis.com', font: "'Limelight'", ph: ['#3b2412', '#e8c98a'] },
+  { id: 'shabaqo', title: 'Shabaqo Stone', tag: 'Carved around 710 BC. Hover to read.', url: 'https://shabaqo.brezgis.com', font: "'Cinzel Decorative'", ph: ['#1a140c', '#e0a84a'] },
   { id: 'grotte', title: 'Grotte du Calcul', tag: 'Computing, 17,000 years early.', url: R + 'lascaux/', font: "'Limelight'", ph: ['#3b1d0c', '#d98a3a'] },
   { id: 'brezvax', title: 'brezvax', tag: '1984. Every article real.', url: R + 'usenet/', font: "'VT323'", ph: ['#020c04', '#36ff7a'] },
   { id: 'arpanet', title: 'TIP ARPA', tag: 'Dial down to 1977. Log in as guest.', url: R + 'usenet/arpanet/', font: "'VT323'", ph: ['#020611', '#cfe3ff'] },
@@ -39,6 +42,7 @@ const SKYWRITING = [
   { ad: 'snowglobe', text: 'SNOW-GLOBE · ON THE AIR 24/7', url: 'https://tv.brezgis.com' },
   { ad: 'noosphere', text: 'NOOSPHERE · THINK WHOLE-GRAIN', url: 'https://noosphere.brezgis.com' },
   { ad: 'recursite', text: 'VISIT THE RECURSITE', url: R },
+  { ad: 'house', text: 'ANNA’S HOUSE · THE KETTLE IS ON', url: 'https://house.brezgis.com' },
 ];
 
 /* Overlay panels, as fractions of each sprite's box: [left, top, width, height],
@@ -46,7 +50,7 @@ const SKYWRITING = [
 const OV = {  // measured from the sprites' pixels by roku-mode/tools/measure.py
   theater: { blade: [0.446, 0.101, 0.108, 0.446], band: [0.072, 0.689, 0.853, 0.063], caseL: [0.145, 0.845, 0.098, 0.108], caseR: [0.755, 0.845, 0.1, 0.108] },
   billboard: { bb: [0.026, 0.094, 0.949, 0.546] },
-  billboardbldg: { bb: [0.113, 0.033, 0.775, 0.132], egg: 'terminal', win: [0.545, 0.497, 0.11, 0.077] },
+  billboardbldg: { bb: [0.113, 0.033, 0.775, 0.132], egg: 'terminal', win: [0.535, 0.489, 0.131, 0.092] },
   adtower: { screens: [[0.094, 0.235, 0.238, 0.518], [0.402, 0.35, 0.51, 0.115], [0.701, 0.518, 0.199, 0.088], [0.384, 0.65, 0.531, 0.111]] },
   diner: { sign: [0.244, 0.035, 0.513, 0.205] },
   bowling: { lucky: [.183, .297, .14, .12] },
@@ -85,7 +89,7 @@ const BAY = { speed: 9, width: 3200, items: [
   { s: 'island', x: 520, y: HORIZON + 70, k: .82, beam: 1 },
 ] };
 /* boats: [sprite, depth 0 (horizon) .. 1 (near), own speed through the water px/s] */
-const BOATS = [['ferry', .07, 5], ['sailboat', .22, -3]];
+const BOATS = [['ferry', .07, 5], ['sailboat', .45, -3]];
 /* How fast the world at a given height scrolls by: one perspective rule for everything, from the
    horizon (where the far shore moves at SHORE.speed) down to the street. Boats, the island, the
    shore and the street all agree with it, so nothing drifts against the water it sits on. */
@@ -133,11 +137,30 @@ function sprite(s, x, bottom, extra, k = 1) {
     Object.assign(box.style, { background: 'repeating-linear-gradient(45deg,#5b2a9a 0 14px,#4a1f86 14px 28px)', outline: '2px dashed #c9a2ff', color: '#e8d8ff', font: '16px monospace', display: 'flex', alignItems: 'center', justifyContent: 'center' });
     box.textContent = s;
   } else {
-    const img = el('img'); img.loading = 'eager'; img.src = 'art/' + s + '.' + (z0.fmt || 'webp'); img.alt = ''; img.draggable = false; img.decoding = 'async';
+    const img = el('img'); img.loading = 'eager'; img.src = src(s); img.alt = ''; img.draggable = false; img.decoding = 'async';
     box.appendChild(img);
   }
   if (extra) Object.assign(box.style, extra);
   return box;
+}
+/* The sprites are traced SVGs, and a browser redraws a vector picture every time a new piece of it
+   scrolls into view; with a street of them that made the city stutter, worst of all in the first
+   seconds. So each SVG is drawn once, at the size the screen needs, into a plain bitmap, and the
+   city is built from the bitmaps. A sprite that could not be drawn keeps its SVG. */
+const RAST = {}; let rastK = 0;
+const artPath = (n) => 'art/' + n + '.' + ((MAN[n] && MAN[n].fmt) || 'webp');
+const src = (n) => RAST[n] || artPath(n);
+const rasterK = () => Math.min(2.5, Math.max(1, scale * Math.min(devicePixelRatio || 1, 2)));
+async function rasterize(K) {
+  for (const n of Object.keys(MAN)) {
+    const z = MAN[n]; if (z.fmt !== 'svg' || /^skyline_/.test(n)) continue;  // the skyline only ever lives in a baked picture
+    const im = await loadImg(n); if (!im) continue;
+    const c = document.createElement('canvas'); c.width = Math.round(z.w * K); c.height = Math.round(z.h * K);
+    c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+    const b = await new Promise((r) => c.toBlob(r)); if (!b) continue;
+    const old = RAST[n]; RAST[n] = URL.createObjectURL(b);
+    if (old) setTimeout(() => URL.revokeObjectURL(old), 10000);
+  }
 }
 function at(box, r) { return { left: px(r[0] * box.w), top: px(r[1] * box.h), width: px(r[2] * box.w), height: px(r[3] * box.h) }; }
 
@@ -327,9 +350,9 @@ function render(L, viewW) {
 
 /* Baked pictures are turned into images with toBlob (encoded in the background, never blocking
    the page) and shared by every strip copy. Plain images composite far cheaper than canvases. */
-const blobURLs = new WeakMap();
+const blobURLs = new WeakMap(), baking = [];
 function blobURL(c) {
-  if (!blobURLs.has(c)) blobURLs.set(c, new Promise((res) => c.toBlob((b) => res(URL.createObjectURL(b)))));  // encoded off the main thread
+  if (!blobURLs.has(c)) { const p = new Promise((res) => c.toBlob((b) => res(URL.createObjectURL(b)))); blobURLs.set(c, p); baking.push(p); }  // encoded off the main thread
   return blobURLs.get(c);
 }
 function canvasAt(src, css) {
@@ -369,7 +392,7 @@ const IMGS = {};
 function loadImg(n) {
   const z = MAN[n]; if (!z) return Promise.resolve(null);
   if (IMGS[n]) return Promise.resolve(IMGS[n]);
-  const i = new Image(); i.src = 'art/' + n + '.' + (z.fmt || 'webp');
+  const i = new Image(); i.src = artPath(n);
   return i.decode().then(() => (IMGS[n] = i), () => null);
 }
 const WATER = [[0, [215, 127, 182]], [.06, [164, 59, 163]], [.30, [108, 24, 141]], [.70, [76, 16, 118]], [1, [58, 12, 102]]], WATER_H = 680;
@@ -676,7 +699,7 @@ const ready = new Set();
 function preload(names) {
   return Promise.all(names.map((n) => {
     const z = MAN[n]; if (!z) return null;
-    const i = new Image(); i.src = 'art/' + n + '.' + (z.fmt || 'webp');
+    const i = new Image(); i.src = src(n);
     return i.decode().then(() => ready.add(n), () => ready.add(n));
   }));
 }
@@ -735,6 +758,16 @@ function shootingStar() {
   setTimeout(() => s.remove(), 1600);
 }
 
+/* ---- the moon keeps the real phase, the way city hall keeps the real time ----
+   Days since a known new moon (6 January 2000, 18:14 UTC), over the synodic month. The lit part is
+   the limb's half-circle closed by the terminator's half-ellipse; a waning moon is the mirror image. */
+function drawMoon() {
+  const p = ((((Date.now() / 86400000 - 10962.76) / 29.530588853) % 1) + 1) % 1;  // 0 new, .5 full
+  const c = Math.cos(2 * Math.PI * p), rx = (Math.abs(c) * 20).toFixed(2), waxing = p < .5;
+  const lit = `M0 -20A20 20 0 0 1 0 20A${rx} 20 0 0 ${c > 0 ? 0 : 1} 0 -20Z`;
+  $('#moon').innerHTML = `<svg viewBox="-24 -24 48 48"><circle r="20" fill="#3b1a78" opacity=".55"/><path d="${lit}" fill="#fff3dc"${waxing ? '' : ' transform="scale(-1 1)"'}/></svg>`;
+}
+
 /* ---- stars: drawn once per resize; a handful twinkle with compositor-only CSS ---- */
 function drawStars() {
   const c = $('#stars'), r = c.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2);
@@ -751,10 +784,13 @@ function drawStars() {
 
 /* ---- sizing and the loop ---- */
 let viewW = 1920, scale = 1;
-function layout() {
+function measure() {
   scale = innerHeight / 1080;
   if (innerWidth / innerHeight < .8) scale = Math.min(scale, innerWidth / 760);  // tall phones: zoom out a little
   viewW = Math.ceil(innerWidth / scale);
+}
+function layout() {
+  measure();
   const st = $('#stage'); st.style.width = px(viewW); st.style.transform = `scale(${scale})`;
   st.style.top = px(Math.max(0, (innerHeight - 1080 * scale) / 2));
   for (const s of slots) s.nodes = [];
@@ -833,16 +869,30 @@ function wake() { document.body.classList.remove('idle'); clearTimeout(idleT); i
 async function start() {
   try { MAN = await (await fetch('art/manifest.json', { cache: 'no-cache' })).json(); } catch { MAN = {}; }
   const baked = new Set([...FAR.items, ...SHORE.items, ...BAY.items].map((i) => i.s).concat(BOATS.map((b) => b[0])));
-  await Promise.race([Promise.all([document.fonts.load("700 27px 'Josefin Sans'"), ...[...baked].map(loadImg)]), new Promise((r) => setTimeout(r, 4000))]);
+  const within = (p, ms) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
+  measure(); rastK = rasterK();
+  await within(Promise.all([document.fonts.load("700 27px 'Josefin Sans'"), ...[...baked].map(loadImg), rasterize(rastK)]), 15000);
+  drawMoon(); setInterval(drawMoon, 3600000);
   layer('clouds', CLOUDS.speed, cloudStrip);
   layer('far', FAR.speed, farStrip);
   layer('shore', SHORE.speed, shoreStrip);
   layer('bay', BAY.speed, bayStrip);
   layer('street', STREET.speed, streetStrip);
   layout();
+  // The curtain stays down until everything on stage has been drawn once: the baked pictures
+  // encoded, every image decoded, and two frames painted. Then the city starts moving.
+  await within(Promise.all(baking).then(() => Promise.all([...document.querySelectorAll('#stage img')].map((i) => i.decode().catch(() => {})))), 8000);
+  await within(preload(['ferry', 'sailboat']), 3000); BOATS.forEach((_, i) => spawnBoat(i, true));
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  t0 = performance.now() - (+Q.get('t') || 0) * 1000;
+  document.body.classList.add('ready'); setTimeout(() => { const c = $('#curtain'); if (c) c.remove(); }, 1600);
   preload(Object.keys(MAN).filter((k) => /^(ad|mini)_/.test(k)));  // posters decoded before their first turn
-  preload(['taxi', 'sedan', 'pickup', 'bus', 'van', 'blimp', 'ferry', 'sailboat', 'foliage', 'clouds', 'balloon']).then(() => BOATS.forEach((_, i) => spawnBoat(i, true)));
-  addEventListener('resize', () => { clearTimeout(start.r); start.r = setTimeout(layout, 150); });
+  preload(['taxi', 'sedan', 'pickup', 'bus', 'van', 'blimp', 'foliage', 'clouds', 'balloon']);
+  // a window that grows a lot needs sharper bitmaps; otherwise the ones in hand are laid out again
+  addEventListener('resize', () => { clearTimeout(start.r); start.r = setTimeout(() => {
+    measure(); const K = rasterK();
+    if (K > rastK * 1.25) { rastK = K; rasterize(K).then(layout); } else layout();
+  }, 150); });
   // billboards take turns: one turns every few seconds
   // nobody is watching a hidden tab: skip the turns rather than build signs for it
   let bi = 0;

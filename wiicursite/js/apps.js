@@ -28,5 +28,8 @@ export const APPS = {
   ancientclub:   { title: 'ancient-club',         art: W.ancientClub,    url: 'https://club.brezgis.com',               home: 'recursite' },
   soundscapade:  { title: 'soundscapade',         art: W.soundscapade,   url: 'https://sound.brezgis.com',              home: 'recursite' },
   snridworld:    { title: 'snridworld',           art: W.snridworld,   url: 'https://snail.brezgis.com',              home: 'recursite' },
+  shabaqo:       { title: 'shabaqo-stone',        art: W.shabaqo,        url: 'https://shabaqo.brezgis.com',            home: 'recursite' },
+  myhouse:       { title: 'my-house',             art: W.myHouse,        url: 'https://house.brezgis.com',              home: 'recursite' },
+  samogitia:     { title: 'samogitia-records',    art: W.samogitia,      url: 'https://samogitia.brezgis.com',          home: 'recursite' },
   brezvax:       { title: 'brezvax',              art: W.brezvax,        url: 'https://recursite.brezgis.com/usenet/',  home: 'recursite' },
 };

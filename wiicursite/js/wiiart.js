@@ -197,4 +197,28 @@ function brezvax() {
     box(`<div class="term"><img src="img/sm/terminal.webp" alt=""><div class="tscr" style="left:${(T.x - T.w / 2) * 100}%;top:${(T.y - T.h / 2) * 100}%;width:${T.w * 100}%;height:${T.h * 100}%">${lines.map((l, i) => `<p style="--i:${i}">${l}</p>`).join('')}<p class="cur">█</p></div></div>`, { x: 50, y: 54, w: 56 }));
 }
 
-export const WII_ART = { recursite, notbell, annasArxiv, honeypot, whatThePh, annagram, stochasticShore, bukvarium, brezgiLv, snowGlobe, dinoTrain, grotte, namedayParty, corporaCafe, petroglyphs, flockquarium, flyParadise, noosphere, lavaHash, ancientClub, soundscapade, snridworld, brezvax };
+function shabaqo() {
+  return banner({ bg: 'radial-gradient(90% 120% at 50% 45%, #4a3a26 0, #1e1710 65%, #0c0906 100%)', tint: '#2a2016' },
+    `<div class="sq-beam"></div>`,
+    pane('shabaqo', { x: 50, y: 58, w: 44, anim: 'zoom', dur: 8, amp: .4 }),
+    sparkles(9, { x0: 12, x1: 60, y0: 8, y1: 70, color: '#ffd98a', size: 1.1, seed: 17 }),
+    wtitle('Shabaqo Stone', { x: 50, y: 13, size: 8, color: '#f0c860', font: SERIF, spacing: .08 }));
+}
+
+function myHouse() {
+  return banner({ bg: 'linear-gradient(180deg,#3a2a7a 0,#8a4aa0 42%,#f08a8a 78%,#ffd0a0 100%)', tint: '#8a4a98' },
+    sparkles(12, { y0: 3, y1: 40, size: 1.3, seed: 23 }),
+    pane('moon', { x: 87, y: 20, w: 9, anim: 'bob', dur: 6, amp: .4 }),
+    `<div class="fog"></div>`,
+    pane('bungalow', { x: 50, y: 60, w: 42, anim: 'bob', dur: 5 }),
+    wtitle('Anna’s House', { x: 30, y: 15, size: 8.5, dark: true }));
+}
+
+function samogitia() {
+  return banner({ bg: 'radial-gradient(120% 120% at 50% 20%, #fffaf0 0, #f1e3c6 60%, #d8bf94 100%)', tint: '#ecdcbc', scan: true },
+    pane('ledger', { x: 50, y: 62, w: 44, anim: 'sway', dur: 5, amp: .25, reflect: true }),
+    sparkles(6, { x0: 15, x1: 85, y0: 28, y1: 80, color: '#e0a83a', seed: 29 }),
+    wtitle('Samogitia Records', { x: 50, y: 14, size: 7.5, color: '#7a4a22', font: SERIF }));
+}
+
+export const WII_ART = { recursite, notbell, annasArxiv, honeypot, whatThePh, annagram, stochasticShore, bukvarium, brezgiLv, snowGlobe, dinoTrain, grotte, namedayParty, corporaCafe, petroglyphs, flockquarium, flyParadise, noosphere, lavaHash, ancientClub, soundscapade, snridworld, shabaqo, myHouse, samogitia, brezvax };
