@@ -1,6 +1,7 @@
 <!doctype html>
-<!-- a 1977 ARPANET session, re-created: everything the terminal prints is copied
-     from period documents, cited at the top of the script below. -->
+<!-- a 1977 ARPANET session, re-created: what the terminal prints is copied from
+     period documents, cited at the top of the script below, and the two lines that
+     had to be rebuilt are named there. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -143,7 +144,7 @@
   <div class="switches" role="toolbar" aria-label="Terminal controls">
     <button class="sw hang" id="hangBtn">HANG UP</button>
     <button class="sw" id="sndBtn" aria-pressed="false">SOUND OFF</button>
-    <button class="sw" id="spdBtn" aria-pressed="false">1200 BAUD</button>
+    <button class="sw" id="spdBtn" aria-pressed="false">300 BAUD</button>
     <button class="sw" id="advBtn">SKIP AHEAD</button>
   </div>
 </div>
@@ -155,8 +156,9 @@
    Everything the terminal prints is copied from these (all public):
    [2183] J. Malman, "User's Guide to the Terminal IMP", BBN Report 2183,
           August 1975 revision (DTIC AD-A014398; bitsavers.org/pdf/bbn/tip).
-          The hunt character E (p.4-2); "Trying..." and the replies "Open",
-          "Refused", "Host not responding" (p.4-8); "Closed" (p.4-10);
+          The hunt character E, for ASCII terminals at 110, 150 or 300 baud
+          (p.4-1); the net news notice (s.4-F); "Trying..." and the replies
+          "Open", "Refused", "Host not responding" (p.4-8); "Closed" (p.4-10);
           "Can't", "Num", "BAD", "Wait" (p.3-2); the @ command grammar --
           first letter of each word, @@ sends an @ (p.3-1, App. B); and the
           decimal host addresses of Appendix A.
@@ -173,11 +175,22 @@
    [BBD]  bbd/bbd.sample, "a recording of a sample BBD session" by Richard
           Kahler, 21 January 1977: VERSION, DAYTIME's SUMEX format, and the
           bulletin board's banner and replies, replayed word for word.
-   [RFC]  RFC 439, 527, 608 and 706 (rfc-editor.org), printed whole by TYPE.
+   [RFC]  RFC 439, 527, 602, 608 and 706 (rfc-editor.org), printed whole by
+          TYPE.  All five were in circulation before January 1977.
 
-   What is not a document is only the session's own state: the time of day
-   (yours, on 21 January 1977), this job's number and line, and which
-   other hosts refuse.
+   REBUILT, not copied.  After the hunt character the TIP "types out TIP's
+   name ... followed by the version number of the TIP software system and
+   the octal port number" [2183 s.4-A], and then the notice "Latest net news
+   DATE" [s.4-F].  The manual prints neither line with real values, and no
+   transcript of one has turned up.  The greeting here takes its layout
+   from the TIP's successor, the TAC ("PVC TAC 110 #:01" in a 1984 login
+   dialog); the version number 327, the port 14 and the news date are
+   placeholders.
+
+   What else is not a document is the session's own state: the time of day
+   (the present one in Pacific time, where SUMEX-AIM kept its clock, on
+   21 January 1977), this job's number and line, and which other hosts
+   refuse.
    ===================================================================== */
 (function(){
 "use strict";
@@ -189,7 +202,7 @@ const screen  = document.getElementById("screen");
 const kb      = document.getElementById("kb");
 const sendBtn = document.getElementById("sendBtn");
 
-let cps = 120;                // characters per second (a 1200-baud line)
+let cps = 30;                 // characters per second: a 300-baud dialled line, the fastest the hunt character E covers
 let soundOn = false;
 let audio = null;
 
@@ -218,6 +231,11 @@ function parkHead(){ (curLine || screen).appendChild(head); }
    long lines at spaces by itself */
 function putChar(c, cls){
   ensureLine(cls);
+  if(c === " " && curLine.childNodes.length === 0){   // leading spaces become an indent, so a wrapped line stays under it
+    curLine._ind = (curLine._ind || 0) + 1;
+    curLine.style.paddingLeft = (curLine._ind * charWidth()) + "px";
+    return;
+  }
   const last = curLine.lastChild;
   if(last && last.nodeType === 3) last.data += c; else curLine.appendChild(document.createTextNode(c));
 }
@@ -225,6 +243,47 @@ function newline(cls){
   ensureLine(cls);
   if(curLine.childNodes.length === 0) curLine.innerHTML = "&nbsp;";
   curLine = null;
+}
+
+/* the glass in columns.  A desk-sized tube shows all 80; a telephone shows fewer,
+   and there filled paragraphs are rejoined and deep indents drawn in, so that
+   text wraps once at the edge and not raggedly in the middle. */
+let chw = 0;
+function charWidth(){
+  if(!chw){
+    const s = document.createElement("span");
+    s.style.cssText = "position:absolute;visibility:hidden;white-space:pre";
+    s.textContent = "0000000000000000000000000000000000000000";
+    screen.appendChild(s);
+    chw = s.getBoundingClientRect().width / 40 || 8;
+    s.remove();
+  }
+  return chw;
+}
+window.addEventListener("resize", ()=>{ chw = 0; });
+function columns(){
+  const cs = getComputedStyle(screen);
+  return Math.floor((screen.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)) / charWidth() + 0.01);
+}
+function fit(text){
+  const cols = columns();
+  if(cols >= 80 || text.indexOf("\n") < 0) return text;
+  const lines = text.split("\n"), out = [];
+  const lead = l => /^ */.exec(l)[0].length;
+  for(let i = 0; i < lines.length; i++){
+    let a = lines[i], prev = a;
+    const item = /^\s*\(\d+\)\s/.test(a);          // a numbered item, whose later lines hang
+    while(i + 1 < lines.length){
+      const b = lines[i+1], rest = b.trimStart();
+      if(prev.trim().length < 56 || !rest) break;
+      if(lead(prev) !== lead(b) && !(item && prev === a && lead(b) > lead(a))) break;
+      if(!/^["'(\w]/.test(rest) || /^\(\d+\)\s/.test(rest) || / {3}\S/.test(prev.trimStart()) || / {3}\S/.test(rest)) break;
+      a = a + " " + rest; prev = b; i++;
+    }
+    const ind = lead(a);                               // indents shrink in proportion to the glass
+    out.push(" ".repeat(Math.round(ind * cols / 80)) + a.slice(ind));
+  }
+  return out.join("\n");
 }
 
 /* the newest line sits at the bottom of the glass and older ones roll up
@@ -241,7 +300,7 @@ function stepPrint(myGen){
   printing = true; setBusy(true);
   const item = queue[0];
   if(item.fn){ queue.shift(); item.fn(); stepPrint(myGen); return; }
-  if(item.pause){ queue.shift(); setTimeout(()=>stepPrint(myGen), item.pause * (120/cps)); return; }
+  if(item.pause){ queue.shift(); setTimeout(()=>stepPrint(myGen), item.pause); return; }
   if(item.text.length === 0){ queue.shift(); stepPrint(myGen); return; }
   const c = item.text[0];
   item.text = item.text.slice(1);
@@ -260,7 +319,7 @@ function kick(){ if(!printing){ printing = true; setBusy(true); stepPrint(gen); 
 
 /* everything goes through the ADM-3A, bought without the lowercase option:
    the TIP's own mixed-case messages ("Trying...", "Open") show in capitals */
-function print(text, cls){ queue.push({text:String(text).toUpperCase(), cls:cls||""}); kick(); }
+function print(text, cls){ queue.push({text:fit(String(text)).toUpperCase(), cls:cls||""}); kick(); }
 function println(text, cls){ print((text||"")+"\n", cls); }
 function pause(ms){ queue.push({pause:ms}); kick(); }
 function then(fn){ queue.push({fn}); kick(); }
@@ -318,16 +377,23 @@ function dingBell(){            // the ADM-3A's bell is a beeper
 }
 
 /* =================================================================
-   1977 CLOCK — today's calendar day and wall time, moved to 1977.
-   (EST/EDT by the 1977 rules: daylight time 24 APR - 30 OCT.)
+   1977 CLOCK
    ================================================================= */
 const MON  = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const MONL = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
 const DAYL = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
 function d77(){
-  // Friday, 21 January 1977 -- the day of the SUMEX-AIM recordings -- at your time of day
+  // Friday, 21 January 1977 -- the day of the SUMEX-AIM recordings -- at the present
+  // time of day in Stanford, since SUMEX-AIM's clock kept Pacific time
   const n = new Date();
-  return new Date(1977, 0, 21, n.getHours(), n.getMinutes(), n.getSeconds());
+  let h = n.getHours(), m = n.getMinutes(), s = n.getSeconds();
+  try {
+    const p = new Intl.DateTimeFormat("en-US", {timeZone:"America/Los_Angeles", hourCycle:"h23",
+      hour:"2-digit", minute:"2-digit", second:"2-digit"}).formatToParts(n);
+    const get = t => parseInt(p.find(x => x.type === t).value, 10);
+    h = get("hour") % 24; m = get("minute"); s = get("second");
+  } catch(e){}
+  return new Date(1977, 0, 21, h, m, s);
 }
 const pad2 = x => String(x).padStart(2,"0");
 function date77(off){ const d = d77(off); return d.getDate()+"-"+MON[d.getMonth()]+"-77"; }
@@ -352,6 +418,7 @@ const HERALD = " SUMEX-AIM Tenex 1.31.73, SUMEX-AIM Exec 1.51.41";
 const FILES = {
 "RFC439.TXT": "Network Working Group                                            V. Cerf\nRequest for Comments: 439                                         SU-ERL\nNIC: 13771                                               21 January 1973\n\n                      PARRY Encounters the DOCTOR\n\n   The session recorded below actually happened on 18 September 1972 and\n   is herewith reproduced for your entertainment.\n\n   Good Evening.\n\n   Tell me your problems.  Please terminate input with a period or a\n   question mark.\n\n   *People get on my nerves sometimes.\n\n   I am not sure I understand you fully.\n\n   *You should pay more attention.\n\n   Suppose you should pay more attention.\n\n   *You're entitled to your own opinion.\n\n   What makes you think I am entitled to my own opinion?\n\n   *It bothers me just to be around people in general.\n\n   Please go on.\n\n   *I went to the track at Bay Meadows a while back.\n\n   What does that suggest to you?\n\n   *I went to the races.\n\n   What else would you like to discuss?\n\n   *Horseracing interests me.\n\n   Why do you say that just now?\n\n   *There's a lot of crooked gambling going on there.\n\n   I am not sure I understand you fully,\n\n   *It's clear to me if not to you.\n\n   Do you think its likely that not to I?\n\n   *I went to the races.\n\n   Please go on.\n\n   *I gamble on horses.\n\n   What does that suggest to you?\n\n   *I went to the races.\n\n   What else would you like to discuss?\n\n   *Gambling has been nothing but trouble to me.\n\n   Why do you say that just now?\n\n   *I've had experience with crooks gambling at the track.\n\n   I am not sure I understand you fully.\n\n   *I've already told you enough about that.\n\n   Oh? I enough about that?\n\n   *I went to the races.\n\n         comment: This has to be the most persistent and patient\n         paranoid I have ever encountered.\n\n   Please go on.\n\n   *Do you know anything about bookies?\n\n   What makes you think I know anything about bookies?\n\n   *A bookie didn't pay me off once.\n\n   What does that suggest to you?\n\n   *I beat up the bookie who did not pay off, and I thought he might use\n   his friends in the underworld to get even with me.\n\n   What else would you like to discuss?\n\n   *What do you know about racketeers?\n\n   Why do you ask?\n\n   *What experience have you had gambling?\n\n   Why does that question interest you?\n\n   *I like horseraces.\n\n   What else do you like?\n\n   *I know the mob controls the big rackets.\n\n   Who are you really talking about?\n\n   *Have you ever really thought about the MAFIA?\n\n   Suppose you ever really thought about the MAFIA.\n\n   *Let's talk about something else.\n\n   I am not sure I understand you fully.\n\n   *You keep asking me the same things, why not change the topic?\n\n   In what way?\n\n   *What do you mean?\n\n   Why are such questions on your mind?\n\n   *I thought I told you, people get on my nerves.\n\n   Your nerves?\n\n   *Well, I don't know.\n\n   Don't you really know?\n\n   *I would say so.\n\n   Please go on.\n\n   *I would rather not discuss that anymore.\n\n   Would you like to discuss your nerves?\n\n   *I guess so.\n\n   What does that suggest to you?\n\n   *What are you getting at?\n\n   What answer would please you most?\n\n   *It's not a matter or like or dislike.\n\n   What else would you like to discuss?\n\n   *I am getting tired of answering the same questions over and over.\n\n   What resemblance do you see?\n\n   *Why do you need to know that?\n\n   What do you think?\n\n   *I don't understand your motives.\n\n   Why don't you understand my motives?\n\n   *Shouldn't I be?\n\n         comment: ???\n\n   Why do you say that just now?\n\n         comment: I was wondering the same thing.\n\n   *That's just the way it is.\n\n   Suppose that's just the way it were not.\n\n   *So?\n\n   I am not sure I understand you fully.\n\n   *You harp on the same questions too much.\n\n   What does that similarity suggest to you?\n\n   *I don't get you.\n\n   Do you wish that you did get I?\n\n   *It's about time you showed some interest in my feelings.\n\n   Oh? I showed some interest in your feelings?\n\n         comment: must have been an accident...\n\n   *I will help you if I trust you.\n\n   Do you wish that you trust I?\n\n   *Maybe yes, maybe no.\n\n   You don't seem quite certain.\n\n    ...Excuse me for just a minute.  Sorry to have interrupt you please\n   continue...\n\n   *Really?\n\n   Please go on.\n\n   *In my opinion you have a one-track mind.\n\n   What makes you think I have a one-track mind?\n\n         comment: you ready for this?\n\n   *I used to go to the track every week.\n\n   What does that suggest to you?\n\n   *I avoid racetracks now because the races are fixed.\n\n   Is that the real reason?\n\n   *I'd rather not discuss it.\n\n   What else would you like to discuss?\n\n   *That's something I don't want to go into.\n\n   Does that trouble you?\n\n   *I went to the races.\n\n   Why do you say that just now.\n\n   *It's none of your business.\n\n   Why are you concerned over my business?\n\n   *I don't confide in strangers.\n\n   Don't you really confide in strangers?\n\n   *Let's change the subject.\n\n   Perhaps that concerns your feelings.\n\n   *I went to the races.\n\n   I am not sure I understand you fully.\n\n   *What's wrong with you that you keep on bugging me about this?\n\n   Who are you really talking about?\n\n   *The way you repeat yourself is getting ridiculous.\n\n   Suppose you repeat myself is getting ridiculous.\n\n         comment: howzat?\n\n   *There are some tricky operators down there.\n\n   Are there really some tricky operators down there?\n\n   *The guys involved in the horseracing racket.\n\n   Please go on.\n\n   *You are a real nag.\n\n         comment: just one of the horses.\n\n   Does it please you to believe I am a real nag?\n\n   *I have had enough of this.\n\n   What does that suggest to you?\n\n   *Goodbye.\n\n   It's been my pleasure, that's $399.29 please.\n\n         comment: talk about tricky operators...\n\n   PARRY was running at SAIL and DOCTOR at BBN Tenex, both being\n   accessed from UCLA/SEX.\n",
 "RFC527.TXT": "Network Working Group                                    R. Merryman  (UCSD-CC)\nRequest for Comments:  527                                              6/22/73\n\n                              ARPAWOCKY\n\n                    Twas brillig, and the Protocols\n                         Did USER-SERVER in the wabe.\n                    All mimsey was the FTP,\n                         And the RJE outgrabe,\n\n                    Beware the ARPANET, my son;\n                         The bits that byte, the heads that scratch;\n                    Beware the NCP, and shun\n                         the frumious system patch,\n\n                    He took his coding pad in hand;\n                         Long time the Echo-plex he sought.\n                    When his HOST-to-IMP began to limp\n                         he stood a while in thought,\n\n                    And while he stood, in uffish thought,\n                         The ARPANET, with IMPish bent,\n                    Sent packets through conditioned lines,\n                         And checked them as they went,\n\n                    One-two, one-two, and through and through\n                         The IMP-to-IMP went ACK and NACK,\n                    When the RFNM came, he said \"I'm game\",\n                         And sent the answer back,\n\n                    Then hast thou joined the ARPANET?\n                         Oh come to me, my bankrupt boy!\n                    Quick, call the NIC! Send RFCs!\n                         He chortled in his joy.\n\n                    Twas brillig, and the Protocols\n                         Did USER-SERVER in the wabe.\n                    All mimsey was the FTP,\n                         And the RJE outgrabe.\n\n                                                            D.L. COVILL\n                                                            May 1973\n",
+"RFC602.TXT": "Arpa Network Working Group                             Bob Metcalfe (PARC-MAXC)\nRequest for Comments: 602                                              Dec 1973\nNIC #21021\n\n\n\n           \"The Stockings Were Hung by the Chimney with Care\"\n\n\nThe ARPA Computer Network is susceptible to security violations for at least\nthe three following reasons:\n\n(1)  Individual sites, used to physical limitations on machine access, have\n     not yet taken sufficient precautions toward securing their systems\n     against unauthorized remote use.  For example, many people still use\n     passwords which are easy to guess:  their fist names, their initials,\n     their host name spelled backwards, a string of characters which are\n     easy to type in sequence (e.g. ZXCVBNM).\n\n(2)  The TIP allows access to the ARPANET to a much wider audience than\n     is thought or intended.  TIP phone numbers are posted, like those\n     scribbled hastily on the walls of phone booths and men's rooms.  The\n     TIP required no user identification before giving service.  Thus,\n     many people, including those who used to spend their time ripping off\n     Ma Bell, get access to our stockings in a most anonymous way.\n\n(3)  There is lingering affection for the challenge of breaking\n     someone's system.  This affection lingers despite the fact that\n     everyone knows that it's easy to break systems, even easier to\n     crash them.\n\nAll of this would be quite humorous and cause for raucous eye\nwinking and elbow nudging, if it weren't for the fact that in\nrecent weeks at least two major serving hosts were crashed\nunder suspicious circumstances by people who knew what they\nwere risking; on yet a third system, the system wheel password\nwas compromised -- by two high school students in Los Angeles\nno less.\n\nWe suspect that the number of dangerous security violations is\nlarger than any of us know is growing.  You are advised\nnot to sit \"in hope that Saint Nicholas would soon be there\".\n\n\n\nRMV:rmv\n",
 "RFC608.TXT": "Network Working Group                                   M.D. Kudlick\nRFC # 608                                               SRI-ARC\nNIC # 21256                                             January 10, 1974\n\n                           HOST NAMES ON-LINE\n\nWe at the NIC agree with Peter Deutsch's suggestion (in RFC# 606 / NIC#\n21246) that the NIC maintain an online ASCII text file of Host names,\naddresses, and attributes.  That suggestion corresponds to one made by\nVint Cerf recently, and evidently receives ARPA/IPT support.\n\nJake Feinler at the NIC designed and maintains a source file, in NLS\nformat, that can be used to generate the ASCII file Peter outlined.  A\nprogram to generate an up to date version of the ASCII file needs to be\nwritten at the NIC, and run periodically (weekly, or as the situation\nwarrants).  Such a mechanism would allow us, of course, to maintain one\nsource of data and use it for this and other purposes.\n\nOur present data includes official Host name, Host address, Host status\n(user, server, TIP) and certain other information like Technical\nLiaison, Host computer, operating system, etc.\n\nProvisions exist for including attributes of the type Peter suggested\n(for example FTP byte size, TELNET duplex mode, echoing mode, and\nnicknames), but these data are currently NOT in our source file.\n\nTo get things moving, therefore, we propose to do the following things:\n\n    1)  We shall write a program to generate the ASCII file in the\n        syntax described in RFC# 606, namely:\n\n        <host-name-file> ::= <entry> / <host-name-file> <entry>\n\n        <entry> ::= <data-part> <end-of-line>\n\n            Note that this produces a blank line after the <data-part>.\n\n        <data-part> ::= <basic-part> / <data-part> <attribute-item>\n\n        <basic-part> ::= <host-name> , <host-address> <end-of-line>\n\n        <attribute-item> ::= <attribute-name> = <attribute-value> <end-\n        of-line>\n\n    2)  We shall initially include only the following items in each\n        <entry>:\n\n        a)  <basic-part>\n\n            in which <host-address> will be a decimal host address,\n            relative to the Host's own Network, and\n\n            in which <host-name> will be the official Host Name, a\n            string obtained through negotiation between the Host and the\n            NIC, governed by these constraints:\n\n                up to 48 characters drawn from the alphabet (A-Z),\n                digits (0-9), and the minus sign (-) ... specifically,\n                no blank or space characters allowed;\n\n                no distinction between upper and lower case letters;\n\n                the first character is a letter;\n\n                the last character is NOT a minus sign;\n\n                no other restrictions on content or syntax.\n\n            Note:  The Host Name may be prefixed with an Official\n            Network Name of up to 24 characters enclosed in parentheses\n            ().  The Network Name designates the Network in which the\n            Host resides.\n\n                (The characters used in the Network Name are drawn from\n                the same character set as those in the Host Name, with\n                the same constraints [except the length] as listed\n                above.)\n\n                The ASCII text file will only contain the Official\n                Network name for Hosts NOT on the ARPANET; for ARPANET\n                Hosts there will be no Network Name prefix.\n\n        b)  <attribute-item>\n\n            in which <attribute-name> initially will have the single\n            possible value STATUS, and the corresponding value of\n            <attribute-value> for STATUS will be one of these:\n\n                SERVER\n                USER\n                TIP\n                UNKNOWN\n\n        c)  <end-of-line>\n\n            this will be carriage return followed by line feed (octal\n            015  followed by  octal  12).\n\n    3)  Attributes other than those for which <attribute-name> is STATUS\n        will be added in the above format at a later date (to be\n        announced) as the data becomes available to us.\n\n        We agree with Peter that the attribute list should not be\n        construed as replacing option negotiation or any other means by\n        which one Host discovers the properties of another, but merely\n        as an alternative source of information that is simply and\n        easily accessible, in machine-readable form.\n\n        Suggestions for attributes that are worthy of inclusion in the\n        ASCII file of Hostnames are welcome.  Please send your\n        suggestions and/or data to Jake Feinler\n            FEINLER @ SRI-ARC,   or  NIC Ident  =  JAKE\n\n        For completeness, we record here the attribute suggestions given\n        in RFC# 606:\n\n            NICKNAMES -- value is a list of acceptable nicknames for the\n            host.  Any system that provides name-to-address translation\n            is encouraged (although of course not required) to accept\n            these names as alternatives to the official host name.\n\n            FTP-BYTE-SIZES -- value is a list of the byte sizes\n            supported by the FTP server.  The first byte size is the one\n            which leads to the least computational overhead (e.g. 36 for\n            PDP-10's, 32 for 360's).\n\n            ECHOING -- value is L or R depending on whether the host\n            expects the terminal to echo (Remote) or expects to do its\n            own echoing (Local).\n\nThe ASCII file generated by the NIC will reside at Host OFFICE-1 (Host\nAddress = 43 decimal), and will have the pathname\n\n    <NETINFO>HOSTS.TXT\n\nUsing this pathname with an FTP process will enable anyone, of course,\nto retrieve the file for use at any Network Host.\n\n    The login username for FTP can be GUEST,\n    password ARPA,\n    account 1.\n\nThe file will be in alphanumeric sequence by Host Name.\n\nThe date after which the file will be available at OFFICE-l will be\nannounced via RFC as soon as the file is ready.\n\nWe welcome comments on this RFC, on RFC# 606, or on any other aspect of\nthis problem.  And we wish to acknowledge the contributions of Vint\nCerf, Peter Deutsch, Jake Feinler, and Nancy Neigus in getting the\nOfficial Host Name list to happen.\n",
 "RFC706.TXT": "Network Working Group                                     Jon Postel  (SRI-ARC)\nRequest for Comments: 706                                              Nov 1975\nNIC #33861\n\n                    On the Junk Mail Problem\n\nIn the ARPA Network Host/IMP interface protocol there is no\nmechanism for the Host to selectively refuse messages. This means\nthat a Host which desires to receive some particular messages must\nread all messages addressed to it. Such a Host could be sent many\nmessages by a malfunctioning Host. This would constitute a denial of\nservice to the normal users of this Host. Both the local users and\nthe network communication could suffer. The services denied are the\nprocessor time consumed in examining the undesired messages and\nrejecting them, and the loss of network thruput or increased delay\ndue to the unnecessary busyness of the network.\n\nIt would be useful for a Host to be able to decline messages from\nsources it believes are misbehaving or are simply annoying. If the\nHost/IMP interface protocol allowed the Host to say to the IMP\n\"refuse messages from Host X\", the IMPs could discard the unwanted\nmessages at their earliest opportunity returning a \"refused\" notice\nto the offending Host.\n\nHow the IMPs might do this is an open issue -- here are two\npossibilities:\n\nThe destination IMP would keep a list (per local Host) of sources\nto refuse (this has the disadvantage of keeping the network\nbusy).\n\nThe destination IMP on receiving the \"refuse messages from Host\nX\" message forwards the message to the source IMP (the IMP local\nto Host X). That IMP keeps a list (per local Host) of\ndestinations that are refusing messages from this source Host.\n\nThis restriction on messages might be removed by a destination Host\neither by sending a \"accept messages from Host X\" message to the\nIMP, or by resetting its Host/IMP interface.\n\nA Host might make use of such a facility by measuring, per source,\nthe number of undesired messages per unit time, if this measure\nexceeds a threshold then the Host could issue the \"refuse messages\nfrom Host X\" message to the IMP.\n"
 };
@@ -534,16 +601,16 @@ function cmdChip(cmd, label){ return [label || cmd, ()=>{ if(!printing) type(cmd
 function chipsFor(){
   if(!conn)
     return setChips([cmdChip("@O 56", "@O 56  SUMEX-AIM")],
-      "A terminal on BBN's NCC-TIP, Friday 21 January 1977. @O 56 opens a connection to SUMEX-AIM, the TENEX at Stanford.");
+      "This is a terminal on BBN's NCC-TIP on Friday 21 January 1977, printing at the 300 baud of a dialled line. @O 56 opens a connection to SUMEX-AIM, the TENEX at Stanford. The TIP's greeting line is rebuilt from its manual, which describes the line without showing one.");
   if(!user)
     return setChips([cmdChip("LOGIN GUEST"), cmdChip("DAYTIME"), cmdChip("@C")],
-      "SUMEX-AIM is asking you to log in. @C closes the connection.");
+      "SUMEX-AIM is waiting for you to log in. @C closes the connection.");
   if(mode === "bbd")
     return setChips(Object.keys(BBD).map(c => cmdChip(c.toUpperCase())).concat([cmdChip("Q")]),
-      "SUMEX's bulletin board. These are the commands recorded on it that day; Q goes back to the Exec.");
-  return setChips([cmdChip("BBD"), cmdChip("TYPE RFC439.TXT"), cmdChip("TYPE RFC527.TXT"), cmdChip("TYPE RFC706.TXT"),
+      "This is SUMEX's bulletin board. These are the commands recorded on it that day, and Q goes back to the Exec.");
+  return setChips([cmdChip("BBD"), cmdChip("TYPE RFC439.TXT"), cmdChip("TYPE RFC527.TXT"), cmdChip("TYPE RFC602.TXT"), cmdChip("TYPE RFC706.TXT"),
                    cmdChip("TYPE RFC608.TXT"), cmdChip("DAYTIME"), cmdChip("VERSION"), cmdChip("WHERE "+user), cmdChip("LOGOUT")],
-    "BBD is SUMEX's bulletin board. TYPE prints a file: here, four RFCs as they were published. LOGOUT ends the job.");
+    "BBD is SUMEX's bulletin board. TYPE prints one of five RFCs as they were published, and LOGOUT ends the job. SUMEX keeps Pacific time.");
 }
 
 /* console switches */
@@ -555,23 +622,27 @@ document.getElementById("sndBtn").addEventListener("click", function(){
   if(soundOn) dingBell();
 });
 document.getElementById("spdBtn").addEventListener("click", function(){
-  // a dial-up 1200-baud modem; the commoner 300; a hardwired 9600 line
-  if(cps === 120){ cps = 30; this.textContent = "300 BAUD"; }
-  else if(cps === 30){ cps = 960; this.textContent = "9600 BAUD"; }
-  else { cps = 120; this.textContent = "1200 BAUD"; }
-  this.setAttribute("aria-pressed", cps !== 120);
+  // the dialled 300-baud line; a 1200-baud modem; a hardwired 9600 line
+  if(cps === 30){ cps = 120; this.textContent = "1200 BAUD"; }
+  else if(cps === 120){ cps = 960; this.textContent = "9600 BAUD"; }
+  else { cps = 30; this.textContent = "300 BAUD"; }
+  this.setAttribute("aria-pressed", cps !== 30);
 });
 document.getElementById("advBtn").addEventListener("click", flush);
-document.getElementById("hangBtn").addEventListener("click", ()=>{ window.location.href = "../"; });
+document.getElementById("hangBtn").addEventListener("click", ()=>{ window.location.href = "../#eot"; });
 
 /* =================================================================
    THE CALL -- the hunt character, then a connection to SUMEX-AIM
    ================================================================= */
 function intro(){
   setChips([], "");
-  print("E","usr");                               // the hunt character [2183 s.4.A]
+  print("E","usr");                               // the hunt character [2183 s.4-A]
   println("");
-  pause(700);
+  pause(600);
+  println("NCC-TIP 327 #:14");                    // rebuilt: see REBUILT in the header
+  println("Latest net news 14-JAN-77");           // [2183 s.4-F], with a placeholder date
+  println('Use "@N<cr>" followed by "netnews<cr>"');
+  pause(800);
   type("@O 56");
 }
 
