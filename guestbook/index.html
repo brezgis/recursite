@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!-- recursite/guestbook/ — hand-authored, like the rest of the recursite. One book, two doors: entries written
+     here and in the mailbox at Anna's House (house.brezgis.com) are the same book, kept by a little service at
+     guestbook.brezgis.com (the recursite is static and cannot keep it itself). -->
+<!-- this page best viewed with a cup of tea; please sign before you leave -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guestbook &mdash; the recursite</title>
+<meta name="description" content="Sign my guestbook! The same book as the mailbox at Anna's House.">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 18px;
+    line-height: 1.4;
+    color: #000000;
+    background: #ffffcc;
+    max-width: 46em;
+    margin: 3.2em auto 1.4em;
+    padding: 0 1.4em;
+  }
+  .masthead { text-align: center; }
+  h1.welcome {
+    font-size: 2.7em;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+    color: #101010;
+    text-shadow: 1px 1px 0 #ffffff, 3px 3px 0 #c9b84a;
+    margin: 0.05em 0 0.2em 0;
+    line-height: 1.08;
+    overflow-wrap: break-word;
+  }
+  .rainbow {
+    clear: both;
+    height: 5px;
+    background: linear-gradient(to right, #0033cc, #0099ff, #00cc66, #ffff00, #ff9900, #ff0000);
+    margin: 1.1em 0 0.9em 0;
+  }
+  .epigraph { font-style: italic; font-size: 0.9em; color: #4a4a3a; margin: 0 auto 1.1em; text-align: center; }
+  hr { border: none; border-top: 1px solid #999080; margin: 1.3em 0; }
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+  a:active { color: #ff0000; }
+  a:hover { background: #ffff88; }
+  h2 { font-size: 1.25em; font-weight: bold; margin: 1.1em 0 0.5em 0; }
+  .note { color: #555548; font-size: 0.82em; }
+  .back { font-size: 0.9em; margin-top: 1.4em; }
+  .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
+  :focus-visible { outline: 2px dotted #000080; outline-offset: 2px; }
+
+  /* the hit counter, as an odometer: it counts signatures, not hits (it is honest that way) */
+  .counter { text-align: center; margin: 0.4em 0 0.2em; }
+  .odometer { display: inline-block; vertical-align: middle; padding: 2px; background: #202020; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; }
+  .odometer span { display: inline-block; width: 0.9em; margin: 0 1px; padding: 1px 0; text-align: center; font-family: "Courier New", Courier, monospace; font-weight: bold;
+    color: #ffffff; background: linear-gradient(#000 0%, #3a3a3a 45%, #111 55%, #000 100%); }
+  .odometer span:last-child { color: #ffdd55; }
+
+  /* the out-of-order notice */
+  .notice { border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; background: #ffffe8; padding: 0.6em 0.9em; margin: 1em 0; }
+  .notice b { color: #cc0000; }
+
+  /* the form, laid out the way a table laid out forms */
+  form table { border-collapse: collapse; margin: 0.4em 0; }
+  form td { padding: 4px 6px; vertical-align: top; }
+  form td.label { text-align: right; font-weight: bold; white-space: nowrap; padding-top: 7px; }
+  input[type=text], textarea { font-family: "Courier New", Courier, monospace; font-size: 0.85em; background: #ffffff; color: #000;
+    border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; padding: 3px; box-sizing: border-box; max-width: 100%; }
+  textarea { width: 30em; resize: vertical; }
+  input[type=text] { width: 22em; }
+  .left { font-size: 0.8em; color: #555548; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .win-btn {
+    background: #c0c0c0; color: #000;
+    border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff;
+    font-family: Arial, Helvetica, sans-serif; font-size: 0.8em;
+    padding: 4px 14px; cursor: pointer; margin-right: 6px;
+  }
+  .win-btn:active { border-color: #808080 #ffffff #ffffff #808080; }
+  .win-btn:disabled { color: #808080; text-shadow: 1px 1px 0 #ffffff; cursor: default; }
+  fieldset { border: none; margin: 0; padding: 0; }
+  .msg { color: #cc0000; font-size: 0.9em; min-height: 1.2em; margin: 0.3em 0 0; }
+  .privacy { font-size: 0.8em; color: #3a3a30; margin: 0.8em 0 0; }
+
+  /* the entries */
+  .entry { margin: 0.2em 0; }
+  .entry .when { font-size: 0.85em; color: #3a3a30; }
+  .entry .text { margin: 0.25em 0 0.2em; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .entry .from { font-size: 0.82em; font-style: italic; color: #555548; margin: 0.1em 0; }
+  .entry .wait { font-size: 0.82em; font-style: italic; color: #cc0000; }
+  .entry .report { font-size: 0.72em; color: #555548; margin: 0.15em 0 0; }
+  .entry .report button { background: none; border: 0; padding: 0; font: inherit; color: #0000ee; text-decoration: underline; cursor: pointer; }
+  .entry hr { margin: 0.9em 0; }
+  .entry:last-child hr { display: none; }
+  .paging { text-align: center; margin: 1em 0 0.4em; }
+  .paging button { background: none; border: 0; padding: 0 0.4em; font: inherit; color: #0000ee; text-decoration: underline; cursor: pointer; }
+  .paging button[hidden] { display: none; }
+  .which { text-align: center; font-size: 0.82em; color: #555548; }
+
+  /* ---- guestbook.exe: a fake Windows 95 pop-up, like recursion.exe on the front page ---- */
+  #pop-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 999; }
+  #pop-overlay.open { display: block; }
+  #pop-window { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(92vw, 420px);
+    background: #c0c0c0; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff; box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+  #pop-titlebar { background: #000080; color: #ffffff; font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 0.85em;
+    padding: 3px 4px 3px 6px; display: flex; justify-content: space-between; align-items: center; }
+  #pop-close { background: #c0c0c0; color: #000; border: 2px solid; border-color: #ffffff #808080 #808080 #ffffff;
+    font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 0.78em; line-height: 1; padding: 1px 7px; cursor: pointer; }
+  #pop-body { display: flex; gap: 14px; align-items: flex-start; padding: 16px 16px 8px; font-family: Arial, Helvetica, sans-serif; font-size: 0.85em; }
+  #pop-icon { flex: none; width: 32px; height: 32px; border-radius: 50%; background: #0000cc; color: #fff; font: bold 22px/32px "Times New Roman", serif;
+    text-align: center; font-style: italic; box-shadow: inset -2px -2px 0 rgba(0,0,0,.35); }
+  #pop-text p { margin: 0 0 0.6em; }
+  #pop-buttons { text-align: center; padding: 6px 0 12px; }
+
+  @media (max-width: 600px) {
+    body { margin: 1.8em auto 1.2em; padding: 0 1em; font-size: 17px; }
+    h1.welcome { font-size: 1.8em; }
+    .rainbow { margin: 0.9em 0 0.8em 0; }
+    form table, form tbody, form tr, form td { display: block; width: 100%; }
+    form td.label { text-align: left; padding: 6px 0 2px; }
+    form td { padding: 2px 0; }
+    textarea, input[type=text] { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="masthead">
+  <h1 class="welcome">Sign my Guestbook!</h1>
+  <div class="rainbow"></div>
+  <p class="epigraph">&ldquo;Be not forgetful to entertain strangers: for thereby some have entertained angels unawares.&rdquo; &mdash; Hebrews 13:2 (KJV)</p>
+</div>
+
+<p>
+  Thank you for visiting the recursite! Please take a moment to sign my guestbook before you go. Tell me where you
+  came from, what you liked, and whether you found the door. This book has a second door, too: entries left in the
+  mailbox at <a href="https://house.brezgis.com" target="_blank" rel="noopener">Anna&rsquo;s House</a> turn up here, and yours turns up there.
+</p>
+
+<p class="counter" id="counter" hidden>This guestbook has been signed <span class="odometer" id="odometer" aria-hidden="true"></span><span id="count-words" class="hp"></span> times.</p>
+
+<noscript><p class="notice">This guestbook needs JavaScript to be read and signed. (In 1996 it would have needed a CGI script in <code>/cgi-bin/</code>, which was worse.) Everything else on the recursite works without it.</p></noscript>
+
+<div class="notice" id="notice" role="status" hidden><b>The guestbook is temporarily out of order.</b> The webmaster has been notified.</div>
+
+<hr>
+
+<h2 id="sign">Sign the Guestbook</h2>
+<form id="form" novalidate>
+  <fieldset id="fields" disabled>
+  <table role="presentation">
+    <tr><td class="label"><label for="gb-name">Your Name:</label></td>
+        <td><input type="text" id="gb-name" name="name" maxlength="40" size="30" autocomplete="nickname" spellcheck="false"></td></tr>
+    <tr class="hp" aria-hidden="true" inert><td></td><td><input type="text" id="gb-leave-blank" name="gb-leave-blank" tabindex="-1" autocomplete="off" aria-hidden="true"></td></tr>
+    <tr><td class="label"><label for="gb-text">Comments:</label></td>
+        <td><textarea id="gb-text" name="text" rows="6" cols="40" maxlength="400" required></textarea><br>
+            <span class="left" id="left" aria-live="off">(400 characters left)</span></td></tr>
+    <tr><td></td>
+        <td><button type="submit" class="win-btn" id="submit">Submit Entry</button><button type="reset" class="win-btn">Reset</button>
+            <p class="msg" id="msg" role="status" aria-live="polite"></p></td></tr>
+  </table>
+  </fieldset>
+  <p class="privacy">Privacy policy: entries go into the book straight away for anyone to read, and the webmaster may take any of them down. We keep your name, your comments and the date, and for a month a scrambled trace of your connection to keep out spambots. No cookies, no e-mail address, no tracking, which in 1996 was simply called having a website.</p>
+</form>
+
+<hr>
+
+<h2 id="entries-h">Guestbook Entries</h2>
+<p class="which" id="which"></p>
+<div id="entries" aria-labelledby="entries-h" aria-live="polite"></div>
+<p class="paging"><button type="button" id="newer" hidden>&lt;&lt; Previous 8 entries</button><button type="button" id="older" hidden>Next 8 entries &gt;&gt;</button></p>
+
+<hr>
+<p class="back"><a href="../">&larr; Back to the recursite</a></p>
+<p class="foot">This primitive HTML site was built by a state-of-the-art language model.</p>
+
+<!-- guestbook.exe: shown once you have signed -->
+<div id="pop-overlay">
+  <div id="pop-window" role="dialog" aria-modal="true" aria-labelledby="pop-title">
+    <div id="pop-titlebar"><span id="pop-title">guestbook.exe</span><button id="pop-close" type="button" aria-label="close">X</button></div>
+    <div id="pop-body"><div id="pop-icon" aria-hidden="true">i</div><div id="pop-text"></div></div>
+    <div id="pop-buttons"><button class="win-btn" id="pop-ok" type="button">OK</button></div>
+  </div>
+</div>
+
+<script>
+// The guestbook. Entries are kept by a little service of Anna's (my_house/guestbook in her house
+// project; see its README). This page only reads and signs; everything is drawn with textContent.
+const GUESTBOOK_URL = 'https://guestbook.brezgis.com';          // e.g. 'https://guestbook.brezgis.com' once the service is running
+
+(function () {
+  // ?guestbook=http://127.0.0.1:PORT points at a local copy, for testing; never on the real site
+  const base = (() => {
+    const o = new URLSearchParams(location.search).get('guestbook');
+    if (o && location.hostname !== 'recursite.brezgis.com') {
+      try { const u = new URL(o); if (/^https?:$/.test(u.protocol) && (u.hostname === 'localhost' || u.hostname === '127.0.0.1')) return u.origin; } catch (e) { /* not a URL */ }
+    }
+    return GUESTBOOK_URL.replace(/\/+$/, '');
+  })();
+  const $ = id => document.getElementById(id);
+  const make = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const store = {
+    get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private window */ } }
+  };
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  // the day an entry was signed, in the reader's own time zone (the service sends the full UTC time as 'at')
+  const longDate = (at, day) => { let t = new Date(at || ''); if (isNaN(t)) { const m = /^(\d{4})-(\d\d)-(\d\d)/.exec(day || ''); if (!m) return ''; t = new Date(+m[1], +m[2] - 1, +m[3]); } return `${DAYS[t.getDay()]}, ${MONTHS[t.getMonth()]} ${t.getDate()}, ${t.getFullYear()}`; };
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const MINE = 'recursite.guestbook.mine', REPORTED = 'recursite.guestbook.reported';
+  let page = 1, pages = 1, form = null, formAt = 0;
+
+  async function call(path, opts) {
+    const ac = new AbortController(), t = setTimeout(() => ac.abort(), 9000);
+    try {
+      const r = await fetch(base + path, Object.assign({ mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-store', signal: ac.signal }, opts || {}));
+      let body = null; try { body = await r.json(); } catch (e) { /* empty */ }
+      return { status: r.status, body };
+    } finally { clearTimeout(t); }
+  }
+
+  function outOfOrder() {
+    $('notice').hidden = false; $('fields').disabled = true; $('counter').hidden = true;
+    $('entries').replaceChildren(); $('which').textContent = ''; $('newer').hidden = $('older').hidden = true;
+  }
+
+  function odometer(n) {
+    const digits = String(Math.max(0, n | 0)).padStart(6, '0');
+    $('odometer').replaceChildren(...[...digits].map(d => make('span', null, d)));
+    $('count-words').textContent = String(n);
+    $('counter').hidden = false;
+  }
+
+  function reportControl(id) {
+    const p = make('p', 'report');
+    if (store.get(REPORTED, []).includes(id)) { p.textContent = '[reported to the webmaster]'; return p; }
+    const ask = make('button', null, 'report this entry'); ask.type = 'button';
+    p.append('[', ask, ']');
+    ask.addEventListener('click', () => {
+      const yes = make('button', null, 'Yes'), no = make('button', null, 'No'); yes.type = no.type = 'button';
+      p.replaceChildren('Report this entry to the webmaster? [', yes, '] [', no, ']'); yes.focus();
+      no.addEventListener('click', () => { p.replaceChildren('[', ask, ']'); ask.focus(); });
+      yes.addEventListener('click', async () => {
+        p.textContent = '[sending…]';
+        let ok = false; try { ok = (await call('/notes/' + encodeURIComponent(id) + '/report', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ form }) })).status === 202; } catch (e) { /* offline */ }
+        if (ok) { const d = store.get(REPORTED, []); d.push(id); store.set(REPORTED, d.slice(-200)); }
+        p.textContent = ok ? '[reported to the webmaster. Thank you!]' : '[that did not go through; try again later]';
+      });
+    });
+    return p;
+  }
+
+  function entry(n, waiting) {
+    const div = make('div', 'entry');
+    const head = make('p', null); head.style.margin = '0';
+    head.append(make('b', null, n.name || 'Anonymous'));
+    if (!waiting) head.append(' ', make('span', 'when', '— ' + longDate(n.at, n.date)));
+    div.append(head, make('p', 'text', n.text));
+    if (waiting) div.append(make('p', 'wait', 'Your entry has been received and is awaiting the webmaster’s approval.'));
+    if (!waiting && n.place === 'house') {
+      const p = make('p', 'from', 'sent by airship mail from '), a = make('a', null, 'Anna’s House');
+      a.href = 'https://house.brezgis.com'; a.target = '_blank'; a.rel = 'noopener';
+      p.append(a); div.append(p);
+    } else if (!waiting && n.place && n.place !== 'recursite') div.append(make('p', 'from', 'sent from ' + n.place));
+    if (!waiting && n.id) div.append(reportControl(String(n.id)));
+    div.append(make('hr'));
+    return div;
+  }
+
+  async function load(p) {
+    let res = null;
+    try { res = await call('/notes?page=' + p); } catch (e) { /* unreachable */ }
+    if (!res || res.status !== 200 || !res.body || !Array.isArray(res.body.notes)) { outOfOrder(); return false; }
+    const b = res.body;
+    page = b.page || p; pages = b.pages || 1; form = b.form || null; formAt = Date.now();
+    $('notice').hidden = true; $('fields').disabled = false;
+    odometer(b.total || 0);
+    const notes = b.notes.filter(n => n && typeof n.text === 'string');
+    // my own entries, until they appear for everyone (kept 90 days at most)
+    let mine = store.get(MINE, []);
+    if (page === 1) {
+      const seen = new Set(notes.map(n => (n.name || '') + '\n' + n.text));
+      mine = mine.filter(m => !seen.has(m.name + '\n' + m.text) && Date.now() - (m.at || 0) < 90 * 864e5);
+      store.set(MINE, mine);
+    }
+    const list = $('entries'); list.replaceChildren();
+    if (page === 1) mine.slice().reverse().forEach(m => list.append(entry(m, true)));
+    notes.forEach(n => list.append(entry(n, false)));
+    if (!list.children.length) list.append(make('p', 'note', 'No entries yet. Be the first to sign!'));
+    const first = (page - 1) * 8 + 1, last = (page - 1) * 8 + notes.length;
+    $('which').textContent = b.total ? `Entries ${first}–${last} of ${b.total}, newest first` : '';
+    $('newer').hidden = page <= 1; $('older').hidden = page >= pages;
+    return true;
+  }
+
+  // the form
+  const text = $('gb-text');
+  const left = () => { $('left').textContent = `(${400 - text.value.length} characters left)`; };
+  text.addEventListener('input', left);
+  $('form').addEventListener('reset', () => setTimeout(() => { left(); $('msg').textContent = ''; }, 0));
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const msg = $('msg'), name = $('gb-name').value.trim().slice(0, 40), body = text.value.trim();
+    if (body.length < 2) { msg.textContent = 'Please write a comment first.'; text.focus(); return; }
+    if (body.length > 400) { msg.textContent = 'Your comment is a little long: 400 characters at most.'; return; }
+    $('submit').disabled = true; msg.textContent = 'Submitting…';
+    // A form is good for one entry within two hours, and not in its first few seconds: if this one is old (the
+    // page was left open overnight) or comes back stale, fetch a fresh one quietly and send again.
+    const fresh = async () => { await load(page); await wait(4500); };
+    const send = () => call('/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, text: body, place: 'recursite', form, website: $('gb-leave-blank').value }) });
+    let res = null;
+    try {
+      if (!form || Date.now() - formAt > 100 * 60e3) await fresh();
+      else if (Date.now() - formAt < 4500) await wait(4500 - (Date.now() - formAt));
+      res = await send();
+      if (res && res.status === 400 && res.body && res.body.code === 'form') { await fresh(); res = await send(); }
+    } catch (e2) { /* offline */ }
+    $('submit').disabled = false;
+    if (res && res.status === 202) {
+      const published = res.body && res.body.status === 'published';
+      if (!published) { const m = store.get(MINE, []); m.push({ name, text: body, at: Date.now() }); store.set(MINE, m.slice(-20)); }
+      $('form').reset(); msg.textContent = '';
+      await load(1);
+      popup(published
+        ? ['Thank you for signing my guestbook!', 'Your entry is now at the top of the list. Come back soon!']
+        : ['Thank you for signing my guestbook!', 'Your entry has been received and will appear once the webmaster has approved it.']);
+      return;
+    }
+    if (res && res.status === 400 && res.body && res.body.code === 'form') { msg.textContent = 'The guestbook jammed for a moment. Your words are still in the box; please press Submit again.'; return; }
+    msg.textContent = (res && res.body && res.body.error) || (res ? 'The guestbook would not take your entry just now. Please try again in a little while.' : 'Your entry could not be sent: the connection seems to be down. Your words are still in the box; please try again in a moment.');
+  });
+  $('newer').addEventListener('click', () => load(page - 1).then(() => $('entries-h').scrollIntoView()));
+  $('older').addEventListener('click', () => load(page + 1).then(() => $('entries-h').scrollIntoView()));
+
+  // guestbook.exe
+  let back = null;
+  function popup(lines) {
+    $('pop-text').replaceChildren(...lines.map(l => make('p', null, l)));
+    back = document.activeElement; $('pop-overlay').classList.add('open'); $('pop-ok').focus();
+  }
+  function closePop() { $('pop-overlay').classList.remove('open'); (back && back.focus ? back : $('gb-name')).focus(); }
+  $('pop-ok').addEventListener('click', closePop); $('pop-close').addEventListener('click', closePop);
+  $('pop-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closePop(); });
+  document.addEventListener('keydown', e => {
+    if (!$('pop-overlay').classList.contains('open')) return;
+    if (e.key === 'Escape') closePop();
+    else if (e.key === 'Tab') { e.preventDefault(); ($('pop-ok') === document.activeElement ? $('pop-close') : $('pop-ok')).focus(); }
+  });
+
+  left();
+  if (!base) outOfOrder(); else load(1);
+})();
+</script>
+</body>
+</html>
