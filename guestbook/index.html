@@ -38,7 +38,12 @@
     background: linear-gradient(to right, #0033cc, #0099ff, #00cc66, #ffff00, #ff9900, #ff0000);
     margin: 1.1em 0 0.9em 0;
   }
-  .epigraph { font-style: italic; font-size: 0.9em; color: #4a4a3a; margin: 0 auto 1.1em; text-align: center; }
+  .epigraph { font-style: italic; font-size: 0.9em; color: #4a4a3a; margin: 0 auto 1.1em; max-width: 46em; text-align: center; text-wrap: pretty; }
+  /* the graffito: Latin, then English, then where it was scratched */
+  .graffito { margin-bottom: 1.1em; }
+  .graffito .epigraph { margin: 0 auto 0.45em; }
+  .graffito .epigraph:last-child { margin-bottom: 0; }
+  .graffito .nw { white-space: nowrap; }
   hr { border: none; border-top: 1px solid #999080; margin: 1.3em 0; }
   a { color: #0000ee; }
   a:visited { color: #551a8b; }
@@ -50,12 +55,6 @@
   .foot { margin-top: 1.6em; font-size: 0.78em; color: #3a3a30; line-height: 1.5; }
   :focus-visible { outline: 2px dotted #000080; outline-offset: 2px; }
 
-  /* the hit counter, as an odometer: it counts signatures, not hits (it is honest that way) */
-  .counter { text-align: center; margin: 0.4em 0 0.2em; }
-  .odometer { display: inline-block; vertical-align: middle; padding: 2px; background: #202020; border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; }
-  .odometer span { display: inline-block; width: 0.9em; margin: 0 1px; padding: 1px 0; text-align: center; font-family: "Courier New", Courier, monospace; font-weight: bold;
-    color: #ffffff; background: linear-gradient(#000 0%, #3a3a3a 45%, #111 55%, #000 100%); }
-  .odometer span:last-child { color: #ffdd55; }
 
   /* the out-of-order notice */
   .notice { border: 2px solid; border-color: #808080 #ffffff #ffffff #808080; background: #ffffe8; padding: 0.6em 0.9em; margin: 1em 0; }
@@ -81,7 +80,6 @@
   .win-btn:disabled { color: #808080; text-shadow: 1px 1px 0 #ffffff; cursor: default; }
   fieldset { border: none; margin: 0; padding: 0; }
   .msg { color: #cc0000; font-size: 0.9em; min-height: 1.2em; margin: 0.3em 0 0; }
-  .privacy { font-size: 0.8em; color: #3a3a30; margin: 0.8em 0 0; }
 
   /* the entries */
   .entry { margin: 0.2em 0; }
@@ -128,16 +126,12 @@
 <div class="masthead">
   <h1 class="welcome">Sign my Guestbook!</h1>
   <div class="rainbow"></div>
-  <p class="epigraph">&ldquo;Be not forgetful to entertain strangers: for thereby some have entertained angels unawares.&rdquo; &mdash; Hebrews 13:2 (KJV)</p>
+  <div class="graffito">
+    <p class="epigraph" lang="la">&ldquo;Admiror, paries, te non cecidisse ruinis, / qui tot scriptorum taedia sustineas.&rdquo;</p>
+    <p class="epigraph">&ldquo;I am amazed, wall, that you have not fallen in ruins, you who bear the weight of so many boring inscriptions.&rdquo;</p>
+    <p class="epigraph">&mdash; graffito in the Basilica at Pompeii, <span class="nw">before AD 79 (CIL IV 1904)</span></p>
+  </div>
 </div>
-
-<p>
-  Thank you for visiting the recursite! Please take a moment to sign my guestbook before you go. Tell me where you
-  came from, what you liked, and whether you found the door. This book has a second door, too: entries left in the
-  mailbox at <a href="https://house.brezgis.com" target="_blank" rel="noopener">Anna&rsquo;s House</a> turn up here, and yours turns up there.
-</p>
-
-<p class="counter" id="counter" hidden>This guestbook has been signed <span class="odometer" id="odometer" aria-hidden="true"></span><span id="count-words" class="hp"></span> times.</p>
 
 <noscript><p class="notice">This guestbook needs JavaScript to be read and signed. (In 1996 it would have needed a CGI script in <code>/cgi-bin/</code>, which was worse.) Everything else on the recursite works without it.</p></noscript>
 
@@ -160,7 +154,6 @@
             <p class="msg" id="msg" role="status" aria-live="polite"></p></td></tr>
   </table>
   </fieldset>
-  <p class="privacy">Privacy policy: entries go into the book straight away for anyone to read, and the webmaster may take any of them down. We keep your name, your comments and the date, and for a month a scrambled trace of your connection to keep out spambots. No cookies, no e-mail address, no tracking, which in 1996 was simply called having a website.</p>
 </form>
 
 <hr>
@@ -221,15 +214,8 @@ const GUESTBOOK_URL = 'https://guestbook.brezgis.com';          // e.g. 'https:/
   }
 
   function outOfOrder() {
-    $('notice').hidden = false; $('fields').disabled = true; $('counter').hidden = true;
+    $('notice').hidden = false; $('fields').disabled = true;
     $('entries').replaceChildren(); $('which').textContent = ''; $('newer').hidden = $('older').hidden = true;
-  }
-
-  function odometer(n) {
-    const digits = String(Math.max(0, n | 0)).padStart(6, '0');
-    $('odometer').replaceChildren(...[...digits].map(d => make('span', null, d)));
-    $('count-words').textContent = String(n);
-    $('counter').hidden = false;
   }
 
   function reportControl(id) {
@@ -275,7 +261,6 @@ const GUESTBOOK_URL = 'https://guestbook.brezgis.com';          // e.g. 'https:/
     const b = res.body;
     page = b.page || p; pages = b.pages || 1; form = b.form || null; formAt = Date.now();
     $('notice').hidden = true; $('fields').disabled = false;
-    odometer(b.total || 0);
     const notes = b.notes.filter(n => n && typeof n.text === 'string');
     // my own entries, until they appear for everyone (kept 90 days at most)
     let mine = store.get(MINE, []);

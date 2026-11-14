@@ -112,6 +112,14 @@
   .rokursite { margin-top: .4em; }
   .wiicursite a, .wiicursite a:visited { color: #cc0000; }
   .wiicursite a .note { color: inherit; }  /* description: note-sized, but red and underlined with its link */
+
+  /* the modes row: wii/roku links on the left, the guestbook button on the right */
+  .modes { display: flex; align-items: center; gap: 2.2em; margin: 1.4em 0 0; }
+  .modes .wiicursite { margin-top: 0; }
+  .modes .rokursite { margin-top: .4em; }
+  a.gbook, a.gbook:visited { flex: none; display: block; line-height: 0; }
+  a.gbook:hover { background: transparent; }
+  a.gbook img { width: 88px; height: 31px; border: 0; }
   a.proj, a.proj:visited { color: #0000ee; }   /* live-project links stay blue even when visited */
   a.repo-link { color: #008000; font-size: 0.82em; }
   a.repo-link:visited { color: #006000; }
@@ -265,8 +273,15 @@
         <span class="note">&mdash; Come over to my house! Make yourself at home. <a href="https://github.com/brezgis/my-house" target="_blank" rel="noopener" class="repo-link">repo</a></span></li>
   </ul>
 
-  <p class="wiicursite"><a href="wiicursite/">*wiicursite <span class="note">&mdash; Experience the Recursite in Wii Mode</span>*</a></p>
-  <p class="wiicursite rokursite"><a href="rokursite/">*rokursite <span class="note">&mdash; Experience the Recursite in Roku City Mode</span>*</a></p>
+  <div class="modes">
+    <div>
+      <p class="wiicursite"><a href="wiicursite/">*wiicursite <span class="note">&mdash; Experience the Recursite in Wii Mode</span>*</a></p>
+      <p class="wiicursite rokursite"><a href="rokursite/">*rokursite <span class="note">&mdash; Experience the Recursite in Roku City Mode</span>*</a></p>
+    </div>
+  <!-- a real 88x31 from GeoCities: geocities.com/kingandi/sign_guest_book.gif, archived 9 Jul 2005,
+         found via GifCities (gifcities.archive.org); it sat on geocities.com/kingandi/upgrades.html -->
+    <a class="gbook" href="guestbook/" title="Sign my Guestbook!"><img src="guestbook/sign-guestbook.gif" width="88" height="31" alt="Sign guestbook"></a>
+  </div>
 
   <h2>Real Talk</h2>
 
@@ -293,7 +308,6 @@
     <!-- <li><a class="proj" href="kaomoji-nonsense/">kaomoji-nonsense</a> <span class="new">NEW!</span></li> -->
     <li><a class="proj" href="i-can-believe-its-not-butter/">i-can-believe-its-not-butter</a></li>
     <li><a class="proj" href="i-had-no-idea-what-it-would-be-like-but-i-guess-its-like-this/">i-had-no-idea-what-it-would-be-like-but-i-guess-its-like-this</a> <span class="new">NEW!</span></li>
-    <li><a class="proj" href="guestbook/">guestbook</a> <span class="new">NEW!</span></li>
   </ul>
 
   <hr>
