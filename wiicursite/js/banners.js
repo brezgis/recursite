@@ -24,5 +24,6 @@ export const DEFAULT_LAYOUT = [
   'grotte', 'nameday', 'corpora', 'petroglyphs',
   'flock', 'fly', 'noosphere', 'lavahash',
   'ancientclub', 'soundscapade', 'snridworld', 'shabaqo',
-  'myhouse', 'samogitia', ...Array(21).fill(null), 'brezvax',
+  'myhouse', 'mytown', 'thelab', 'samogitia',
+  ...Array(19).fill(null), 'brezvax',
 ];

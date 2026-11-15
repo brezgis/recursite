@@ -214,6 +214,26 @@ function myHouse() {
     wtitle('Anna’s House', { x: 30, y: 15, size: 8.5, dark: true }));
 }
 
+// Vesper Street (town.brezgis.com): the main street on its island, at the hour it prefers
+function myTown() {
+  return banner({ bg: 'linear-gradient(180deg,#4a3a8a 0,#b0589a 40%,#ff9a6a 76%,#ffe0a0 100%)', tint: '#b0609a' },
+    `<div class="sun"></div>`,
+    sparkles(8, { y0: 3, y1: 30, size: 1.2, seed: 31 }),
+    `<div class="fog"></div>`,
+    pane('mainstreet', { x: 52, y: 61, w: 50, anim: 'bob', dur: 5.5 }),
+    pane('airship', { x: 86, y: 24, w: 15, anim: 'drift', dur: 9, amp: .5 }),
+    wtitle('Vesper Street', { x: 32, y: 15, size: 8.5, dark: true }));
+}
+
+// Cloud Spring Harbor Laboratory (lab.brezgis.com): the college on its island, by day
+function theLab() {
+  return banner({ bg: 'linear-gradient(180deg,#6ab0e8 0,#a8d8f6 50%,#e8f6ff 100%)', tint: '#a0d0f0' },
+    `<div class="fog"></div><div class="fog f2"></div>`,
+    pane('college', { x: 50, y: 62, w: 48, anim: 'bob', dur: 6 }),
+    pane('airship', { x: 14, y: 40, w: 14, anim: 'drift', dur: 10, amp: .5, flip: true }),
+    wtitle('Cloud Spring Harbor', { x: 50, y: 13, size: 7.5, dark: true }));
+}
+
 function samogitia() {
   return banner({ bg: 'radial-gradient(120% 120% at 50% 20%, #fffaf0 0, #f1e3c6 60%, #d8bf94 100%)', tint: '#ecdcbc', scan: true },
     pane('ledger', { x: 50, y: 62, w: 44, anim: 'sway', dur: 5, amp: .25, reflect: true }),
@@ -221,4 +241,4 @@ function samogitia() {
     wtitle('Samogitia Records', { x: 50, y: 14, size: 7.5, color: '#7a4a22', font: SERIF }));
 }
 
-export const WII_ART = { recursite, notbell, annasArxiv, honeypot, whatThePh, annagram, stochasticShore, bukvarium, brezgiLv, snowGlobe, dinoTrain, grotte, namedayParty, corporaCafe, petroglyphs, flockquarium, flyParadise, noosphere, lavaHash, ancientClub, soundscapade, snridworld, shabaqo, myHouse, samogitia, brezvax };
+export const WII_ART = { recursite, notbell, annasArxiv, honeypot, whatThePh, annagram, stochasticShore, bukvarium, brezgiLv, snowGlobe, dinoTrain, grotte, namedayParty, corporaCafe, petroglyphs, flockquarium, flyParadise, noosphere, lavaHash, ancientClub, soundscapade, snridworld, shabaqo, myHouse, myTown, theLab, samogitia, brezvax };

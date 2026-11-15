@@ -19,6 +19,8 @@ const ADS = [
   { id: 'snowglobe', title: 'Snow-Globe', tag: 'Now broadcasting. 24/7.', url: 'https://tv.brezgis.com', font: "'Monoton'", ph: ['#1b2f66', '#cfe6ff'] },
   { id: 'dinotrain', title: 'Dino-Train-Table', tag: 'All aboard the Cretaceous Express.', url: 'https://brezgis.com/dino-train-table/', font: "'Bungee'", ph: ['#2f5d2a', '#f0c35a'] },
   { id: 'house', title: 'Anna’s House', tag: 'The door is open and the kettle is on.', url: 'https://house.brezgis.com', font: "'Righteous'", ph: ['#4a2a5e', '#ffb86b'] },
+  { id: 'town', title: 'Vesper Street', tag: 'The shops are open and the sun is going down.', url: 'https://town.brezgis.com', font: "'Limelight'", ph: ['#5a2a6e', '#ff9a5c'] },
+  { id: 'lab', title: 'Cloud Spring Harbor', tag: 'A laboratory in the sky. Lectures in progress.', url: 'https://lab.brezgis.com', font: "'Cinzel Decorative'", ph: ['#1c2a5a', '#e8c98a'] },
   { id: 'samogitia', title: 'Samogitia Records', tag: 'Old parish registers, read at last.', url: 'https://samogitia.brezgis.com', font: "'Limelight'", ph: ['#3b2412', '#e8c98a'] },
   { id: 'shabaqo', title: 'Shabaqo Stone', tag: 'Carved around 710 BC. Hover to read.', url: 'https://shabaqo.brezgis.com', font: "'Cinzel Decorative'", ph: ['#1a140c', '#e0a84a'] },
   { id: 'grotte', title: 'Grotte du Calcul', tag: 'Computing, 17,000 years early.', url: R + 'lascaux/', font: "'Limelight'", ph: ['#3b1d0c', '#d98a3a'] },
@@ -26,11 +28,11 @@ const ADS = [
   { id: 'arpanet', title: 'TIP ARPA', tag: 'Dial down to 1977. Log in as guest.', url: R + 'usenet/arpanet/', font: "'VT323'", ph: ['#020611', '#cfe3ff'] },
   { id: 'recursite', title: 'The Recursite', tag: 'A 1990s website, all the way down.', url: R, font: "'Limelight'", ph: ['#2a0d6e', '#ffde96'] },
 ];
-/* The ledger. Projects with a permanent sign of their own (the club, the diner, the aquarium,
-   the record shop's round sign) never also rotate onto an ad. Everything that rotates (billboards,
+/* The ledger. Projects with a permanent place of their own (the club, the diner, the aquarium,
+   the record shop's round sign, Anna's house) never also rotate onto an ad. Everything that rotates (billboards,
    screens, poster cases, the cinema marquee, vehicle panels, the blimp) asks pickAd() for a project
    that is not on screen or about to scroll on. Easter eggs (terminal, fly, snail, LUCKY) don't count. */
-const CLAIMED = new Set(['ancient', 'corpora', 'flockquarium', 'soundscapade']);
+const CLAIMED = new Set(['ancient', 'corpora', 'flockquarium', 'soundscapade', 'house']);
 const MARQUEE = [
   { top: 'THE RECURSITE', big: 'FREE PAGES & PROGRAMS', url: R, ad: 'recursite', name: 'the recursite' },
   { top: 'NOW SHOWING', big: 'BREZVAX · 1984', url: R + 'usenet/', ad: 'brezvax', name: 'brezvax' },
@@ -42,7 +44,8 @@ const SKYWRITING = [
   { ad: 'snowglobe', text: 'SNOW-GLOBE · ON THE AIR 24/7', url: 'https://tv.brezgis.com' },
   { ad: 'noosphere', text: 'NOOSPHERE · THINK WHOLE-GRAIN', url: 'https://noosphere.brezgis.com' },
   { ad: 'recursite', text: 'VISIT THE RECURSITE', url: R },
-  { ad: 'house', text: 'ANNA’S HOUSE · THE KETTLE IS ON', url: 'https://house.brezgis.com' },
+  { ad: 'town', text: 'VESPER STREET · THE SHOPS ARE OPEN', url: 'https://town.brezgis.com' },
+  { ad: 'lab', text: 'CLOUD SPRING HARBOR · LECTURES IN PROGRESS', url: 'https://lab.brezgis.com' },
 ];
 
 /* Overlay panels, as fractions of each sprite's box: [left, top, width, height],
@@ -114,6 +117,8 @@ const STREET = { speed: 24, items: [
   { s: 'lamp', fill: 120, y: BASE + 8 },
   { s: 'hotel' },
   { s: 'rowhouse_a', gap: 6 },
+  { s: 'tree', fill: 170, y: BASE + 6 },
+  { s: 'annashouse', ad: 'house', bush: 1 },   // the bungalow of house.brezgis.com: the whole house is the door
 ], tail: 60 };
 /* traffic lanes: one speed and direction each, so nothing ever drives through anything */
 const LANES = [

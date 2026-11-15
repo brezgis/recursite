@@ -30,6 +30,8 @@ export const APPS = {
   snridworld:    { title: 'snridworld',           art: W.snridworld,   url: 'https://snail.brezgis.com',              home: 'recursite' },
   shabaqo:       { title: 'shabaqo-stone',        art: W.shabaqo,        url: 'https://shabaqo.brezgis.com',            home: 'recursite' },
   myhouse:       { title: 'my-house',             art: W.myHouse,        url: 'https://house.brezgis.com',              home: 'recursite' },
+  mytown:        { title: 'my-town',              art: W.myTown,         url: 'https://town.brezgis.com',               home: 'recursite' },
+  thelab:        { title: 'cloud-spring-harbor',  art: W.theLab,         url: 'https://lab.brezgis.com',                home: 'recursite' },
   samogitia:     { title: 'samogitia-records',    art: W.samogitia,      url: 'https://samogitia.brezgis.com',          home: 'recursite' },
   brezvax:       { title: 'brezvax',              art: W.brezvax,        url: 'https://recursite.brezgis.com/usenet/',  home: 'recursite' },
 };
